@@ -26,27 +26,11 @@ const gen = () => {
 };
 const genId = gen();
 const genIndex = gen();
+
+const minesweeperZIndex = genIndex();
+const notepadZIndex = genIndex();
+const winampZIndex = genIndex();
 export const defaultAppState = [
-  {
-    component: InternetExplorer,
-    header: {
-      title: 'Internet Explorer',
-      icon: iePaper,
-    },
-    defaultSize: {
-      width: 700,
-      height: 500,
-    },
-    defaultOffset: {
-      x: 130,
-      y: 20,
-    },
-    resizable: true,
-    minimized: false,
-    maximized: window.innerWidth < 800,
-    id: genId(),
-    zIndex: genIndex(),
-  },
   {
     component: Minesweeper,
     header: {
@@ -65,7 +49,7 @@ export const defaultAppState = [
     minimized: false,
     maximized: false,
     id: genId(),
-    zIndex: genIndex(),
+    zIndex: minesweeperZIndex,
   },
   {
     component: Winamp,
@@ -86,27 +70,27 @@ export const defaultAppState = [
     minimized: false,
     maximized: false,
     id: genId(),
-    zIndex: genIndex(),
+    zIndex: winampZIndex,
   },
   {
-    component: MyComputer,
+    component: Notepad,
     header: {
-      title: 'My Computer',
-      icon: computer,
+      title: 'Untitled - Notepad',
+      icon: notepad,
     },
     defaultSize: {
-      width: 660,
+      width: 300,
       height: 500,
     },
     defaultOffset: {
-      x: 250,
-      y: 40,
+      x: 180,
+      y: 460,
     },
     resizable: true,
     minimized: false,
     maximized: window.innerWidth < 800,
     id: genId(),
-    zIndex: genIndex(),
+    zIndex: notepadZIndex,
   },
 ];
 

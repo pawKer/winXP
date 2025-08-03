@@ -4,12 +4,11 @@ const album = 'netBloc Vol. 24: tiuqottigeloot';
 
 export const initialTracks = [
   {
-    url:
-      'https://raw.githubusercontent.com/captbaritone/webamp-music/4b556fbf/Diablo_Swing_Orchestra_-_01_-_Heroines.mp3',
+    url: '/songs/bruises_on_my_neck_SPED_UP.mp3',
     duration: 322.612245,
     metaData: {
-      title: 'Heroines',
-      artist: 'Diablo Swing Orchestra',
+      title: 'bruises',
+      artist: 'reshra',
       album,
     },
   },

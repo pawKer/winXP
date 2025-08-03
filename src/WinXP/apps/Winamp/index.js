@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import Webamp from 'webamp';
+import Webamp from 'webamp/butterchurn';
 import { initialTracks } from './config';
 
 function Winamp({ onClose, onMinimize }) {
@@ -11,7 +11,36 @@ function Winamp({ onClose, onMinimize }) {
       return;
     }
     webamp.current = new Webamp({
+      initialSkin: {
+        url: '/winamp_skin/modern.wsz',
+        name: 'Modern',
+      },
       initialTracks,
+      windowLayout: {
+        main: {
+          position: {},
+          shadeMode: false,
+          closed: false,
+        },
+        equalizer: {
+          position: {},
+          shadeMode: false,
+          closed: false,
+        },
+        playlist: {
+          position: {},
+          shadeMode: false,
+          // Number of additional sprites by which to expand the window.
+          size: { extraHeight: 4 },
+          closed: false,
+        },
+        milkdrop: {
+          position: {},
+          // Number of additional sprites by which to expand the window.
+          size: { extraHeight: 5, extraWidth: 5 },
+          closed: false,
+        },
+      },
     });
     webamp.current.renderWhenReady(target).then(() => {
       target.appendChild(document.querySelector('#webamp'));
