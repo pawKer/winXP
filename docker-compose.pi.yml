@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  winxp:
+    build: .
+    ports:
+      - "14567:80"
+    volumes:
+      # Mount songs directory from host to container
+      - /srv/dev-disk-by-uuid-4E1AEA7B1AEA6007/AppData/reshra-xyz/songs:/usr/share/nginx/html/songs:ro
+      # Optional: Mount the entire public directory for other assets
+      # - ./public:/usr/share/nginx/html:ro
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    container_name: winxp-app

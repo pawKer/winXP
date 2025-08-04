@@ -10,4 +10,5 @@ README.md
 .env.test.local
 .env.production.local
 Dockerfile
-.dockerignore 
+.dockerignore
+public/songs 
