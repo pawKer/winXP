@@ -63,8 +63,8 @@ export const defaultAppState = [
       height: 0,
     },
     defaultOffset: {
-      x: 0,
-      y: 0,
+      x: window.innerWidth / 2,
+      y: window.innerHeight / 2,
     },
     resizable: false,
     minimized: false,
@@ -79,7 +79,7 @@ export const defaultAppState = [
       icon: notepad,
     },
     defaultSize: {
-      width: 300,
+      width: 400,
       height: 500,
     },
     defaultOffset: {

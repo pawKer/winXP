@@ -350,7 +350,7 @@ const Container = styled.div`
   height: 100%;
   overflow: hidden;
   position: relative;
-  background: url(resh.png);
+  background: url(reshra_low_res.jpg);
   background-repeat: repeat;
   background-size: 300px;
   animation: ${({ state }) => animation[state]} 5s forwards;

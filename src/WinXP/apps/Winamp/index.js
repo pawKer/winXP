@@ -5,6 +5,7 @@ import { initialTracks } from './config';
 function Winamp({ onClose, onMinimize }) {
   const ref = useRef(null);
   const webamp = useRef(null);
+
   useEffect(() => {
     const target = ref.current;
     if (!target) {
@@ -16,35 +17,36 @@ function Winamp({ onClose, onMinimize }) {
         name: 'Modern',
       },
       initialTracks,
-      windowLayout: {
-        main: {
-          position: {},
-          shadeMode: false,
-          closed: false,
-        },
-        equalizer: {
-          position: {},
-          shadeMode: false,
-          closed: false,
-        },
-        playlist: {
-          position: {},
-          shadeMode: false,
-          // Number of additional sprites by which to expand the window.
-          size: { extraHeight: 4 },
-          closed: false,
-        },
-        milkdrop: {
-          position: {},
-          // Number of additional sprites by which to expand the window.
-          size: { extraHeight: 5, extraWidth: 5 },
-          closed: false,
-        },
-      },
+      // windowLayout: {
+      //   main: {
+      //     position: {},
+      //     shadeMode: false,
+      //     closed: false,
+      //   },
+      //   equalizer: {
+      //     position: {},
+      //     shadeMode: false,
+      //     closed: false,
+      //   },
+      //   playlist: {
+      //     position: {},
+      //     shadeMode: false,
+      //     // Number of additional sprites by which to expand the window.
+      //     size: { extraHeight: 4 },
+      //     closed: false,
+      //   },
+      //   milkdrop: {
+      //     position: {},
+      //     // Number of additional sprites by which to expand the window.
+      //     size: { extraHeight: 5, extraWidth: 5 },
+      //     closed: false,
+      //   },
+      // },
     });
-    webamp.current.renderWhenReady(target).then(() => {
-      target.appendChild(document.querySelector('#webamp'));
-    });
+    // webamp.current.renderWhenReady(target).then(() => {
+    //   target.appendChild(document.querySelector('#webamp'));
+    // });
+    webamp.current.renderWhenReady(target);
     return () => {
       webamp.current.dispose();
       webamp.current = null;

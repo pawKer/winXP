@@ -5,7 +5,14 @@ import { WindowDropDowns } from 'components';
 import dropDownData from './dropDownData';
 
 export default function Notepad({ onClose }) {
-  const [docText, setDocText] = useState('Thank you for listening :)');
+  const defaultText = `Thank you for listening :)
+
+Links:
+
+Instagram - https://instagram.com/reshnocash
+Youtube - https://youtube.com/reshra
+TikTok - https://tiktok.com/@reshra`;
+  const [docText, setDocText] = useState(defaultText);
   const [wordWrap, setWordWrap] = useState(false);
 
   function onClickOptionItem(item) {
