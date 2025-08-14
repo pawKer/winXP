@@ -4,15 +4,8 @@ import styled from 'styled-components';
 import { WindowDropDowns } from 'components';
 import dropDownData from './dropDownData';
 
-export default function Notepad({ onClose }) {
-  const defaultText = `Thank you for listening :)
-
-Links:
-
-Instagram - https://instagram.com/reshnocash
-Youtube - https://youtube.com/reshra
-TikTok - https://tiktok.com/@reshra`;
-  const [docText, setDocText] = useState(defaultText);
+export default function Notepad({ onClose, headerContent }) {
+  const [docText, setDocText] = useState('');
   const [wordWrap, setWordWrap] = useState(false);
 
   function onClickOptionItem(item) {
@@ -55,13 +48,20 @@ TikTok - https://tiktok.com/@reshra`;
       <section className="np__toolbar">
         <WindowDropDowns items={dropDownData} onClickItem={onClickOptionItem} />
       </section>
-      <StyledTextarea
-        wordWrap={wordWrap}
-        value={docText}
-        onChange={e => setDocText(e.target.value)}
-        onKeyDown={onTextAreaKeyDown}
-        spellCheck={false}
-      />
+      <TextContentContainer>
+        {headerContent && (
+          <HeaderSection>
+            <HeaderText dangerouslySetInnerHTML={{ __html: headerContent }} />
+          </HeaderSection>
+        )}
+        <StyledTextarea
+          wordWrap={wordWrap}
+          value={docText}
+          onChange={e => setDocText(e.target.value)}
+          onKeyDown={onTextAreaKeyDown}
+          spellCheck={false}
+        />
+      </TextContentContainer>
     </Div>
   );
 }
@@ -80,6 +80,47 @@ const Div = styled.div`
   }
 `;
 
+const TextContentContainer = styled.div`
+  border: 1px solid #96abff;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+`;
+
+const HeaderSection = styled.div`
+  flex-shrink: 0;
+  background: white;
+  padding: 2px;
+  max-height: 200px;
+  overflow-y: auto;
+`;
+
+const HeaderText = styled.div`
+  font-family: 'Lucida Console', monospace;
+  font-size: 13px;
+  line-height: 14px;
+  color: #000;
+  white-space: pre-line;
+  outline: none;
+  resize: none;
+  overflow-y: scroll;
+
+  a {
+    color: #0000ff;
+    text-decoration: underline;
+    cursor: pointer;
+
+    &:hover {
+      color: #800080;
+    }
+
+    &:visited {
+      color: #800080;
+    }
+  }
+`;
+
 const StyledTextarea = styled.textarea`
   flex: auto;
   outline: none;
@@ -88,7 +129,7 @@ const StyledTextarea = styled.textarea`
   line-height: 14px;
   resize: none;
   padding: 2px;
+  border: none;
   ${props => (props.wordWrap ? '' : 'white-space: nowrap; overflow-x: scroll;')}
   overflow-y: scroll;
-  border: 1px solid #96abff;
 `;

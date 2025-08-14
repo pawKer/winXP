@@ -48,6 +48,7 @@ const Window = memo(function({
   zIndex,
   isFocus,
   className,
+  headerContent,
 }) {
   function _onMouseDown() {
     onMouseDown(id);
@@ -134,6 +135,7 @@ const Window = memo(function({
           onClose: _onMouseUpClose,
           onMinimize: _onMouseUpMinimize,
           isFocus,
+          headerContent,
           ...injectProps,
         })}
       </div>

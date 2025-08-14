@@ -5,6 +5,7 @@ import MyComputer from './MyComputer';
 import Notepad from './Notepad';
 import Winamp from './Winamp';
 import Paint from './Paint';
+import { notepadHeaderContents } from './Notepad/headerContents';
 import iePaper from 'assets/windowsIcons/ie-paper.png';
 import ie from 'assets/windowsIcons/ie.png';
 import mine from 'assets/minesweeper/mine-icon.png';
@@ -16,6 +17,7 @@ import notepadLarge from 'assets/windowsIcons/327(32x32).png';
 import winamp from 'assets/windowsIcons/winamp.png';
 import paintLarge from 'assets/windowsIcons/680(32x32).png';
 import paint from 'assets/windowsIcons/680(16x16).png';
+import txtFileLarge from 'assets/windowsIcons/txtfile(32x32).png';
 
 const gen = () => {
   let id = -1;
@@ -30,6 +32,7 @@ const genIndex = gen();
 const minesweeperZIndex = genIndex();
 const notepadZIndex = genIndex();
 const winampZIndex = genIndex();
+const notepad2ZIndex = genIndex();
 export const defaultAppState = [
   {
     component: Minesweeper,
@@ -91,7 +94,29 @@ export const defaultAppState = [
     maximized: window.innerWidth < 800,
     id: genId(),
     zIndex: notepadZIndex,
+    headerContent: notepadHeaderContents.socialMedia,
   },
+  // {
+  //   component: Notepad,
+  //   header: {
+  //     title: 'Parts List - Notepad',
+  //     icon: notepad,
+  //   },
+  //   defaultSize: {
+  //     width: 400,
+  //     height: 500,
+  //   },
+  //   defaultOffset: {
+  //     x: 500,
+  //     y: 550,
+  //   },
+  //   resizable: true,
+  //   minimized: false,
+  //   maximized: window.innerWidth < 800,
+  //   id: genId(),
+  //   zIndex: notepad2ZIndex,
+  //   headerContent: notepadHeaderContents.partsList,
+  // },
 ];
 
 export const defaultIconState = [
@@ -137,6 +162,13 @@ export const defaultIconState = [
     component: Paint,
     isFocus: false,
   },
+  // {
+  //   id: 6,
+  //   icon: txtFileLarge,
+  //   title: 'Thank You.txt',
+  //   component: Notepad,
+  //   isFocus: false,
+  // },
 ];
 
 export const appSettings = {
