@@ -54,13 +54,16 @@ function Icon({
   id,
   component,
   measure,
+  headerContent,
+  ...otherProps
 }) {
   const ref = useRef(null);
   function _onMouseDown() {
     onMouseDown(id);
   }
   function _onDoubleClick() {
-    onDoubleClick(component);
+    // Pass the full icon data including headerContent
+    onDoubleClick(component, { headerContent, title, ...otherProps });
   }
   useEffect(() => {
     const target = ref.current;

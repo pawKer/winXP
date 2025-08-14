@@ -215,11 +215,29 @@ function WinXP() {
   function onMouseDownIcon(id) {
     dispatch({ type: FOCUS_ICON, payload: id });
   }
-  function onDoubleClickIcon(component) {
+  function onDoubleClickIcon(component, iconData) {
     const appSetting = Object.values(appSettings).find(
       setting => setting.component === component,
     );
-    dispatch({ type: ADD_APP, payload: appSetting });
+
+    // If we have icon data with headerContent or title, merge it with the app settings
+    const finalAppSetting = iconData
+      ? {
+          ...appSetting,
+          ...(iconData.headerContent && {
+            headerContent: iconData.headerContent,
+          }),
+          ...(iconData.title &&
+            iconData.title.includes('.txt') && {
+              header: {
+                ...appSetting.header,
+                title: iconData.title + ' - Notepad',
+              },
+            }),
+        }
+      : appSetting;
+
+    dispatch({ type: ADD_APP, payload: finalAppSetting });
   }
   function getFocusedAppId() {
     if (state.focusing !== FOCUSING.WINDOW) return -1;

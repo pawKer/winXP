@@ -5,7 +5,7 @@ import MyComputer from './MyComputer';
 import Notepad from './Notepad';
 import Winamp from './Winamp';
 import Paint from './Paint';
-import { notepadHeaderContents } from './Notepad/headerContents';
+import { socialMedia } from './Notepad/headerContents';
 import iePaper from 'assets/windowsIcons/ie-paper.png';
 import ie from 'assets/windowsIcons/ie.png';
 import mine from 'assets/minesweeper/mine-icon.png';
@@ -94,7 +94,7 @@ export const defaultAppState = [
     maximized: window.innerWidth < 800,
     id: genId(),
     zIndex: notepadZIndex,
-    headerContent: notepadHeaderContents.socialMedia,
+    headerContent: socialMedia,
   },
   // {
   //   component: Notepad,
@@ -162,13 +162,14 @@ export const defaultIconState = [
     component: Paint,
     isFocus: false,
   },
-  // {
-  //   id: 6,
-  //   icon: txtFileLarge,
-  //   title: 'Thank You.txt',
-  //   component: Notepad,
-  //   isFocus: false,
-  // },
+  {
+    id: 6,
+    icon: txtFileLarge,
+    title: 'Thank You.txt',
+    component: Notepad,
+    isFocus: false,
+    headerContent: socialMedia,
+  },
 ];
 
 export const appSettings = {
