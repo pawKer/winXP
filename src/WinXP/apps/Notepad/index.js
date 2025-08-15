@@ -99,7 +99,7 @@ const StyledTextarea = styled.textarea`
   flex: auto;
   outline: none;
   font-family: 'Lucida Console', monospace;
-  font-size: 13px;
+  font-size: 16px;
   line-height: 14px;
   resize: none;
   padding: 2px;
