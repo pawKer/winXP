@@ -18,6 +18,7 @@ import {
 } from './constants/actions';
 import { FOCUSING, POWER_STATE } from './constants';
 import { defaultIconState, defaultAppState, appSettings } from './apps';
+import { PartsListHeader } from './apps/Notepad/headerComponents';
 import Modal from './Modal';
 import Footer from './Footer';
 import Windows from './Windows';
@@ -301,6 +302,20 @@ function WinXP() {
   function onModalClose() {
     dispatch({ type: CANCEL_POWER_OFF });
   }
+
+  function onOpenNewNotepad() {
+    dispatch({
+      type: ADD_APP,
+      payload: {
+        ...appSettings.Notepad,
+        header: {
+          ...appSettings.Notepad.header,
+          title: 'Parts List.txt - Notepad',
+        },
+        headerContent: <PartsListHeader />,
+      },
+    });
+  }
   return (
     <Container
       ref={ref}
@@ -326,6 +341,7 @@ function WinXP() {
         onMinimize={onMinimizeWindow}
         onMaximize={onMaximizeWindow}
         focusedAppId={focusedAppId}
+        onOpenNewNotepad={onOpenNewNotepad}
       />
       <Footer
         apps={state.apps}

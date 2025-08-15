@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { WindowDropDowns } from 'components';
 import dropDownData from './dropDownData';
 
-export default function Notepad({ onClose, headerContent }) {
+export default function Notepad({ onClose, headerContent, onOpenNewNotepad }) {
   const [docText, setDocText] = useState('');
   const [wordWrap, setWordWrap] = useState(false);
 
@@ -51,7 +51,7 @@ export default function Notepad({ onClose, headerContent }) {
       <TextContentContainer>
         {headerContent && (
           <HeaderSection>
-            <HeaderText dangerouslySetInnerHTML={{ __html: headerContent }} />
+            {React.cloneElement(headerContent, { onOpenNewNotepad })}
           </HeaderSection>
         )}
         <StyledTextarea
@@ -86,39 +86,13 @@ const TextContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: stretch;
+  overflow-y: scroll;
 `;
 
 const HeaderSection = styled.div`
   flex-shrink: 0;
   background: white;
   padding: 2px;
-  max-height: 200px;
-  overflow-y: auto;
-`;
-
-const HeaderText = styled.div`
-  font-family: 'Lucida Console', monospace;
-  font-size: 13px;
-  line-height: 14px;
-  color: #000;
-  white-space: pre-line;
-  outline: none;
-  resize: none;
-  overflow-y: scroll;
-
-  a {
-    color: #0000ff;
-    text-decoration: underline;
-    cursor: pointer;
-
-    &:hover {
-      color: #800080;
-    }
-
-    &:visited {
-      color: #800080;
-    }
-  }
 `;
 
 const StyledTextarea = styled.textarea`
@@ -130,6 +104,6 @@ const StyledTextarea = styled.textarea`
   resize: none;
   padding: 2px;
   border: none;
+  min-height: 200px;
   ${props => (props.wordWrap ? '' : 'white-space: nowrap; overflow-x: scroll;')}
-  overflow-y: scroll;
 `;

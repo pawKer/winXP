@@ -12,6 +12,7 @@ function Windows({
   onMinimize,
   onMaximize,
   focusedAppId,
+  onOpenNewNotepad,
 }) {
   return (
     <div style={{ position: 'relative', zIndex: 0 }}>
@@ -25,6 +26,7 @@ function Windows({
           onMouseUpMinimize={onMinimize}
           onMouseUpMaximize={onMaximize}
           isFocus={focusedAppId === app.id} // for styledWindow
+          onOpenNewNotepad={onOpenNewNotepad}
           {...app}
         />
       ))}
@@ -49,6 +51,7 @@ const Window = memo(function({
   isFocus,
   className,
   headerContent,
+  onOpenNewNotepad,
 }) {
   function _onMouseDown() {
     onMouseDown(id);
@@ -136,6 +139,7 @@ const Window = memo(function({
           onMinimize: _onMouseUpMinimize,
           isFocus,
           headerContent,
+          onOpenNewNotepad,
           ...injectProps,
         })}
       </div>

@@ -5,7 +5,7 @@ import MyComputer from './MyComputer';
 import Notepad from './Notepad';
 import Winamp from './Winamp';
 import Paint from './Paint';
-import { socialMedia } from './Notepad/headerContents';
+import { SocialMediaHeader, PartsListHeader } from './Notepad/headerComponents';
 import iePaper from 'assets/windowsIcons/ie-paper.png';
 import ie from 'assets/windowsIcons/ie.png';
 import mine from 'assets/minesweeper/mine-icon.png';
@@ -94,29 +94,8 @@ export const defaultAppState = [
     maximized: window.innerWidth < 800,
     id: genId(),
     zIndex: notepadZIndex,
-    headerContent: socialMedia,
+    headerContent: <SocialMediaHeader />,
   },
-  // {
-  //   component: Notepad,
-  //   header: {
-  //     title: 'Parts List - Notepad',
-  //     icon: notepad,
-  //   },
-  //   defaultSize: {
-  //     width: 400,
-  //     height: 500,
-  //   },
-  //   defaultOffset: {
-  //     x: 500,
-  //     y: 550,
-  //   },
-  //   resizable: true,
-  //   minimized: false,
-  //   maximized: window.innerWidth < 800,
-  //   id: genId(),
-  //   zIndex: notepad2ZIndex,
-  //   headerContent: notepadHeaderContents.partsList,
-  // },
 ];
 
 export const defaultIconState = [
@@ -168,7 +147,15 @@ export const defaultIconState = [
     title: 'Thank You.txt',
     component: Notepad,
     isFocus: false,
-    headerContent: socialMedia,
+    headerContent: <SocialMediaHeader />,
+  },
+  {
+    id: 7,
+    icon: txtFileLarge,
+    title: 'Parts List.txt',
+    component: Notepad,
+    isFocus: false,
+    headerContent: <PartsListHeader />,
   },
 ];
 
