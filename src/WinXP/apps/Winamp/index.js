@@ -5,6 +5,35 @@ import { initialTracks } from './config';
 function Winamp({ onClose, onMinimize }) {
   const ref = useRef(null);
   const webamp = useRef(null);
+  const movedToContainer = useRef(false);
+
+  function getWebampNode() {
+    return document.getElementById('webamp');
+  }
+
+  function attachToContainer() {
+    const container = ref.current;
+    const node = getWebampNode();
+    if (container && node && node.parentElement !== container) {
+      const containerRect = container.getBoundingClientRect();
+      const nodeRect = node.getBoundingClientRect();
+      container.appendChild(node);
+      // Adjust top/left so visual position remains the same, now relative to container
+      const newLeft = nodeRect.left - containerRect.left;
+      const newTop = nodeRect.top - containerRect.top;
+      node.style.left = `${Math.round(newLeft)}px`;
+      node.style.top = `${Math.round(newTop)}px`;
+      movedToContainer.current = true;
+    }
+  }
+
+  function detachToBody() {
+    const node = getWebampNode();
+    if (node && node.parentElement && node.parentElement !== document.body) {
+      document.body.appendChild(node);
+      movedToContainer.current = false;
+    }
+  }
 
   useEffect(() => {
     const target = ref.current;
@@ -43,24 +72,34 @@ function Winamp({ onClose, onMinimize }) {
       //   },
       // },
     });
-    // webamp.current.renderWhenReady(target).then(() => {
-    //   target.appendChild(document.querySelector('#webamp'));
-    // });
-    webamp.current.renderWhenReady(target);
+    webamp.current.renderWhenReady(target).then(() => {
+      attachToContainer();
+    });
     return () => {
-      webamp.current.dispose();
-      webamp.current = null;
+      detachToBody();
+      if (webamp.current) {
+        webamp.current.dispose();
+        webamp.current = null;
+      }
     };
   }, []);
+
   useEffect(() => {
-    if (webamp.current) {
-      webamp.current.onClose(onClose);
-      webamp.current.onMinimize(onMinimize);
-    }
-  });
+    if (!webamp.current) return;
+    webamp.current.onClose(() => {
+      try {
+        detachToBody();
+      } catch (e) {}
+      onClose();
+    });
+    webamp.current.onMinimize(() => {
+      onMinimize();
+    });
+  }, [onClose, onMinimize]);
+
   return (
     <div
-      style={{ position: 'fixed', left: 0, top: 0, right: 0, bottom: 0 }}
+      style={{ width: '100%', height: '100%', position: 'relative' }}
       ref={ref}
     />
   );
