@@ -100,6 +100,8 @@ function MineSweeperView({
   const face = useRef(null);
   const [mouseDownContent, setMouseDownContent] = useState(false);
   const [openBehavior, setOpenBehavior] = useState({ index: -1, behavior: '' });
+  const [touchStartTime, setTouchStartTime] = useState(0);
+  const [touchStartIndex, setTouchStartIndex] = useState(-1);
   function remainMines() {
     return (
       mines -
@@ -158,6 +160,47 @@ function MineSweeperView({
         behavior: 'multi',
       });
     }
+  }
+
+  function onTouchStartCeils(e) {
+    e.preventDefault();
+    const touch = e.touches[0];
+    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+    const ceilElement = element?.closest('.mine__ceil');
+    const index = Array.prototype.indexOf.call(
+      e.currentTarget.children,
+      ceilElement,
+    );
+
+    if (index !== -1) {
+      setTouchStartTime(Date.now());
+      setTouchStartIndex(index);
+      setOpenBehavior({
+        index,
+        behavior: 'single',
+      });
+    }
+  }
+
+  function onTouchEndCeils(e) {
+    e.preventDefault();
+    const touchDuration = Date.now() - touchStartTime;
+    const { behavior, index } = openBehavior;
+
+    if (index === -1 || index !== touchStartIndex) return;
+
+    // Long press (500ms+) for flagging
+    if (touchDuration > 500) {
+      changeCeilState(index);
+    } else if (behavior === 'single') {
+      openCeil(index);
+    } else if (behavior === 'multi') {
+      openCeils(index);
+    }
+
+    setTouchStartTime(0);
+    setTouchStartIndex(-1);
+    setOpenBehavior({ index: -1, behavior: '' });
   }
   function onMouseOverCeils(e) {
     const index = Array.prototype.indexOf.call(
@@ -218,7 +261,11 @@ function MineSweeperView({
           onClickItem={onClickOptionItem}
         />
       </div>
-      <section className="mine__content" onMouseDown={onMouseDownContent}>
+      <section
+        className="mine__content"
+        onMouseDown={onMouseDownContent}
+        onTouchStart={e => e.preventDefault()}
+      >
         <div className="mine__score-bar">
           <div className="mine__digits__outer">
             {renderDigits(remainMines())}
@@ -236,6 +283,8 @@ function MineSweeperView({
           onMouseDown={onMouseDownCeils}
           onMouseOver={onMouseOverCeils}
           onMouseUp={onMouseUpCeils}
+          onTouchStart={onTouchStartCeils}
+          onTouchEnd={onTouchEndCeils}
         >
           <Ceils ceils={ceils} />
         </div>
@@ -337,6 +386,14 @@ const CeilBackgroundOpen = styled.div`
 export default styled(MineSweeperView)`
   img {
     pointer-events: none;
+  }
+  * {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
   .mine__options {
     height: 20px;
