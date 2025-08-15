@@ -56,7 +56,7 @@ export const SocialMediaHeader = ({ onOpenNewNotepad }) => (
     >
       https://tiktok.com/@reshra
     </a>
-    {'\n\n'}
+    {'\n\n\n'}
     <a
       href="#"
       onClick={e => {

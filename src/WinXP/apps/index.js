@@ -30,9 +30,9 @@ const genId = gen();
 const genIndex = gen();
 
 const minesweeperZIndex = genIndex();
-const notepadZIndex = genIndex();
 const winampZIndex = genIndex();
-const notepad2ZIndex = genIndex();
+const notepadZIndex = genIndex();
+// const notepad2ZIndex = genIndex();
 export const defaultAppState = [
   {
     component: Minesweeper,
@@ -86,12 +86,12 @@ export const defaultAppState = [
       height: 500,
     },
     defaultOffset: {
-      x: 180,
-      y: 460,
+      x: window.innerWidth < 800 ? 0 : 180,
+      y: window.innerWidth < 800 ? 0 : 460,
     },
     resizable: true,
     minimized: false,
-    maximized: window.innerWidth < 800,
+    maximized: false,
     id: genId(),
     zIndex: notepadZIndex,
     headerContent: <SocialMediaHeader />,
