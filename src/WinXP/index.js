@@ -316,6 +316,19 @@ function WinXP() {
       },
     });
   }
+
+  function onFocusWinamp() {
+    // Find the Winamp app and focus it
+    const winampApp = state.apps.find(
+      app => app.component === appSettings.Winamp.component,
+    );
+    if (winampApp) {
+      dispatch({ type: FOCUS_APP, payload: winampApp.id });
+    } else {
+      // If Winamp is not open, open it first
+      dispatch({ type: ADD_APP, payload: appSettings.Winamp });
+    }
+  }
   return (
     <Container
       ref={ref}
@@ -342,6 +355,7 @@ function WinXP() {
         onMaximize={onMaximizeWindow}
         focusedAppId={focusedAppId}
         onOpenNewNotepad={onOpenNewNotepad}
+        onFocusWinamp={onFocusWinamp}
       />
       <Footer
         apps={state.apps}

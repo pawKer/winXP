@@ -4,7 +4,12 @@ import styled from 'styled-components';
 import { WindowDropDowns } from 'components';
 import dropDownData from './dropDownData';
 
-export default function Notepad({ onClose, headerContent, onOpenNewNotepad }) {
+export default function Notepad({
+  onClose,
+  headerContent,
+  onOpenNewNotepad,
+  onFocusWinamp,
+}) {
   const [docText, setDocText] = useState('');
   const [wordWrap, setWordWrap] = useState(false);
 
@@ -51,7 +56,10 @@ export default function Notepad({ onClose, headerContent, onOpenNewNotepad }) {
       <TextContentContainer>
         {headerContent && (
           <HeaderSection>
-            {React.cloneElement(headerContent, { onOpenNewNotepad })}
+            {React.cloneElement(headerContent, {
+              onOpenNewNotepad,
+              onFocusWinamp,
+            })}
           </HeaderSection>
         )}
         <StyledTextarea

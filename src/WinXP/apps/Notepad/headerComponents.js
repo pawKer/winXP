@@ -24,7 +24,7 @@ const HeaderText = styled.div`
   }
 `;
 
-export const SocialMediaHeader = ({ onOpenNewNotepad }) => (
+export const SocialMediaHeader = ({ onOpenNewNotepad, onFocusWinamp }) => (
   <HeaderText>
     Thank you for listening :)
     {'\n\n'}
@@ -55,6 +55,18 @@ export const SocialMediaHeader = ({ onOpenNewNotepad }) => (
       rel="noopener noreferrer"
     >
       https://tiktok.com/@reshra
+    </a>
+    {'\n\n\n'}
+    <a
+      href="#"
+      onClick={e => {
+        e.preventDefault();
+        if (onFocusWinamp) {
+          onFocusWinamp();
+        }
+      }}
+    >
+      {'>>>'} Play my music {'<<<'}
     </a>
     {'\n\n\n'}
     <a
