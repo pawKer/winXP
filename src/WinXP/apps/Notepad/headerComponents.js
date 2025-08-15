@@ -6,7 +6,7 @@ const HeaderText = styled.div`
   font-size: 13px;
   line-height: 14px;
   color: #000;
-  white-space: pre-line;
+  white-space: pre;
   outline: none;
   resize: none;
   a {
@@ -26,20 +26,20 @@ const HeaderText = styled.div`
 
 export const SocialMediaHeader = ({ onOpenNewNotepad, onFocusWinamp }) => (
   <HeaderText>
-    Thank you for listening :)
-    {'\n\n'}
-    Links:
-    {'\n\n'}
-    Instagram -{' '}
+    {'╔════════════════════════════════════════════╗\n'}
+    {'║           Thank you for visiting!          ║\n'}
+    {'╚════════════════════════════════════════════╝\n\n'}
+    {'╔══════════════════[ Links ]═════════════════╗\n║\n'}
+    {'║ ▶ Instagram:    '}
     <a
       href="https://instagram.com/reshnocash"
       target="_blank"
       rel="noopener noreferrer"
     >
-      https://instagram.com/reshnocash
+      @reshnocash
     </a>
-    {'\n\n'}
-    Youtube -{' '}
+    {'\n║\n'}
+    {'║ ▶ Youtube:      '}
     <a
       href="https://youtube.com/reshra"
       target="_blank"
@@ -47,8 +47,8 @@ export const SocialMediaHeader = ({ onOpenNewNotepad, onFocusWinamp }) => (
     >
       https://youtube.com/reshra
     </a>
-    {'\n\n'}
-    TikTok -{' '}
+    {'\n║\n'}
+    {'║ ▶ TikTok:       '}
     <a
       href="https://tiktok.com/@reshra"
       target="_blank"
@@ -56,7 +56,11 @@ export const SocialMediaHeader = ({ onOpenNewNotepad, onFocusWinamp }) => (
     >
       https://tiktok.com/@reshra
     </a>
-    {'\n\n\n'}
+    {'\n║\n'}
+    {'╚════════════════════════════════════════════╝\n\n'}
+
+    {'╔═════════════════[ Actions ]════════════════╗\n║\n'}
+    {'║ '}
     <a
       href="#"
       onClick={e => {
@@ -68,7 +72,8 @@ export const SocialMediaHeader = ({ onOpenNewNotepad, onFocusWinamp }) => (
     >
       {'>>>'} Play my music {'<<<'}
     </a>
-    {'\n\n\n'}
+    {'\n║\n'}
+    {'║ '}
     <a
       href="#"
       onClick={e => {
@@ -80,6 +85,8 @@ export const SocialMediaHeader = ({ onOpenNewNotepad, onFocusWinamp }) => (
     >
       {'>>>'} Open Parts List.txt {'<<<'}
     </a>
+    {'\n║\n'}
+    {'╚════════════════════════════════════════════╝\n\n\n'}
   </HeaderText>
 );
 
