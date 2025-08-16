@@ -175,32 +175,30 @@ function MineSweeperView({
     if (index !== -1) {
       setTouchStartTime(Date.now());
       setTouchStartIndex(index);
-      setOpenBehavior({
-        index,
-        behavior: 'single',
-      });
+      // Don't interfere with mouse behavior - just track touch
     }
   }
 
   function onTouchEndCeils(e) {
     e.preventDefault();
     const touchDuration = Date.now() - touchStartTime;
-    const { behavior, index } = openBehavior;
 
-    if (index === -1 || index !== touchStartIndex) return;
+    if (touchStartIndex === -1) return;
 
     // Long press (500ms+) for flagging
     if (touchDuration > 500) {
-      changeCeilState(index);
-    } else if (behavior === 'single') {
-      openCeil(index);
-    } else if (behavior === 'multi') {
-      openCeils(index);
+      changeCeilState(touchStartIndex);
+    } else {
+      // Short tap for opening
+      openCeil(touchStartIndex);
     }
 
     setTouchStartTime(0);
     setTouchStartIndex(-1);
-    setOpenBehavior({ index: -1, behavior: '' });
+  }
+
+  function onTouchMoveCeils(e) {
+    e.preventDefault();
   }
   function onMouseOverCeils(e) {
     const index = Array.prototype.indexOf.call(
@@ -285,6 +283,7 @@ function MineSweeperView({
           onMouseUp={onMouseUpCeils}
           onTouchStart={onTouchStartCeils}
           onTouchEnd={onTouchEndCeils}
+          onTouchMove={onTouchMoveCeils}
         >
           <Ceils ceils={ceils} />
         </div>
