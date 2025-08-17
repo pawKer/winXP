@@ -310,7 +310,7 @@ function WinXP() {
         ...appSettings.Notepad,
         header: {
           ...appSettings.Notepad.header,
-          title: 'Parts List.txt - Notepad',
+          title: 'Guitar Parts.txt - Notepad',
         },
         headerContent: <PartsListHeader />,
       },

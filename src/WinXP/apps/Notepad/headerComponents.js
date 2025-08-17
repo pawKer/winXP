@@ -82,7 +82,7 @@ export const SocialMediaHeader = ({ onOpenNewNotepad, onFocusWinamp }) => (
         }
       }}
     >
-      {'>>>'} Open Parts List.txt {'<<<'}
+      {'>>>'} Open Guitar Parts.txt {'<<<'}
     </a>
     {'\n\n'}
     {'╚════════════════════════════════════════════╝\n\n\n'}
@@ -91,6 +91,7 @@ export const SocialMediaHeader = ({ onOpenNewNotepad, onFocusWinamp }) => (
 
 export const PartsListHeader = () => (
   <HeaderText>
+    {'╔═════════════[ Guitar Parts ]═════════════╗\n\n'}
     Pickups -{' '}
     <a
       href="https://s.click.aliexpress.com/e/_EJ0db1o"
@@ -153,7 +154,8 @@ export const PartsListHeader = () => (
     >
       https://s.click.aliexpress.com/e/_EuXuhHY
     </a>
-    {'\n\n'}
+    {'\n\n╚══════════════════════════════════════════╝\n\n'}
+    {'╔══════════════[ Other Parts ]═════════════╗\n\n'}
     Spanner guitar tool -{' '}
     <a
       href="https://s.click.aliexpress.com/e/_Ex7wIwm"
@@ -189,5 +191,43 @@ export const PartsListHeader = () => (
     >
       https://s.click.aliexpress.com/e/_EQk4Dn8
     </a>
+    {'\n\n'}
+    Persian Carped Mouse Pad -{' '}
+    <a
+      href="https://s.click.aliexpress.com/e/_EvaTjiK"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      https://s.click.aliexpress.com/e/_EvaTjiK
+    </a>
+    {'\n\n'}
+    Guitar String Winder / Cutter -{' '}
+    <a
+      href="https://s.click.aliexpress.com/e/_EIyWYrC"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      https://s.click.aliexpress.com/e/_EIyWYrC
+    </a>
+    {'\n\n╚══════════════════════════════════════════╝\n\n'}
+    {'╔══════════════[ Resources ]═══════════════╗\n\n'}
+    Wiring Diagrams -{' '}
+    <a
+      href="https://www.seymourduncan.com/resources/pickup/wiring-diagrams"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      https://www.seymourduncan.com/resources/pickup/wiring-diagrams
+    </a>
+    {'\n\n'}
+    Pickup Wire Color Codes -{' '}
+    <a
+      href="https://www.seymourduncan.com/blog/latest-updates/humbucker-wire-color-translation"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      https://www.seymourduncan.com/blog/latest-updates/humbucker-wire-color-translation
+    </a>
+    {'\n\n╚══════════════════════════════════════════╝\n\n'}
   </HeaderText>
 );

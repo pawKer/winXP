@@ -78,7 +78,7 @@ export const defaultAppState = [
   {
     component: Notepad,
     header: {
-      title: 'Untitled - Notepad',
+      title: 'Thank You.txt - Notepad',
       icon: notepad,
     },
     defaultSize: {
@@ -152,7 +152,7 @@ export const defaultIconState = [
   {
     id: 7,
     icon: txtFileLarge,
-    title: 'Parts List.txt',
+    title: 'Guitar Parts.txt',
     component: Notepad,
     isFocus: false,
     headerContent: <PartsListHeader />,
