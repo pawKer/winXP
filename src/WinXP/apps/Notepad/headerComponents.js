@@ -27,9 +27,3 @@ export const SocialMediaHeader = ({ onOpenNewNotepad, onFocusWinamp }) => {
 export const PartsListHeader = () => {
   return <HeaderRenderer config={guitarPartsConfig} />;
 };
-
-// Export the configs and helper functions for easy customization
-export { socialMediaConfig, guitarPartsConfig } from './headerConfig';
-
-// Export the HeaderRenderer for custom headers
-export { default as HeaderRenderer } from './components/HeaderRenderer';
