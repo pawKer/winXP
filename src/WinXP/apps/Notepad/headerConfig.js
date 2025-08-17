@@ -65,7 +65,7 @@ export const guitarPartsConfig = {
           type: 'external',
         },
         {
-          label: 'Push-Push Potentiometers -',
+          label: 'Push-Push Pots -',
           url: 'https://s.click.aliexpress.com/e/_Exo98qq',
           displayText: 'https://s.click.aliexpress.com/e/_Exo98qq',
           type: 'external',
@@ -83,7 +83,7 @@ export const guitarPartsConfig = {
           type: 'external',
         },
         {
-          label: 'Volume/Tone knobs -',
+          label: 'Volume/Tone Knobs -',
           url: 'https://s.click.aliexpress.com/e/_EHBVnuO',
           displayText: 'https://s.click.aliexpress.com/e/_EHBVnuO',
           type: 'external',
@@ -124,13 +124,13 @@ export const guitarPartsConfig = {
           type: 'external',
         },
         {
-          label: 'Persian Carped Mouse Pad -',
+          label: 'Carpet Mouse Pad -',
           url: 'https://s.click.aliexpress.com/e/_EvaTjiK',
           displayText: 'https://s.click.aliexpress.com/e/_EvaTjiK',
           type: 'external',
         },
         {
-          label: 'Guitar String Winder / Cutter -',
+          label: 'Guitar String Tool -',
           url: 'https://s.click.aliexpress.com/e/_EIyWYrC',
           displayText: 'https://s.click.aliexpress.com/e/_EIyWYrC',
           type: 'external',
@@ -148,7 +148,7 @@ export const guitarPartsConfig = {
           type: 'external',
         },
         {
-          label: 'Pickup Wire Color Codes -',
+          label: 'Pickup Wire Colors -',
           url:
             'https://www.seymourduncan.com/blog/latest-updates/humbucker-wire-color-translation',
           displayText:

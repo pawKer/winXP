@@ -56,14 +56,30 @@ const createTitleBorder = (text, maxWidth = 50) => {
 };
 
 const Section = ({ title, items, onAction }) => {
+  // Calculate the maximum label width for consistent alignment
+  const getMaxLabelWidth = () => {
+    let maxWidth = 0;
+    items.forEach(item => {
+      const labelWidth = (item.label || '').length;
+      maxWidth = Math.max(maxWidth, labelWidth);
+    });
+    return maxWidth;
+  };
+
+  const maxLabelWidth = getMaxLabelWidth();
+
   const renderItem = (item, index) => {
     const { label, type, displayText } = item;
 
     if (type === 'external') {
+      // Calculate padding to align all links
+      const labelPadding = ' '.repeat(maxLabelWidth - (label || '').length);
+
       return (
         <React.Fragment key={index}>
           {'  '}
-          {label}{' '}
+          {label}
+          {labelPadding}{' '}
           <a href={item.url} target="_blank" rel="noopener noreferrer">
             {displayText}
           </a>
@@ -99,11 +115,11 @@ const Section = ({ title, items, onAction }) => {
   const getMaxWidth = () => {
     let maxWidth = title.length + 4; // Base width for title + brackets
 
-    // Check all items to find the longest line
+    // Check all items to find the longest line (now with aligned links)
     items.forEach(item => {
       const itemLength =
-        (item.label || '').length + (item.displayText || '').length + 1; // +1 for space
-      maxWidth = Math.max(maxWidth, itemLength + 4); // +4 for padding
+        maxLabelWidth + 1 + (item.displayText || '').length + 4; // maxLabelWidth + space + displayText + padding
+      maxWidth = Math.max(maxWidth, itemLength);
     });
 
     // Ensure minimum width and make it even for better symmetry
@@ -111,8 +127,8 @@ const Section = ({ title, items, onAction }) => {
   };
 
   const maxWidth = getMaxWidth();
-  const topBorder = createSymmetricBorder(title, 44);
-  const bottomBorder = createBottomBorder(44);
+  const topBorder = createSymmetricBorder(title, 42);
+  const bottomBorder = createBottomBorder(42);
 
   return (
     <>
@@ -145,10 +161,17 @@ const HeaderRenderer = ({ config, onAction }) => {
       const sectionWidth = section.title.length + 4;
       maxWidth = Math.max(maxWidth, sectionWidth);
 
+      // Calculate max label width for this section
+      let maxLabelWidth = 0;
+      section.items.forEach(item => {
+        const labelWidth = (item.label || '').length;
+        maxLabelWidth = Math.max(maxLabelWidth, labelWidth);
+      });
+
       section.items.forEach(item => {
         const itemLength =
-          (item.label || '').length + (item.displayText || '').length + 1;
-        maxWidth = Math.max(maxWidth, itemLength + 4);
+          maxLabelWidth + 1 + (item.displayText || '').length + 4;
+        maxWidth = Math.max(maxWidth, itemLength);
       });
     });
 
@@ -164,7 +187,7 @@ const HeaderRenderer = ({ config, onAction }) => {
         (() => {
           const { topBorder, titleLine, bottomBorder } = createTitleBorder(
             title,
-            48,
+            46,
           );
           return (
             <>
