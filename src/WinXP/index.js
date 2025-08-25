@@ -1,4 +1,4 @@
-import React, { useReducer, useRef, useCallback } from 'react';
+import React, { useReducer, useRef, useCallback, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import useMouse from 'react-use/lib/useMouse';
 
@@ -18,7 +18,10 @@ import {
 } from './constants/actions';
 import { FOCUSING, POWER_STATE } from './constants';
 import { defaultIconState, defaultAppState, appSettings } from './apps';
-import { PartsListHeader } from './apps/Notepad/headerComponents';
+import {
+  PartsListHeader,
+  SocialMediaHeader,
+} from './apps/Notepad/headerComponents';
 import Modal from './Modal';
 import Footer from './Footer';
 import Windows from './Windows';
@@ -174,11 +177,44 @@ const reducer = (state, action = { type: '' }) => {
       return state;
   }
 };
-function WinXP() {
+function WinXP({ defaultPath = '/' }) {
   const [state, dispatch] = useReducer(reducer, initState);
   const ref = useRef(null);
   const mouse = useMouse(ref);
   const focusedAppId = getFocusedAppId();
+
+  // Open appropriate notepad file based on path
+  useEffect(() => {
+    if (defaultPath === '/notes/guitar-parts') {
+      // Open Guitar Parts.txt
+      dispatch({
+        type: ADD_APP,
+        payload: {
+          ...appSettings.Notepad,
+          header: {
+            ...appSettings.Notepad.header,
+            title: 'Guitar Parts.txt - Notepad',
+          },
+          headerContent: <PartsListHeader />,
+        },
+      });
+    } else if (defaultPath === '/') {
+      // Open Thank You.txt (default)
+      // dispatch({
+      //   type: ADD_APP,
+      //   payload: {
+      //     ...appSettings.Notepad,
+      //     header: {
+      //       ...appSettings.Notepad.header,
+      //       title: 'Thank You.txt - Notepad',
+      //     },
+      //     de
+      //     headerContent: <SocialMediaHeader />,
+      //   },
+      // });
+    }
+  }, [defaultPath]);
+
   const onFocusApp = useCallback(id => {
     dispatch({ type: FOCUS_APP, payload: id });
   }, []);
@@ -398,7 +434,7 @@ const Container = styled.div`
   height: 100%;
   overflow: hidden;
   position: relative;
-  background: url(reshra_low_res.jpg);
+  background: url(/reshra_low_res.jpg);
   background-repeat: repeat;
   background-size: 300px;
   animation: ${({ state }) => animation[state]} 5s forwards;
