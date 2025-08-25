@@ -31,8 +31,8 @@ COPY --from=build /app/build /usr/share/nginx/html
 # Create songs directory for volume mounting
 RUN mkdir -p /usr/share/nginx/html/songs
 
-# Copy nginx configuration (optional - you can create a custom nginx.conf if needed)
-# COPY nginx.conf /etc/nginx/nginx.conf
+# Copy custom nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Expose port 80
 EXPOSE 80
