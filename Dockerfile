@@ -16,6 +16,9 @@ RUN yarn install --frozen-lockfile
 # Copy source code
 COPY . .
 
+ARG REACT_APP_GA_MEASUREMENT_ID
+ENV REACT_APP_GA_MEASUREMENT_ID=${REACT_APP_GA_MEASUREMENT_ID}
+
 # Build the app
 RUN yarn build
 

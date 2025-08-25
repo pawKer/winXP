@@ -2,7 +2,10 @@ version: '3.8'
 
 services:
   winxp:
-    build: .
+    build:
+      context: .
+      args:
+        - REACT_APP_GA_MEASUREMENT_ID=${REACT_APP_GA_MEASUREMENT_ID}
     ports:
       - "14567:80"
     volumes:

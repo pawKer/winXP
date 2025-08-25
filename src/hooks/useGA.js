@@ -1,11 +1,28 @@
 import { useEffect } from 'react';
-import ga from 'react-ga';
+import ReactGA from 'react-ga4';
 
-function useGA(id, route) {
+function useGA(measurementId, route) {
   useEffect(() => {
-    ga.initialize(id);
-    ga.pageview(route);
-  }, [id, route]);
+    if (!measurementId) return;
+
+    // Initialize GA4
+    ReactGA.initialize(measurementId);
+
+    // Send pageview
+    ReactGA.send({
+      hitType: 'pageview',
+      page: route || window.location.pathname,
+    });
+  }, [measurementId, route]);
 }
+
+// Utility function to track custom events
+export const trackEvent = (eventName, parameters = {}) => {
+  ReactGA.event({
+    category: 'User Interaction',
+    action: eventName,
+    ...parameters,
+  });
+};
 
 export default useGA;
