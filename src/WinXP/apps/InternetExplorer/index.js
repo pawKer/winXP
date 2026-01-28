@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import { WindowDropDowns, Google } from 'components';
+import { WindowDropDowns, Google, Linktree } from 'components';
 import dropDownData from './dropDownData';
 import ie from 'assets/windowsIcons/ie-paper.png';
 import printer from 'assets/windowsIcons/17(32x32).png';
@@ -137,7 +137,7 @@ function InternetExplorer({ onClose }) {
         <div className="ie__address_bar__content">
           <img src={ie} alt="ie" className="ie__address_bar__content__img" />
           <div className="ie__address_bar__content__text">
-            {`https://www.google.com.tw${
+            {`https://www.reshra.xyz${
               state.route === 'search'
                 ? `/search?q=${encodeURIComponent(state.query)}`
                 : ''
@@ -165,11 +165,29 @@ function InternetExplorer({ onClose }) {
       </section>
       <div className="ie__content">
         <div className="ie__content__inner">
-          <Google
+          {/* <Google
             route={state.route}
             query={state.query}
             onSearch={onSearch}
             goMain={goMain}
+          /> */}
+          <Linktree
+            profile={{
+              name: 'Rares',
+              handle: '@rares',
+              bio: 'Links, projects, and notes.',
+              avatarSrc: '/reshra_low_res.jpg', // optional (from public/)
+            }}
+            links={[
+              { title: 'GitHub', url: 'https://github.com/yourname' },
+              { title: 'Portfolio', url: 'yourdomain.com' }, // auto-normalized to https://
+              {
+                title: 'Email',
+                url: 'mailto:you@example.com',
+                subtitle: 'Say hi',
+              },
+            ]}
+            footer="Made with WinXP vibes"
           />
         </div>
       </div>
@@ -400,10 +418,10 @@ const Div = styled.div`
   }
   .ie__content__inner {
     position: relative;
-    min-height: 800px;
-    min-width: 800px;
     width: 100%;
     height: 100%;
+    min-width: 0;
+    min-height: 0;
   }
   .ie__footer {
     height: 20px;
