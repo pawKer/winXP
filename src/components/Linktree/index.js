@@ -49,7 +49,9 @@ function Linktree({
   className,
 }) {
   const mergedProfile = { ...DEFAULT_PROFILE, ...(profile || {}) };
-  const linkItems = safeArray(links).filter(l => l && l.title && l.url);
+  const linkItems = safeArray(links).filter(
+    l => l && l.title && (l.url || typeof l.onClick === 'function'),
+  );
 
   return (
     <Shell className={className}>
@@ -74,14 +76,27 @@ function Linktree({
 
         <Links aria-label="Links">
           {linkItems.map((item, idx) => {
-            const href = normalizeUrl(item.url);
-            const external = isExternalHref(href);
+            const hasUrl = !!item.url;
+            const href = hasUrl ? normalizeUrl(item.url) : undefined;
+            const external = href ? isExternalHref(href) : false;
+            const isActionOnly = !href && typeof item.onClick === 'function';
+            const asElement = isActionOnly ? 'button' : 'a';
+
+            function handleClick(e) {
+              if (typeof item.onClick === 'function') {
+                e.preventDefault();
+                item.onClick();
+              }
+            }
             return (
               <LinkRow key={`${item.title}-${idx}`}>
                 <LinkButton
+                  as={asElement}
                   href={href}
                   target={external ? '_blank' : undefined}
                   rel={external ? 'noreferrer noopener' : undefined}
+                  type={asElement === 'button' ? 'button' : undefined}
+                  onClick={item.onClick ? handleClick : undefined}
                 >
                   <LinkText>
                     <LinkTitle>{item.title}</LinkTitle>

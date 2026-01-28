@@ -22,7 +22,7 @@ import stop from 'assets/windowsIcons/stop.png';
 import windows from 'assets/windowsIcons/windows.png';
 import dropdown from 'assets/windowsIcons/dropdown.png';
 
-function InternetExplorer({ onClose }) {
+function InternetExplorer({ onClose, onOpenNewNotepad, onFocusWinamp }) {
   const [state, setState] = useState({
     route: 'main',
     query: '',
@@ -176,11 +176,21 @@ function InternetExplorer({ onClose }) {
               name: 'Rares',
               handle: '@rares',
               bio: 'Links, projects, and notes.',
-              avatarSrc: '/reshra_low_res.jpg', // optional (from public/)
+              avatarSrc: '/reshra_low_res.jpg',
             }}
             links={[
               { title: 'GitHub', url: 'https://github.com/yourname' },
-              { title: 'Portfolio', url: 'yourdomain.com' }, // auto-normalized to https://
+              { title: 'Portfolio', url: 'yourdomain.com' },
+              {
+                title: 'Guitar Parts.txt',
+                subtitle: 'Open in Notepad',
+                onClick: onOpenNewNotepad,
+              },
+              {
+                title: 'Winamp',
+                subtitle: 'Play music',
+                onClick: onFocusWinamp,
+              },
               {
                 title: 'Email',
                 url: 'mailto:you@example.com',
