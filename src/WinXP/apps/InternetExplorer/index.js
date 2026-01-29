@@ -186,11 +186,12 @@ function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
               },
             }}
             links={[
-              // {
-              //   title: 'reshra - forever',
-              //   url: 'https://github.com/yourname',
-              //   highlight: true,
-              // },
+              {
+                title: '🎵 reshra - forever 🎵',
+                url:
+                  'https://distrokid.com/hyperfollow/reshra/forever?ref=release',
+                highlight: true,
+              },
               {
                 title: 'Guitar Parts.txt',
                 subtitle: 'Open in Notepad',

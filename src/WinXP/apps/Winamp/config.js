@@ -2,6 +2,14 @@
 
 export const initialTracks = [
   {
+    url: '/songs/reshra - forever.wav',
+    duration: 228,
+    metaData: {
+      title: 'forever (new)',
+      artist: 'reshra',
+    },
+  },
+  {
     url: '/songs/reshra - somn.wav',
     duration: 184,
     metaData: {
