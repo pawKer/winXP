@@ -415,7 +415,7 @@ const Bio = styled.p`
 const SocialLinksRow = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 16px;
   margin-top: 8px;
 `;
 
