@@ -47,7 +47,7 @@ export const defaultAppState = [
     },
     defaultOffset: {
       x: 180,
-      y: 50,
+      y: 40,
     },
     resizable: false,
     minimized: false,
@@ -84,11 +84,11 @@ export const defaultAppState = [
     },
     defaultSize: {
       width: 550,
-      height: 750,
+      height: 800,
     },
     defaultOffset: {
       x: 180,
-      y: 325,
+      y: 300,
     },
     resizable: true,
     minimized: false,

@@ -175,17 +175,22 @@ function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
           <RetroLinktree
             profile={{
               name: 'reshra',
-              handle: '@reshra',
+              handle: 'reshra',
               bio: 'Links, projects, and notes.',
               avatarSrc: '/reshra_low_res.jpg',
+              socialLinks: {
+                instagram: 'reshnocash',
+                tiktok: 'reshra',
+                youtube: 'reshra',
+                spotify: '781EBVicrg3Ry3uWjwQLD8',
+              },
             }}
             links={[
-              {
-                title: 'GitHub',
-                url: 'https://github.com/yourname',
-                highlight: true,
-              },
-              { title: 'Portfolio', url: 'yourdomain.com' },
+              // {
+              //   title: 'reshra - forever',
+              //   url: 'https://github.com/yourname',
+              //   highlight: true,
+              // },
               {
                 title: 'Guitar Parts.txt',
                 subtitle: 'Open in Notepad',
@@ -200,14 +205,9 @@ function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
               },
               {
                 title: 'Winamp',
-                subtitle: 'Play music',
+                subtitle: 'Play my music',
                 onClick: onFocusWinamp,
                 iconNode: <FaMusic />,
-              },
-              {
-                title: 'Email',
-                url: 'mailto:you@example.com',
-                subtitle: 'Say hi',
               },
             ]}
             footer="Made with Notepad"

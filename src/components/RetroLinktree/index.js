@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { FaHome, FaBookOpen, FaImages, FaPenNib } from 'react-icons/fa';
+import {
+  FaHome,
+  FaBookOpen,
+  FaImages,
+  FaPenNib,
+  FaInstagram,
+  FaTiktok,
+  FaYoutube,
+  FaSpotify,
+} from 'react-icons/fa';
 import { trackEvent } from 'hooks';
 
 import spinningGlobe from 'assets/spinning-globe.gif';
@@ -11,7 +20,35 @@ const DEFAULT_PROFILE = {
     'Welcome to my homepage! This is where I share links, projects, and other cool stuff.',
   handle: '@yourhandle',
   avatarSrc: '',
+  socialLinks: {},
 };
+
+const SOCIAL_CONFIG = [
+  {
+    key: 'instagram',
+    Icon: FaInstagram,
+    baseUrl: 'https://instagram.com/',
+    normalize: v => (v && !/^https?:\/\//i.test(v) ? v.replace(/^@/, '') : v),
+  },
+  {
+    key: 'tiktok',
+    Icon: FaTiktok,
+    baseUrl: 'https://tiktok.com/@',
+    normalize: v => (v && !/^https?:\/\//i.test(v) ? v.replace(/^@/, '') : v),
+  },
+  {
+    key: 'youtube',
+    Icon: FaYoutube,
+    baseUrl: 'https://youtube.com/',
+    normalize: v => (v && !/^https?:\/\//i.test(v) ? v.replace(/^@/, '') : v),
+  },
+  {
+    key: 'spotify',
+    Icon: FaSpotify,
+    baseUrl: 'https://open.spotify.com/artist/',
+    normalize: v => (v && !/^https?:\/\//i.test(v) ? v : v),
+  },
+];
 
 const DEFAULT_LINKS = [
   {
@@ -116,9 +153,32 @@ function RetroLinktree({
             <TitleBlock>
               <Name>{mergedProfile.name}</Name>
               {mergedProfile.handle ? (
-                <Handle>{mergedProfile.handle}</Handle>
+                <Handle>@{mergedProfile.handle}</Handle>
               ) : null}
               {mergedProfile.bio ? <Bio>{mergedProfile.bio}</Bio> : null}
+              {mergedProfile.socialLinks &&
+              Object.keys(mergedProfile.socialLinks).length > 0 ? (
+                <SocialLinksRow>
+                  {SOCIAL_CONFIG.map(({ key, Icon, baseUrl, normalize }) => {
+                    const value = mergedProfile.socialLinks[key];
+                    if (!value) return null;
+                    const href = /^https?:\/\//i.test(value)
+                      ? value
+                      : `${baseUrl}${normalize(value)}`;
+                    return (
+                      <SocialLink
+                        key={key}
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={key}
+                      >
+                        <Icon />
+                      </SocialLink>
+                    );
+                  })}
+                </SocialLinksRow>
+              ) : null}
             </TitleBlock>
           </HeaderInner>
         </PageHeader>
@@ -339,6 +399,41 @@ const Bio = styled.p`
   font-size: 12px;
   line-height: 1.4;
   color: #e0e0ff;
+`;
+
+const SocialLinksRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+`;
+
+const SocialLink = styled.a`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.15);
+  color: #d9e7ff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.25);
+    color: #fff;
+  }
+
+  &:focus-visible {
+    outline: 2px dotted #ffff00;
+    outline-offset: 2px;
+  }
+
+  svg {
+    font-size: 14px;
+  }
 `;
 
 const Main = styled.main`
