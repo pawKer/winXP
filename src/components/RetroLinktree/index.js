@@ -172,6 +172,17 @@ function RetroLinktree({
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={key}
+                        onClick={() => {
+                          try {
+                            trackEvent('retro_link_click', {
+                              label: key,
+                              destination: href,
+                              type: 'social',
+                            });
+                          } catch (err) {
+                            // Best-effort tracking; don't break navigation
+                          }
+                        }}
                       >
                         <Icon />
                       </SocialLink>
