@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { FaHome, FaBookOpen, FaImages, FaPenNib } from 'react-icons/fa';
+
+import spinningGlobe from 'assets/spinning-globe.gif';
 
 const DEFAULT_PROFILE = {
   name: 'Your Name',
@@ -10,10 +13,26 @@ const DEFAULT_PROFILE = {
 };
 
 const DEFAULT_LINKS = [
-  { title: 'My Homepage', url: 'https://example.com' },
-  { title: 'Guestbook', url: 'https://example.com/guestbook' },
-  { title: 'Photo Gallery', url: 'https://example.com/photos' },
-  { title: 'Sign My Guestbook', url: 'https://example.com/sign' },
+  {
+    title: 'My Homepage',
+    url: 'https://example.com',
+    iconNode: <FaHome />,
+  },
+  {
+    title: 'Guestbook',
+    url: 'https://example.com/guestbook',
+    iconNode: <FaBookOpen />,
+  },
+  {
+    title: 'Photo Gallery',
+    url: 'https://example.com/photos',
+    iconNode: <FaImages />,
+  },
+  {
+    title: 'Sign My Guestbook',
+    url: 'https://example.com/sign',
+    iconNode: <FaPenNib />,
+  },
 ];
 
 function normalizeUrl(url) {
@@ -51,13 +70,40 @@ function RetroLinktree({
   const linkItems = safeArray(links).filter(
     l => l && l.title && (l.url || typeof l.onClick === 'function'),
   );
+  const [counter, setCounter] = useState(123);
+
+  useEffect(() => {
+    let timeoutId;
+    let cancelled = false;
+
+    function scheduleNext() {
+      if (cancelled) return;
+      const delay = 1000 + Math.random() * 9000; // 1-10 seconds
+      timeoutId = setTimeout(() => {
+        setCounter(prev => prev + 1);
+        scheduleNext();
+      }, delay);
+    }
+
+    scheduleNext();
+
+    return () => {
+      cancelled = true;
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, []);
+
+  const formattedCounter = String(counter).padStart(6, '0');
 
   return (
     <Shell className={className}>
       <Page>
         <PageHeader>
           <TitleBar>
-            <TitleGlow>{mergedProfile.name}'s Web Page</TitleGlow>
+            <TitleGlow>
+              <TitleGlobe src={spinningGlobe} alt="" aria-hidden="true" />
+              {mergedProfile.name}'s Web Page
+            </TitleGlow>
           </TitleBar>
           <HeaderInner>
             <AvatarWrap aria-hidden="true">
@@ -92,12 +138,23 @@ function RetroLinktree({
               const external = href ? isExternalHref(href) : false;
               const isActionOnly = !href && typeof item.onClick === 'function';
               const asElement = isActionOnly ? 'button' : 'a';
+              const defaultIcons = [FaHome, FaBookOpen, FaImages, FaPenNib];
+              const FallbackIcon = defaultIcons[idx % defaultIcons.length];
 
               function handleClick(e) {
                 if (typeof item.onClick === 'function') {
                   e.preventDefault();
                   item.onClick();
                 }
+              }
+
+              let iconContent;
+              if (item.iconNode) {
+                iconContent = item.iconNode;
+              } else if (item.icon) {
+                iconContent = <LinkIconImg src={item.icon} alt="" />;
+              } else {
+                iconContent = <FallbackIcon />;
               }
 
               return (
@@ -110,6 +167,7 @@ function RetroLinktree({
                     type={asElement === 'button' ? 'button' : undefined}
                     onClick={item.onClick ? handleClick : undefined}
                   >
+                    <LinkIcon aria-hidden="true">{iconContent}</LinkIcon>
                     <LinkText>
                       <LinkTitle>{item.title}</LinkTitle>
                       {item.subtitle ? (
@@ -123,7 +181,15 @@ function RetroLinktree({
           </Links>
         </Main>
 
-        {footer ? <Footer>{footer}</Footer> : null}
+        {footer ? (
+          <Footer>
+            <FooterText>{footer}</FooterText>
+            <FooterMeta>
+              <CounterLabel>Visitors today: </CounterLabel>
+              <CounterDigits>{formattedCounter}</CounterDigits>
+            </FooterMeta>
+          </Footer>
+        ) : null}
       </Page>
     </Shell>
   );
@@ -174,7 +240,8 @@ const TitleBar = styled.div`
 `;
 
 const TitleGlow = styled.div`
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   padding: 2px 12px;
   font-weight: 700;
   font-size: 18px;
@@ -184,6 +251,13 @@ const TitleGlow = styled.div`
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.8);
   background: linear-gradient(90deg, #7fb4ff, #b3d5ff, #7fb4ff);
+`;
+
+const TitleGlobe = styled.img`
+  width: 18px;
+  height: 18px;
+  margin-right: 6px;
+  vertical-align: middle;
 `;
 
 const HeaderInner = styled.div`
@@ -246,7 +320,7 @@ const Bio = styled.p`
   margin: 6px 0 0;
   font-size: 12px;
   line-height: 1.4;
-  color: #ecf3ff;
+  color: #e0e0ff;
 `;
 
 const Main = styled.main`
@@ -331,7 +405,7 @@ const LinkTitle = styled.div`
 const LinkSubtitle = styled.div`
   margin-top: 2px;
   font-size: 11px;
-  color: #4b6997;
+  color: #001144;
 `;
 
 const Footer = styled.footer`
@@ -341,6 +415,51 @@ const Footer = styled.footer`
   font-size: 10px;
   text-align: center;
   color: #5c75a5;
+`;
+
+const FooterText = styled.div`
+  margin-bottom: 3px;
+`;
+
+const FooterMeta = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+`;
+
+const CounterLabel = styled.span`
+  font-size: 10px;
+`;
+
+const CounterDigits = styled.span`
+  display: inline-block;
+  padding: 2px 4px;
+  background-color: #000000;
+  color: #00ff00;
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  border-radius: 2px;
+  box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.8);
+`;
+
+const LinkIcon = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: inset 0 0 0 1px rgba(64, 42, 122, 0.22);
+  font-size: 11px;
+`;
+
+const LinkIconImg = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 `;
 
 export default RetroLinktree;

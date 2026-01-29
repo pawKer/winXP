@@ -21,6 +21,7 @@ import refresh from 'assets/windowsIcons/refresh.png';
 import stop from 'assets/windowsIcons/stop.png';
 import windows from 'assets/windowsIcons/windows.png';
 import dropdown from 'assets/windowsIcons/dropdown.png';
+import { FaGuitar, FaMusic } from 'react-icons/fa';
 
 function InternetExplorer({ onClose, onOpenNewNotepad, onFocusWinamp }) {
   const [state, setState] = useState({
@@ -185,11 +186,13 @@ function InternetExplorer({ onClose, onOpenNewNotepad, onFocusWinamp }) {
                 title: 'Guitar Parts.txt',
                 subtitle: 'Open in Notepad',
                 onClick: onOpenNewNotepad,
+                iconNode: <FaGuitar />,
               },
               {
                 title: 'Winamp',
                 subtitle: 'Play music',
                 onClick: onFocusWinamp,
+                iconNode: <FaMusic />,
               },
               {
                 title: 'Email',
@@ -197,7 +200,7 @@ function InternetExplorer({ onClose, onOpenNewNotepad, onFocusWinamp }) {
                 subtitle: 'Say hi',
               },
             ]}
-            footer="Made with WinXP vibes"
+            footer="Made with Notepad"
           />
         </div>
       </div>

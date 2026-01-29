@@ -10,6 +10,7 @@
     "react-dom": "^16.8.6",
     "react-ga4": "^2.1.0",
     "react-router-dom": "5.3.4",
+    "react-icons": "^5.2.1",
     "react-scripts": "^5.0.1",
     "react-use": "^7.0.1",
     "styled-components": "^4.2.0",
