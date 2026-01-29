@@ -16,22 +16,18 @@ const DEFAULT_LINKS = [
   {
     title: 'My Homepage',
     url: 'https://example.com',
-    iconNode: <FaHome />,
   },
   {
     title: 'Guestbook',
     url: 'https://example.com/guestbook',
-    iconNode: <FaBookOpen />,
   },
   {
     title: 'Photo Gallery',
     url: 'https://example.com/photos',
-    iconNode: <FaImages />,
   },
   {
     title: 'Sign My Guestbook',
     url: 'https://example.com/sign',
-    iconNode: <FaPenNib />,
   },
 ];
 
@@ -102,7 +98,7 @@ function RetroLinktree({
           <TitleBar>
             <TitleGlow>
               <TitleGlobe src={spinningGlobe} alt="" aria-hidden="true" />
-              {mergedProfile.name}'s Web Page
+              {mergedProfile.name}'s world
             </TitleGlow>
           </TitleBar>
           <HeaderInner>
@@ -167,13 +163,17 @@ function RetroLinktree({
                     type={asElement === 'button' ? 'button' : undefined}
                     onClick={item.onClick ? handleClick : undefined}
                   >
-                    <LinkIcon aria-hidden="true">{iconContent}</LinkIcon>
+                    {item.highlight && <StarGif aria-hidden="true">★</StarGif>}
+                    {item.iconNode && (
+                      <LinkIcon aria-hidden="true">{iconContent}</LinkIcon>
+                    )}
                     <LinkText>
                       <LinkTitle>{item.title}</LinkTitle>
                       {item.subtitle ? (
                         <LinkSubtitle>{item.subtitle}</LinkSubtitle>
                       ) : null}
                     </LinkText>
+                    {item.highlight && <StarGif aria-hidden="true">★</StarGif>}
                   </LinkButton>
                 </LinkRow>
               );
@@ -460,6 +460,31 @@ const LinkIconImg = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
+`;
+
+const StarGif = styled.span`
+  display: inline-block;
+  margin: 0 4px;
+  font-size: 14px;
+  color: #ffd700;
+  text-shadow: 0 0 4px rgba(255, 215, 0, 0.8);
+  animation: sparkle 1.5s ease-in-out infinite;
+
+  @keyframes sparkle {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.6;
+      transform: scale(1.2);
+    }
+  }
+
+  &:nth-child(2) {
+    animation-delay: 0.3s;
+  }
 `;
 
 export default RetroLinktree;

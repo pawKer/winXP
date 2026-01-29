@@ -5,7 +5,7 @@ import MyComputer from './MyComputer';
 import Notepad from './Notepad';
 import Winamp from './Winamp';
 import Paint from './Paint';
-import { SocialMediaHeader, PartsListHeader } from './Notepad/headerComponents';
+import { getAllNotes } from './notesConfig';
 import iePaper from 'assets/windowsIcons/ie-paper.png';
 import ie from 'assets/windowsIcons/ie.png';
 import mine from 'assets/minesweeper/mine-icon.png';
@@ -32,6 +32,7 @@ const genIndex = gen();
 const minesweeperZIndex = genIndex();
 const winampZIndex = genIndex();
 const notepadZIndex = genIndex();
+const internetExplorerZIndex = genIndex();
 // const notepad2ZIndex = genIndex();
 export const defaultAppState = [
   {
@@ -46,7 +47,7 @@ export const defaultAppState = [
     },
     defaultOffset: {
       x: 180,
-      y: 170,
+      y: 50,
     },
     resizable: false,
     minimized: false,
@@ -76,27 +77,58 @@ export const defaultAppState = [
     zIndex: winampZIndex,
   },
   {
-    component: Notepad,
+    component: InternetExplorer,
     header: {
-      title: 'Thank You.txt - Notepad',
-      icon: notepad,
+      title: 'Internet Explorer',
+      icon: ie,
     },
     defaultSize: {
-      width: 400,
-      height: 500,
+      width: 550,
+      height: 700,
     },
     defaultOffset: {
       x: 180,
-      y: 460,
+      y: 350,
     },
     resizable: true,
     minimized: false,
     maximized: window.innerWidth < 800,
     id: genId(),
-    zIndex: notepadZIndex,
-    headerContent: <SocialMediaHeader />,
+    zIndex: internetExplorerZIndex,
   },
+  // {
+  //   component: Notepad,
+  //   header: {
+  //     title: 'Thank You.txt - Notepad',
+  //     icon: notepad,
+  //   },
+  //   defaultSize: {
+  //     width: 400,
+  //     height: 500,
+  //   },
+  //   defaultOffset: {
+  //     x: 180,
+  //     y: 460,
+  //   },
+  //   resizable: true,
+  //   minimized: false,
+  //   maximized: window.innerWidth < 800,
+  //   id: genId(),
+  //   zIndex: notepadZIndex,
+  //   headerContent: <SocialMediaHeader />,
+  // },
 ];
+
+const NOTE_ICON_START_ID = 6;
+
+const noteIcons = getAllNotes().map((note, index) => ({
+  id: NOTE_ICON_START_ID + index,
+  icon: txtFileLarge,
+  title: note.desktopIconTitle || note.title,
+  component: Notepad,
+  isFocus: false,
+  noteId: note.id,
+}));
 
 export const defaultIconState = [
   {
@@ -141,22 +173,7 @@ export const defaultIconState = [
     component: Paint,
     isFocus: false,
   },
-  {
-    id: 6,
-    icon: txtFileLarge,
-    title: 'Thank You.txt',
-    component: Notepad,
-    isFocus: false,
-    headerContent: <SocialMediaHeader />,
-  },
-  {
-    id: 7,
-    icon: txtFileLarge,
-    title: 'Guitar Parts.txt',
-    component: Notepad,
-    isFocus: false,
-    headerContent: <PartsListHeader />,
-  },
+  ...noteIcons,
 ];
 
 export const appSettings = {

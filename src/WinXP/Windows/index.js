@@ -12,6 +12,7 @@ function Windows({
   onMinimize,
   onMaximize,
   focusedAppId,
+  onOpenNote,
   onOpenNewNotepad,
   onFocusWinamp,
 }) {
@@ -27,6 +28,7 @@ function Windows({
           onMouseUpMinimize={onMinimize}
           onMouseUpMaximize={onMaximize}
           isFocus={focusedAppId === app.id} // for styledWindow
+          onOpenNote={onOpenNote}
           onOpenNewNotepad={onOpenNewNotepad}
           onFocusWinamp={onFocusWinamp}
           {...app}
@@ -53,6 +55,7 @@ const Window = memo(function({
   isFocus,
   className,
   headerContent,
+  onOpenNote,
   onOpenNewNotepad,
   onFocusWinamp,
 }) {
@@ -142,6 +145,7 @@ const Window = memo(function({
           onMinimize: _onMouseUpMinimize,
           isFocus,
           headerContent,
+          onOpenNote,
           onOpenNewNotepad,
           onFocusWinamp,
           ...injectProps,

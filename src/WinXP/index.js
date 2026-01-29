@@ -18,10 +18,7 @@ import {
 } from './constants/actions';
 import { FOCUSING, POWER_STATE } from './constants';
 import { defaultIconState, defaultAppState, appSettings } from './apps';
-import {
-  PartsListHeader,
-  SocialMediaHeader,
-} from './apps/Notepad/headerComponents';
+import { getNoteById, getNoteByPath } from './apps/notesConfig';
 import Modal from './Modal';
 import Footer from './Footer';
 import Windows from './Windows';
@@ -183,35 +180,32 @@ function WinXP({ defaultPath = '/' }) {
   const mouse = useMouse(ref);
   const focusedAppId = getFocusedAppId();
 
+  function openNote(noteId) {
+    const note = getNoteById(noteId);
+    if (!note) return;
+
+    dispatch({
+      type: ADD_APP,
+      payload: {
+        ...appSettings.Notepad,
+        header: {
+          ...appSettings.Notepad.header,
+          title: `${note.title} - Notepad`,
+        },
+        headerContent: note.headerComponent ? <note.headerComponent /> : null,
+      },
+    });
+  }
+
   // Open appropriate notepad file based on path
   useEffect(() => {
-    if (defaultPath === '/notes/guitar-parts') {
-      // Open Guitar Parts.txt
-      dispatch({
-        type: ADD_APP,
-        payload: {
-          ...appSettings.Notepad,
-          header: {
-            ...appSettings.Notepad.header,
-            title: 'Guitar Parts.txt - Notepad',
-          },
-          headerContent: <PartsListHeader />,
-        },
-      });
+    const noteFromPath = getNoteByPath(defaultPath);
+    console.log(noteFromPath);
+    if (noteFromPath) {
+      openNote(noteFromPath.id);
     } else if (defaultPath === '/') {
-      // Open Thank You.txt (default)
-      // dispatch({
-      //   type: ADD_APP,
-      //   payload: {
-      //     ...appSettings.Notepad,
-      //     header: {
-      //       ...appSettings.Notepad.header,
-      //       title: 'Thank You.txt - Notepad',
-      //     },
-      //     de
-      //     headerContent: <SocialMediaHeader />,
-      //   },
-      // });
+      // Default to Thank You.txt
+      // openNote('thankYou');
     }
   }, [defaultPath]);
 
@@ -253,6 +247,12 @@ function WinXP({ defaultPath = '/' }) {
     dispatch({ type: FOCUS_ICON, payload: id });
   }
   function onDoubleClickIcon(component, iconData) {
+    // If this icon is associated with a note, use the note config
+    if (iconData && iconData.noteId) {
+      openNote(iconData.noteId);
+      return;
+    }
+
     const appSetting = Object.values(appSettings).find(
       setting => setting.component === component,
     );
@@ -339,18 +339,9 @@ function WinXP({ defaultPath = '/' }) {
     dispatch({ type: CANCEL_POWER_OFF });
   }
 
-  function onOpenNewNotepad() {
-    dispatch({
-      type: ADD_APP,
-      payload: {
-        ...appSettings.Notepad,
-        header: {
-          ...appSettings.Notepad.header,
-          title: 'Guitar Parts.txt - Notepad',
-        },
-        headerContent: <PartsListHeader />,
-      },
-    });
+  function onOpenNewNotepad(docType = 'guitarParts') {
+    // Backwards-compatible helper for headers that still call onOpenNewNotepad.
+    openNote(docType);
   }
 
   function onFocusWinamp() {
@@ -390,6 +381,7 @@ function WinXP({ defaultPath = '/' }) {
         onMinimize={onMinimizeWindow}
         onMaximize={onMaximizeWindow}
         focusedAppId={focusedAppId}
+        onOpenNote={openNote}
         onOpenNewNotepad={onOpenNewNotepad}
         onFocusWinamp={onFocusWinamp}
       />

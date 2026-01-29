@@ -1,6 +1,10 @@
 import React from 'react';
 import HeaderRenderer from './components/HeaderRenderer';
-import { socialMediaConfig, guitarPartsConfig } from './headerConfig';
+import {
+  socialMediaConfig,
+  guitarPartsConfig,
+  midiPedalConfig,
+} from './headerConfig';
 
 // Wrapper components that maintain the same API for backward compatibility
 export const SocialMediaHeader = ({ onOpenNewNotepad, onFocusWinamp }) => {
@@ -13,7 +17,7 @@ export const SocialMediaHeader = ({ onOpenNewNotepad, onFocusWinamp }) => {
         break;
       case 'openGuitarParts':
         if (onOpenNewNotepad) {
-          onOpenNewNotepad();
+          onOpenNewNotepad('guitarParts');
         }
         break;
       default:
@@ -26,4 +30,8 @@ export const SocialMediaHeader = ({ onOpenNewNotepad, onFocusWinamp }) => {
 
 export const PartsListHeader = () => {
   return <HeaderRenderer config={guitarPartsConfig} />;
+};
+
+export const MidiPedalHeader = () => {
+  return <HeaderRenderer config={midiPedalConfig} />;
 };

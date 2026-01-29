@@ -21,9 +21,9 @@ import refresh from 'assets/windowsIcons/refresh.png';
 import stop from 'assets/windowsIcons/stop.png';
 import windows from 'assets/windowsIcons/windows.png';
 import dropdown from 'assets/windowsIcons/dropdown.png';
-import { FaGuitar, FaMusic } from 'react-icons/fa';
+import { FaGamepad, FaGuitar, FaMusic } from 'react-icons/fa';
 
-function InternetExplorer({ onClose, onOpenNewNotepad, onFocusWinamp }) {
+function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
   const [state, setState] = useState({
     route: 'main',
     query: '',
@@ -174,19 +174,29 @@ function InternetExplorer({ onClose, onOpenNewNotepad, onFocusWinamp }) {
           /> */}
           <RetroLinktree
             profile={{
-              name: 'Rares',
-              handle: '@rares',
+              name: 'reshra',
+              handle: '@reshra',
               bio: 'Links, projects, and notes.',
               avatarSrc: '/reshra_low_res.jpg',
             }}
             links={[
-              { title: 'GitHub', url: 'https://github.com/yourname' },
+              {
+                title: 'GitHub',
+                url: 'https://github.com/yourname',
+                highlight: true,
+              },
               { title: 'Portfolio', url: 'yourdomain.com' },
               {
                 title: 'Guitar Parts.txt',
                 subtitle: 'Open in Notepad',
-                onClick: onOpenNewNotepad,
+                onClick: () => onOpenNote('guitarParts'),
                 iconNode: <FaGuitar />,
+              },
+              {
+                title: 'Midi Pedal.txt',
+                subtitle: 'Open in Notepad',
+                onClick: () => onOpenNote('midiPedal'),
+                iconNode: <FaGamepad />,
               },
               {
                 title: 'Winamp',
@@ -435,6 +445,13 @@ const Div = styled.div`
     height: 100%;
     min-width: 0;
     min-height: 0;
+    /* Custom cursor for entire content area */
+    cursor: url('/sword.png'), auto;
+  }
+  .ie__content__inner a,
+  .ie__content__inner button {
+    /* Ensure links/buttons also use the sword cursor on hover */
+    cursor: url('/sword.png'), pointer;
   }
   .ie__footer {
     height: 20px;

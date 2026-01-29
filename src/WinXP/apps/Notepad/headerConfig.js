@@ -159,3 +159,12 @@ export const guitarPartsConfig = {
     },
   ],
 };
+
+export const midiPedalConfig = {
+  sections: [
+    {
+      title: 'Midi Pedal',
+      items: [],
+    },
+  ],
+};
