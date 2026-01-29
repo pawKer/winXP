@@ -445,13 +445,13 @@ const Div = styled.div`
     height: 100%;
     min-width: 0;
     min-height: 0;
-    /* Custom cursor for entire content area */
-    cursor: url('/sword.png'), auto;
+    /* Custom cursor for entire content area (hotspot at top-right corner) */
+    cursor: url('/sword.png') 32 0, auto;
   }
   .ie__content__inner a,
   .ie__content__inner button {
     /* Ensure links/buttons also use the sword cursor on hover */
-    cursor: url('/sword.png'), pointer;
+    cursor: url('/sword.png') 32 0, pointer;
   }
   .ie__footer {
     height: 20px;
