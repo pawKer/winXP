@@ -2,10 +2,15 @@ import React, { useEffect, useRef } from 'react';
 import Webamp from 'webamp/butterchurn';
 import { initialTracks } from './config';
 
+const IS_DEV = process.env.NODE_ENV === 'development';
+
 function Winamp({ onClose, onMinimize }) {
   const ref = useRef(null);
   const webamp = useRef(null);
   const movedToContainer = useRef(false);
+  // React 18 StrictMode runs effects twice in dev; we need to ignore
+  // the first run so Webamp is only created/disposed once.
+  const didInitEffect = useRef(false);
 
   function getWebampNode() {
     return document.getElementById('webamp');
@@ -36,11 +41,20 @@ function Winamp({ onClose, onMinimize }) {
   }
 
   useEffect(() => {
+    // In React 18 StrictMode (development only), effects run twice.
+    // Skip the first run so that Webamp is only initialized on the
+    // "real" second run, avoiding double-dispose issues inside Webamp.
+    if (IS_DEV && !didInitEffect.current) {
+      didInitEffect.current = true;
+      return;
+    }
+
     const target = ref.current;
     if (!target) {
       return;
     }
-    webamp.current = new Webamp({
+
+    const webampInstance = new Webamp({
       initialSkin: {
         url: '/winamp_skin/modern.wsz',
         name: 'Modern',
@@ -72,13 +86,21 @@ function Winamp({ onClose, onMinimize }) {
       //   },
       // },
     });
-    webamp.current.renderWhenReady(target).then(() => {
-      attachToContainer();
+
+    webamp.current = webampInstance;
+    let disposed = false;
+
+    webampInstance.renderWhenReady(target).then(() => {
+      if (!disposed) {
+        attachToContainer();
+      }
     });
+
     return () => {
+      disposed = true;
       detachToBody();
-      if (webamp.current) {
-        webamp.current.dispose();
+      webampInstance.dispose();
+      if (webamp.current === webampInstance) {
         webamp.current = null;
       }
     };
