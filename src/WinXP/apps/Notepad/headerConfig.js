@@ -163,8 +163,113 @@ export const guitarPartsConfig = {
 export const midiPedalConfig = {
   sections: [
     {
-      title: 'Midi Pedal',
-      items: [],
+      title: 'Resources',
+      items: [
+        {
+          label: 'PedalinoMini -',
+          url: 'https://github.com/alf45tar/PedalinoMini',
+          displayText: 'https://github.com/alf45tar/PedalinoMini',
+          type: 'external',
+        },
+        {
+          label: 'PedalinoMini 6 -',
+          url: 'https://github.com/alf45tar/PedalinoMini-6',
+          displayText: 'https://github.com/alf45tar/PedalinoMini-6',
+          type: 'external',
+        },
+        {
+          label: 'HX Midi Help -',
+          url: 'https://helixhelp.com/tips-and-guides/universal/midi',
+          displayText: 'https://helixhelp.com/tips-and-guides/universal/midi',
+          type: 'external',
+        },
+      ],
+    },
+    {
+      title: 'Required Parts',
+      items: [
+        {
+          label: 'LILYGO T-Display S3 -',
+          url:
+            'https://www.lilygo.cc/products/t-display-s3?variant=42351558590645',
+          displayText: 'https://www.lilygo.cc/products/t-displ....',
+          type: 'external',
+        },
+        {
+          label: 'LILYGO T-Display TF Shield -',
+          url:
+            'https://www.lilygo.cc/products/t-display-tf-shied?variant=42729797025973',
+          displayText: 'https://www.lilygo.cc/products/t-displ....',
+          type: 'external',
+        },
+        {
+          label: 'Momentary SPST Foot Switches -',
+          url: 'https://s.click.aliexpress.com/e/_c4tcOgwB',
+          displayText: 'https://s.click.aliexpress.com/e/_c4tcOgwB',
+          type: 'external',
+        },
+        {
+          label: 'TRS 1/4 inch Female Jack -',
+          url: 'https://s.click.aliexpress.com/e/_c3qoTJib',
+          displayText: 'https://s.click.aliexpress.com/e/_c3qoTJib',
+          type: 'external',
+        },
+        {
+          label: 'Schottky Rectifier Diode -',
+          url: 'https://s.click.aliexpress.com/e/_c32kpU7h',
+          displayText: 'https://s.click.aliexpress.com/e/_c32kpU7h',
+          type: 'external',
+        },
+        {
+          label: 'TRS 3.5mm Female Jack (style 1) -',
+          url: 'https://s.click.aliexpress.com/e/_c3QmQcxt',
+          displayText: 'https://s.click.aliexpress.com/e/_c3QmQcxt',
+          type: 'external',
+        },
+        {
+          label: 'TRS 3.5mm Female Jack (style 2) -',
+          url: 'https://s.click.aliexpress.com/e/_c3FZY3Zv',
+          displayText: 'https://s.click.aliexpress.com/e/_c3FZY3Zv',
+          type: 'external',
+        },
+        {
+          label: 'WS2812B Addressable LED Strip -',
+          url: 'https://s.click.aliexpress.com/e/_c3dAmgfh',
+          displayText: 'https://s.click.aliexpress.com/e/_c3dAmgfh',
+          type: 'external',
+        },
+        {
+          label: '24 AWG Wire Box Kit -',
+          url:
+            'https://www.aliexpress.com/item/1005005888991575.html?spm=a2g0o.order_list.order_list_main.76.599618022DTviZ',
+          displayText: 'https://www.aliexpress.com/item/100500....',
+          type: 'external',
+        },
+        {
+          label: 'M3 10mm Hex Screws -',
+          url:
+            'https://www.aliexpress.com/item/32969042589.html?spm=a2g0o.order_list.order_list_main.51.599618022DTviZ',
+          displayText: 'https://www.aliexpress.com/item/329690....',
+          type: 'external',
+        },
+      ],
+    },
+    {
+      title: 'Other Parts',
+      items: [
+        {
+          label: 'USB C Soldering Iron -',
+          url: 'https://s.click.aliexpress.com/e/_c36APv0r',
+          displayText: 'https://s.click.aliexpress.com/e/_c36APv0r',
+          type: 'external',
+        },
+        {
+          label: 'Wire Stripper Tool -',
+          url: 'https://s.click.aliexpress.com/e/_c4OWWP8n',
+          displayText: 'https://s.click.aliexpress.com/e/_c4OWWP8n',
+          type: 'external',
+        },
+      ],
     },
   ],
 };
