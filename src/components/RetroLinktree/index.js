@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { FaHome, FaBookOpen, FaImages, FaPenNib } from 'react-icons/fa';
+import { trackEvent } from 'hooks';
 
 import spinningGlobe from 'assets/spinning-globe.gif';
 
@@ -138,7 +139,24 @@ function RetroLinktree({
               const FallbackIcon = defaultIcons[idx % defaultIcons.length];
 
               function handleClick(e) {
+                // Track GA event for all link interactions
+                try {
+                  trackEvent('retro_link_click', {
+                    label: item.title,
+                    destination: href || null,
+                    index: idx,
+                    type: isActionOnly
+                      ? 'action'
+                      : external
+                      ? 'external'
+                      : 'internal',
+                  });
+                } catch (err) {
+                  // Best-effort tracking; don't break navigation
+                }
+
                 if (typeof item.onClick === 'function') {
+                  // For action links, prevent navigation and run callback
                   e.preventDefault();
                   item.onClick();
                 }
@@ -161,7 +179,7 @@ function RetroLinktree({
                     target={external ? '_blank' : undefined}
                     rel={external ? 'noreferrer noopener' : undefined}
                     type={asElement === 'button' ? 'button' : undefined}
-                    onClick={item.onClick ? handleClick : undefined}
+                    onClick={handleClick}
                   >
                     {item.highlight && <StarGif aria-hidden="true">★</StarGif>}
                     {item.iconNode && (

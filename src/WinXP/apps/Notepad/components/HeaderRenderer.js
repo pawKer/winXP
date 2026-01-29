@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { trackEvent } from 'hooks';
 
 const HeaderText = styled.div`
   font-family: 'Lucida Console', monospace;
@@ -80,7 +81,22 @@ const Section = ({ title, items, onAction }) => {
           {'  '}
           {label}
           {labelPadding}{' '}
-          <a href={item.url} target="_blank" rel="noopener noreferrer">
+          <a
+            href={item.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => {
+              try {
+                trackEvent('notes_link_click', {
+                  label: displayText,
+                  destination: item.url,
+                  type: 'external',
+                });
+              } catch (err) {
+                // best-effort tracking
+              }
+            }}
+          >
             {displayText}
           </a>
           {'\n\n'}
@@ -96,6 +112,15 @@ const Section = ({ title, items, onAction }) => {
             href="#"
             onClick={e => {
               e.preventDefault();
+              try {
+                trackEvent('notes_link_click', {
+                  label: displayText,
+                  action: item.action || null,
+                  type: 'action',
+                });
+              } catch (err) {
+                // best-effort tracking
+              }
               if (onAction && item.action) {
                 onAction(item.action);
               }
