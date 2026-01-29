@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import { WindowDropDowns, Google, Linktree } from 'components';
+import { WindowDropDowns, Google, Linktree, RetroLinktree } from 'components';
 import dropDownData from './dropDownData';
 import ie from 'assets/windowsIcons/ie-paper.png';
 import printer from 'assets/windowsIcons/17(32x32).png';
@@ -171,7 +171,7 @@ function InternetExplorer({ onClose, onOpenNewNotepad, onFocusWinamp }) {
             onSearch={onSearch}
             goMain={goMain}
           /> */}
-          <Linktree
+          <RetroLinktree
             profile={{
               name: 'Rares',
               handle: '@rares',

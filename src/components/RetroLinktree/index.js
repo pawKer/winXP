@@ -1,0 +1,346 @@
+import React from 'react';
+import styled from 'styled-components';
+
+const DEFAULT_PROFILE = {
+  name: 'Your Name',
+  bio:
+    'Welcome to my homepage! This is where I share links, projects, and other cool stuff.',
+  handle: '@yourhandle',
+  avatarSrc: '',
+};
+
+const DEFAULT_LINKS = [
+  { title: 'My Homepage', url: 'https://example.com' },
+  { title: 'Guestbook', url: 'https://example.com/guestbook' },
+  { title: 'Photo Gallery', url: 'https://example.com/photos' },
+  { title: 'Sign My Guestbook', url: 'https://example.com/sign' },
+];
+
+function normalizeUrl(url) {
+  if (!url) return '';
+  if (/^(mailto:|tel:|https?:\/\/|\/)/i.test(url)) return url;
+  return `https://${url}`;
+}
+
+function getInitials(name) {
+  if (!name) return '?';
+  const parts = String(name)
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+  const first = parts[0]?.[0] || '?';
+  const last = parts.length > 1 ? parts[parts.length - 1][0] : '';
+  return `${first}${last}`.toUpperCase();
+}
+
+function safeArray(value) {
+  return Array.isArray(value) ? value : [];
+}
+
+function isExternalHref(href) {
+  return /^https?:\/\//i.test(href);
+}
+
+function RetroLinktree({
+  profile = DEFAULT_PROFILE,
+  links = DEFAULT_LINKS,
+  footer = 'Best viewed in 800x600 with Internet Explorer',
+  className,
+}) {
+  const mergedProfile = { ...DEFAULT_PROFILE, ...(profile || {}) };
+  const linkItems = safeArray(links).filter(
+    l => l && l.title && (l.url || typeof l.onClick === 'function'),
+  );
+
+  return (
+    <Shell className={className}>
+      <Page>
+        <PageHeader>
+          <TitleBar>
+            <TitleGlow>{mergedProfile.name}'s Web Page</TitleGlow>
+          </TitleBar>
+          <HeaderInner>
+            <AvatarWrap aria-hidden="true">
+              {mergedProfile.avatarSrc ? (
+                <AvatarImg src={mergedProfile.avatarSrc} alt="" />
+              ) : (
+                <AvatarFallback>
+                  {getInitials(mergedProfile.name)}
+                </AvatarFallback>
+              )}
+            </AvatarWrap>
+
+            <TitleBlock>
+              <Name>{mergedProfile.name}</Name>
+              {mergedProfile.handle ? (
+                <Handle>{mergedProfile.handle}</Handle>
+              ) : null}
+              {mergedProfile.bio ? <Bio>{mergedProfile.bio}</Bio> : null}
+            </TitleBlock>
+          </HeaderInner>
+        </PageHeader>
+
+        <Main>
+          <MarqueeLike>
+            <span>Welcome to my corner of the web!</span>
+          </MarqueeLike>
+
+          <Links aria-label="Links">
+            {linkItems.map((item, idx) => {
+              const hasUrl = !!item.url;
+              const href = hasUrl ? normalizeUrl(item.url) : undefined;
+              const external = href ? isExternalHref(href) : false;
+              const isActionOnly = !href && typeof item.onClick === 'function';
+              const asElement = isActionOnly ? 'button' : 'a';
+
+              function handleClick(e) {
+                if (typeof item.onClick === 'function') {
+                  e.preventDefault();
+                  item.onClick();
+                }
+              }
+
+              return (
+                <LinkRow key={`${item.title}-${idx}`}>
+                  <LinkButton
+                    as={asElement}
+                    href={href}
+                    target={external ? '_blank' : undefined}
+                    rel={external ? 'noreferrer noopener' : undefined}
+                    type={asElement === 'button' ? 'button' : undefined}
+                    onClick={item.onClick ? handleClick : undefined}
+                  >
+                    <LinkText>
+                      <LinkTitle>{item.title}</LinkTitle>
+                      {item.subtitle ? (
+                        <LinkSubtitle>{item.subtitle}</LinkSubtitle>
+                      ) : null}
+                    </LinkText>
+                  </LinkButton>
+                </LinkRow>
+              );
+            })}
+          </Links>
+        </Main>
+
+        {footer ? <Footer>{footer}</Footer> : null}
+      </Page>
+    </Shell>
+  );
+}
+
+const Shell = styled.div`
+  min-height: 100%;
+  width: 100%;
+  display: grid;
+  place-items: center;
+  padding: 24px 12px;
+  background-color: #a9c8ff;
+  background-image: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    transparent 40%,
+    transparent 60%,
+    rgba(255, 255, 255, 0.4) 100%
+  );
+  background-attachment: fixed;
+`;
+
+const Page = styled.div`
+  width: 100%;
+  max-width: 520px;
+  background-color: #f7fbff;
+  border-radius: 12px;
+  border: 2px solid #9db7e0;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+  padding: 10px;
+  color: #10213a;
+  font-family: 'Tahoma', 'Verdana', 'Arial', sans-serif;
+  box-sizing: border-box;
+`;
+
+const PageHeader = styled.header`
+  background: linear-gradient(180deg, #4f7ac9 0%, #3059a3 55%, #22427e 100%);
+  border-radius: 9px;
+  border: 1px solid #22427e;
+  padding: 6px;
+  margin-bottom: 10px;
+  color: #fff;
+`;
+
+const TitleBar = styled.div`
+  text-align: center;
+  margin-bottom: 4px;
+`;
+
+const TitleGlow = styled.div`
+  display: inline-block;
+  padding: 2px 12px;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+  text-shadow: 1px 1px 0 #00316e;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  background: linear-gradient(90deg, #7fb4ff, #b3d5ff, #7fb4ff);
+`;
+
+const HeaderInner = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 4px 4px;
+  background-color: rgba(0, 0, 40, 0.1);
+
+  @media (max-width: 560px) {
+    flex-direction: column;
+    text-align: center;
+  }
+`;
+
+const AvatarWrap = styled.div`
+  width: 64px;
+  height: 64px;
+  border-radius: 6px;
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.85);
+  background-color: #d4e5ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const AvatarImg = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+`;
+
+const AvatarFallback = styled.div`
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: #245493;
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.8);
+`;
+
+const TitleBlock = styled.div`
+  min-width: 0;
+`;
+
+const Name = styled.h1`
+  margin: 0;
+  font-size: 18px;
+  color: #ffffff;
+  text-shadow: 1px 1px 0 #00316e;
+`;
+
+const Handle = styled.div`
+  margin-top: 2px;
+  font-size: 12px;
+  color: #d9e7ff;
+`;
+
+const Bio = styled.p`
+  margin: 6px 0 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #ecf3ff;
+`;
+
+const Main = styled.main`
+  background: linear-gradient(180deg, #f7fbff 0%, #edf4ff 40%, #e3ecff 100%);
+  border-radius: 10px;
+  border: 1px solid #d0def5;
+  padding: 10px 10px 8px;
+  box-sizing: border-box;
+`;
+
+const MarqueeLike = styled.div`
+  border-radius: 6px;
+  border: 1px solid #c0d5f7;
+  padding: 4px 8px;
+  margin-bottom: 8px;
+  background: linear-gradient(90deg, #e5f0ff, #f5f9ff);
+  color: #204170;
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const Links = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+`;
+
+const LinkRow = styled.li`
+  margin-top: 4px;
+  & + & {
+    margin-top: 12px;
+  }
+`;
+
+const LinkButton = styled.a`
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  border-radius: 999px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #a4bff0;
+  background: linear-gradient(180deg, #ffffff 0%, #edf3ff 40%, #d7e5ff 100%);
+  color: #17396d;
+  padding: 9px 18px;
+  font-size: 12px;
+  box-shadow: 0 2px 0 rgba(16, 33, 58, 0.4);
+  cursor: pointer;
+
+  &:hover {
+    background: linear-gradient(180deg, #ffffff 0%, #e3ecff 40%, #ccdcff 100%);
+  }
+
+  &:active {
+    box-shadow: 0 1px 0 rgba(16, 33, 58, 0.5) inset;
+    transform: translateY(1px);
+  }
+
+  &:focus-visible {
+    outline: 2px dotted #ffff00;
+    outline-offset: 2px;
+  }
+`;
+
+const LinkText = styled.div`
+  min-width: 0;
+`;
+
+const LinkTitle = styled.div`
+  font-weight: 700;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
+`;
+
+const LinkSubtitle = styled.div`
+  margin-top: 2px;
+  font-size: 11px;
+  color: #4b6997;
+`;
+
+const Footer = styled.footer`
+  margin-top: 8px;
+  padding-top: 4px;
+  border-top: 1px solid #d0def5;
+  font-size: 10px;
+  text-align: center;
+  color: #5c75a5;
+`;
+
+export default RetroLinktree;
