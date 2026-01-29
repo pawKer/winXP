@@ -184,6 +184,15 @@ function WinXP({ defaultPath = '/' }) {
     const note = getNoteById(noteId);
     if (!note) return;
 
+    // Check if a note with this noteId is already open
+    const existingNoteApp = state.apps.find(app => app.noteId === noteId);
+    if (existingNoteApp) {
+      // If it exists, focus it instead of opening a new one
+      dispatch({ type: FOCUS_APP, payload: existingNoteApp.id });
+      return;
+    }
+
+    // Otherwise, open a new note window
     dispatch({
       type: ADD_APP,
       payload: {
@@ -193,6 +202,7 @@ function WinXP({ defaultPath = '/' }) {
           title: `${note.title} - Notepad`,
         },
         headerContent: note.headerComponent ? <note.headerComponent /> : null,
+        noteId: noteId,
       },
     });
   }
