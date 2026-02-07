@@ -21,12 +21,15 @@ import refresh from 'assets/windowsIcons/refresh.png';
 import stop from 'assets/windowsIcons/stop.png';
 import windows from 'assets/windowsIcons/windows.png';
 import dropdown from 'assets/windowsIcons/dropdown.png';
-import { FaGamepad, FaGuitar, FaMusic } from 'react-icons/fa';
+import { FaGamepad, FaGuitar, FaMusic, FaEnvelope } from 'react-icons/fa';
+
+import NewsletterView from './NewsletterView';
 
 function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
   const [state, setState] = useState({
     route: 'main',
     query: '',
+    contentView: 'linktree', // 'linktree' | 'newsletter'
   });
   function onSearch(str) {
     if (str.length) {
@@ -40,6 +43,7 @@ function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
     setState({
       route: 'main',
       query: '',
+      contentView: 'linktree',
     });
   }
   function onClickOptionItem(item) {
@@ -166,53 +170,66 @@ function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
       </section>
       <div className="ie__content">
         <div className="ie__content__inner">
-          {/* <Google
-            route={state.route}
-            query={state.query}
-            onSearch={onSearch}
-            goMain={goMain}
-          /> */}
-          <RetroLinktree
-            profile={{
-              name: 'reshra',
-              handle: 'reshra',
-              bio: 'Links, projects, and notes.',
-              avatarSrc: '/reshra_low_res.jpg',
-              socialLinks: {
-                instagram: 'reshnocash',
-                tiktok: 'reshra',
-                youtube: 'reshra',
-                spotify: '781EBVicrg3Ry3uWjwQLD8',
-              },
-            }}
-            links={[
-              {
-                title: '🎵 reshra - forever 🎵',
-                url:
-                  'https://distrokid.com/hyperfollow/reshra/forever?ref=release',
-                highlight: true,
-              },
-              {
-                title: 'Guitar Parts.txt',
-                subtitle: 'Open in Notepad',
-                onClick: () => onOpenNote('guitarParts'),
-                iconNode: <FaGuitar />,
-              },
-              {
-                title: 'Midi Pedal.txt',
-                subtitle: 'Open in Notepad',
-                onClick: () => onOpenNote('midiPedal'),
-                iconNode: <FaGamepad />,
-              },
-              {
-                title: 'Winamp',
-                subtitle: 'Play my music',
-                onClick: onFocusWinamp,
-                iconNode: <FaMusic />,
-              },
-            ]}
-            footer="Made with Notepad"
-          />
+          {state.contentView === 'newsletter' ? (
+            <NewsletterView onBack={goMain} />
+          ) : (
+            <>
+              {/* <Google
+                route={state.route}
+                query={state.query}
+                onSearch={onSearch}
+                goMain={goMain}
+              /> */}
+              <RetroLinktree
+                profile={{
+                  name: 'reshra',
+                  handle: 'reshra',
+                  bio: 'Links, projects, and notes.',
+                  avatarSrc: '/reshra_low_res.jpg',
+                  socialLinks: {
+                    instagram: 'reshnocash',
+                    tiktok: 'reshra',
+                    youtube: 'reshra',
+                    spotify: '781EBVicrg3Ry3uWjwQLD8',
+                  },
+                }}
+                links={[
+                  {
+                    title: '🎵 reshra - forever 🎵',
+                    url:
+                      'https://distrokid.com/hyperfollow/reshra/forever?ref=release',
+                    highlight: true,
+                  },
+                  {
+                    title: 'Subscribe to my newsletter',
+                    subtitle: 'Get updates in your inbox',
+                    onClick: () =>
+                      setState(s => ({ ...s, contentView: 'newsletter' })),
+                    iconNode: <FaEnvelope />,
+                  },
+                  {
+                    title: 'Guitar Parts.txt',
+                    subtitle: 'Open in Notepad',
+                    onClick: () => onOpenNote('guitarParts'),
+                    iconNode: <FaGuitar />,
+                  },
+                  {
+                    title: 'Midi Pedal.txt',
+                    subtitle: 'Open in Notepad',
+                    onClick: () => onOpenNote('midiPedal'),
+                    iconNode: <FaGamepad />,
+                  },
+                  {
+                    title: 'Winamp',
+                    subtitle: 'Play my music',
+                    onClick: onFocusWinamp,
+                    iconNode: <FaMusic />,
+                  },
+                ]}
+                footer="Made with Notepad"
+              />
+            </>
+          )}
         </div>
       </div>
       <footer className="ie__footer">
