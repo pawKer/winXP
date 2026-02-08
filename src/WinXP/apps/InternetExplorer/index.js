@@ -24,12 +24,13 @@ import dropdown from 'assets/windowsIcons/dropdown.png';
 import { FaGamepad, FaGuitar, FaMusic, FaEnvelope } from 'react-icons/fa';
 
 import NewsletterView from './NewsletterView';
+import SubstackView from './SubstackView';
 
 function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
   const [state, setState] = useState({
     route: 'main',
     query: '',
-    contentView: 'linktree', // 'linktree' | 'newsletter'
+    contentView: 'linktree', // 'linktree' | 'newsletter' | 'substack'
   });
   function onSearch(str) {
     if (str.length) {
@@ -172,6 +173,8 @@ function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
         <div className="ie__content__inner">
           {state.contentView === 'newsletter' ? (
             <NewsletterView onBack={goMain} />
+          ) : state.contentView === 'substack' ? (
+            <SubstackView onBack={goMain} />
           ) : (
             <>
               {/* <Google
@@ -200,11 +203,18 @@ function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
                       'https://distrokid.com/hyperfollow/reshra/forever?ref=release',
                     highlight: true,
                   },
+                  // {
+                  //   title: 'Subscribe to my newsletter',
+                  //   subtitle: 'Get updates in your inbox',
+                  //   onClick: () =>
+                  //     setState(s => ({ ...s, contentView: 'newsletter' })),
+                  //   iconNode: <FaEnvelope />,
+                  // },
                   {
                     title: 'Subscribe to my newsletter',
                     subtitle: 'Get updates in your inbox',
                     onClick: () =>
-                      setState(s => ({ ...s, contentView: 'newsletter' })),
+                      setState(s => ({ ...s, contentView: 'substack' })),
                     iconNode: <FaEnvelope />,
                   },
                   {
