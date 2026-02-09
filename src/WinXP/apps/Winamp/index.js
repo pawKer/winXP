@@ -1,8 +1,25 @@
 import React, { useEffect, useRef } from 'react';
-import Webamp from 'webamp/butterchurn';
+import Webamp from 'webamp';
+import WebampWithVisualizers from 'webamp/butterchurn';
 import { initialTracks } from './config';
 
 const IS_DEV = process.env.NODE_ENV === 'development';
+
+function hasWebGL() {
+  console.log('checking webgl');
+  try {
+    const canvas = document.createElement('canvas');
+    return !!(
+      canvas.getContext('webgl2') ||
+      canvas.getContext('webgl') ||
+      canvas.getContext('experimental-webgl')
+    );
+  } catch (e) {
+    console.log('no webgl');
+    console.error(e);
+    return false;
+  }
+}
 
 function Winamp({ onClose, onMinimize }) {
   const ref = useRef(null);
@@ -54,7 +71,9 @@ function Winamp({ onClose, onMinimize }) {
       return;
     }
 
-    const webampInstance = new Webamp({
+    const WebampCtor = hasWebGL() ? WebampWithVisualizers : Webamp;
+
+    const webampInstance = new WebampCtor({
       initialSkin: {
         url: '/winamp_skin/modern.wsz',
         name: 'Modern',
