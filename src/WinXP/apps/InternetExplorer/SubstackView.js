@@ -104,7 +104,7 @@ const IframeContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #fff;
+  background: #f7fbff;
   border-radius: 12px;
   border: 2px solid #9db7e0;
   overflow: hidden;

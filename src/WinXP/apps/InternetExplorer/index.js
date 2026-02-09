@@ -203,20 +203,20 @@ function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
                       'https://distrokid.com/hyperfollow/reshra/forever?ref=release',
                     highlight: true,
                   },
-                  // {
-                  //   title: 'Subscribe to my newsletter',
-                  //   subtitle: 'Get updates in your inbox',
-                  //   onClick: () =>
-                  //     setState(s => ({ ...s, contentView: 'newsletter' })),
-                  //   iconNode: <FaEnvelope />,
-                  // },
                   {
                     title: 'Subscribe to my newsletter',
                     subtitle: 'Get updates in your inbox',
                     onClick: () =>
-                      setState(s => ({ ...s, contentView: 'substack' })),
+                      setState(s => ({ ...s, contentView: 'newsletter' })),
                     iconNode: <FaEnvelope />,
                   },
+                  // {
+                  //   title: 'Subscribe to my newsletter',
+                  //   subtitle: 'Get updates in your inbox',
+                  //   onClick: () =>
+                  //     setState(s => ({ ...s, contentView: 'substack' })),
+                  //   iconNode: <FaEnvelope />,
+                  // },
                   {
                     title: 'Guitar Parts.txt',
                     subtitle: 'Open in Notepad',
