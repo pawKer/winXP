@@ -144,7 +144,7 @@ export const guitarPartsConfig = {
           label: 'Wiring Diagrams -',
           url: 'https://www.seymourduncan.com/resources/pickup/wiring-diagrams',
           displayText:
-            'https://www.seymourduncan.com/resources/pickup/wiring-diagrams',
+            'https://seymourduncan.com/resources/pickup/wiring-diagr...',
           type: 'external',
         },
         {
@@ -152,7 +152,7 @@ export const guitarPartsConfig = {
           url:
             'https://www.seymourduncan.com/blog/latest-updates/humbucker-wire-color-translation',
           displayText:
-            'https://www.seymourduncan.com/blog/latest-updates/humbucker-wire-color-translation',
+            'https://seymourduncan.com/blog/latest-updates/humbucker...',
           type: 'external',
         },
       ],
