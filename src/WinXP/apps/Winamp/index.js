@@ -6,7 +6,6 @@ import { initialTracks } from './config';
 const IS_DEV = process.env.NODE_ENV === 'development';
 
 function hasWebGL() {
-  console.log('checking webgl');
   try {
     const canvas = document.createElement('canvas');
     return !!(
@@ -15,8 +14,6 @@ function hasWebGL() {
       canvas.getContext('experimental-webgl')
     );
   } catch (e) {
-    console.log('no webgl');
-    console.error(e);
     return false;
   }
 }
