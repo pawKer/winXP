@@ -50,7 +50,7 @@ export const socialMediaConfig = {
 export const guitarPartsConfig = {
   sections: [
     {
-      title: 'Guitar Parts',
+      title: 'Guitar Parts (affiliate links)',
       items: [
         {
           label: 'Pickups -',
@@ -97,7 +97,7 @@ export const guitarPartsConfig = {
       ],
     },
     {
-      title: 'Other Parts',
+      title: 'Other Parts (affiliate links)',
       items: [
         {
           label: 'Spanner guitar tool -',
@@ -186,7 +186,7 @@ export const midiPedalConfig = {
       ],
     },
     {
-      title: 'Required Parts',
+      title: 'Required Parts (affiliate links)',
       items: [
         {
           label: 'LILYGO T-Display S3 -',
@@ -255,7 +255,7 @@ export const midiPedalConfig = {
       ],
     },
     {
-      title: 'Other Parts',
+      title: 'Other Parts (affiliate links)',
       items: [
         {
           label: 'USB C Soldering Iron -',
