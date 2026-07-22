@@ -4,6 +4,7 @@ import {
   socialMediaConfig,
   guitarPartsConfig,
   midiPedalConfig,
+  namAmpCaptureLinksConfig,
 } from './headerConfig';
 
 // Wrapper components that maintain the same API for backward compatibility
@@ -34,4 +35,8 @@ export const PartsListHeader = () => {
 
 export const MidiPedalHeader = () => {
   return <HeaderRenderer config={midiPedalConfig} />;
+};
+
+export const NamAmpCaptureLinksHeader = () => {
+  return <HeaderRenderer config={namAmpCaptureLinksConfig} />;
 };

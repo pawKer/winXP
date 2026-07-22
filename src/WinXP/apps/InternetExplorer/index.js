@@ -21,7 +21,13 @@ import refresh from 'assets/windowsIcons/refresh.png';
 import stop from 'assets/windowsIcons/stop.png';
 import windows from 'assets/windowsIcons/windows.png';
 import dropdown from 'assets/windowsIcons/dropdown.png';
-import { FaGamepad, FaGuitar, FaMusic, FaEnvelope } from 'react-icons/fa';
+import {
+  FaGamepad,
+  FaGuitar,
+  FaMusic,
+  FaEnvelope,
+  FaVolumeUp,
+} from 'react-icons/fa';
 
 import NewsletterView from './NewsletterView';
 import SubstackView from './SubstackView';
@@ -217,6 +223,12 @@ function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
                   //     setState(s => ({ ...s, contentView: 'substack' })),
                   //   iconNode: <FaEnvelope />,
                   // },
+                  {
+                    title: 'NAM Amp Capture Links.txt',
+                    subtitle: 'Open in Notepad',
+                    onClick: () => onOpenNote('namAmpCaptureLinks'),
+                    iconNode: <FaVolumeUp />,
+                  },
                   {
                     title: 'Guitar Parts.txt',
                     subtitle: 'Open in Notepad',

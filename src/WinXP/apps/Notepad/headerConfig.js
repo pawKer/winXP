@@ -273,3 +273,51 @@ export const midiPedalConfig = {
     },
   ],
 };
+
+export const namAmpCaptureLinksConfig = {
+  title: 'NAM Amp Capture Links',
+  sections: [
+    {
+      title: 'Resources',
+      items: [
+        {
+          label: 'Tone3000 Website -',
+          url: 'https://www.tone3000.com/',
+          displayText: 'https://www.tone3000.com/',
+          type: 'external',
+        },
+        {
+          label: 'NAM Website -',
+          url: 'https://www.neuralampmodeler.com/',
+          displayText: 'https://www.neuralampmodeler.com/',
+          type: 'external',
+        },
+        {
+          label: 'Tone3000 Capture Tutorial -',
+          url: 'https://www.youtube.com/watch?v=cwUiLhsXkHA',
+          displayText: 'https://www.youtube.com/watch?v=cwUi....',
+          type: 'external',
+        },
+        {
+          label: 'NAM Tutorial -',
+          url: 'https://www.youtube.com/watch?v=HTx69r5483k',
+          displayText: 'https://www.youtube.com/watch?v=HTx6....',
+          type: 'external',
+        },
+        {
+          label: 'My VOX AC15 AMP Capture -',
+          url: 'https://www.tone3000.com/tones/vox-ac15c1--76096',
+          displayText: 'https://www.tone3000.com/tones/vox-ac15c1--76096',
+          type: 'external',
+        },
+        {
+          label: 'Mic Placement for Recording Diagram -',
+          url:
+            'https://4.bp.blogspot.com/-RiY-s2Zz1R8/UM50ARC9QhI/AAAAAAAAAcw/KL5h_nQsWJ0/s1600/Speaker+Diagram.png',
+          displayText: 'https://4.bp.blogspot.com/-RiY-s2Zz1R8/UM50....',
+          type: 'external',
+        },
+      ],
+    },
+  ],
+};

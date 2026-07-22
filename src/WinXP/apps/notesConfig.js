@@ -2,6 +2,7 @@ import {
   SocialMediaHeader,
   PartsListHeader,
   MidiPedalHeader,
+  NamAmpCaptureLinksHeader,
 } from './Notepad/headerComponents';
 
 // Central configuration for all Notepad-based \"notes\" in the WinXP desktop.
@@ -31,6 +32,13 @@ export const NOTES = [
     path: '/notes/midi-pedal',
     desktopIconTitle: 'Midi Pedal.txt',
     headerComponent: MidiPedalHeader,
+  },
+  {
+    id: 'namAmpCaptureLinks',
+    title: 'NAM Amp Capture Links.txt',
+    path: '/notes/nam-amp-capture-links',
+    desktopIconTitle: 'NAM Amp Capture Links.txt',
+    headerComponent: NamAmpCaptureLinksHeader,
   },
 ];
 
