@@ -178,6 +178,14 @@ export const midiPedalConfig = {
           type: 'external',
         },
         {
+          label: 'My Pedalino GPIO Mapping -',
+          url:
+            'https://docs.google.com/spreadsheets/d/1-WhQdlNNmLfMPVwCnidQKRq9GjmZo3riJOmJoAho18o/edit?gid=0#gid=0',
+          displayText:
+            'https://docs.google.com/spreadsheets/d/1-WhQdlNNmLfMPVwCnidQKRq9G...',
+          type: 'external',
+        },
+        {
           label: 'HX Midi Help -',
           url: 'https://helixhelp.com/tips-and-guides/universal/midi',
           displayText: 'https://helixhelp.com/tips-and-guides/universal/midi',
