@@ -191,6 +191,13 @@ export const midiPedalConfig = {
           displayText: 'https://helixhelp.com/tips-and-guides/universal/midi',
           type: 'external',
         },
+        {
+          label: 'HX Stomp Midi Tutorial Playlist -',
+          url: 'https://www.youtube.com/watch?v=u1Be2wWeTEQ&list=PLU_121LLWRVk',
+          displayText:
+            'https://www.youtube.com/watch?v=u1Be2wWeTEQ&list=PLU_121LLWRVk',
+          type: 'external',
+        },
       ],
     },
     {
