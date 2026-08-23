@@ -2,10 +2,18 @@
 
 export const initialTracks = [
   {
+    url: '/songs/reshra - anii 2000.wav',
+    duration: 195,
+    metaData: {
+      title: 'anii 2000 (new)',
+      artist: 'reshra',
+    },
+  },
+  {
     url: '/songs/reshra - forever.wav',
     duration: 228,
     metaData: {
-      title: 'forever (new)',
+      title: 'forever',
       artist: 'reshra',
     },
   },

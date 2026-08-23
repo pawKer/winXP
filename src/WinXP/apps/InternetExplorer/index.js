@@ -204,9 +204,9 @@ function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
                 }}
                 links={[
                   {
-                    title: '🎵 reshra - forever 🎵',
+                    title: '🎵 reshra - anii 2000 🎵',
                     url:
-                      'https://distrokid.com/hyperfollow/reshra/forever?ref=release',
+                      'https://distrokid.com/hyperfollow/reshra/anii-2000?ref=release',
                     highlight: true,
                   },
                   {
