@@ -354,7 +354,6 @@ const HeaderInner = styled.div`
   align-items: center;
   gap: 10px;
   padding: 6px 4px 4px;
-  background-color: rgba(0, 0, 40, 0.1);
 
   @media (max-width: 560px) {
     flex-direction: column;
@@ -423,8 +422,8 @@ const SocialLink = styled.a`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  width: 34px;
+  height: 34px;
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.15);
   color: #d9e7ff;
@@ -443,7 +442,7 @@ const SocialLink = styled.a`
   }
 
   svg {
-    font-size: 14px;
+    font-size: 18px;
   }
 `;
 
@@ -519,6 +518,7 @@ const LinkButton = styled.a`
 
 const LinkText = styled.div`
   min-width: 0;
+  text-align: center;
 `;
 
 const LinkTitle = styled.div`

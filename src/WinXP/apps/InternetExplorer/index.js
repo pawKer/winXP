@@ -24,6 +24,7 @@ import dropdown from 'assets/windowsIcons/dropdown.png';
 import {
   FaGamepad,
   FaGuitar,
+  FaFolderOpen,
   FaMusic,
   FaEnvelope,
   FaVolumeUp,
@@ -31,6 +32,7 @@ import {
 
 import NewsletterView from './NewsletterView';
 import SubstackView from './SubstackView';
+import './xpScrollbar.css';
 
 function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
   const [state, setState] = useState({
@@ -215,6 +217,13 @@ function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
                     onClick: () =>
                       setState(s => ({ ...s, contentView: 'newsletter' })),
                     iconNode: <FaEnvelope />,
+                  },
+                  {
+                    title: 'anii 2000 (Guitar Hero Files)',
+                    subtitle: 'Google Drive folder',
+                    url:
+                      'https://drive.google.com/drive/folders/1g7SefzKNeO9_EjYc6GEQu-hWvagXgfV9?usp=drive_link',
+                    iconNode: <FaFolderOpen />,
                   },
                   // {
                   //   title: 'Subscribe to my newsletter',
@@ -474,52 +483,11 @@ const Div = styled.div`
   .ie__content {
     flex: 1;
     overflow: auto;
-    scrollbar-color: #aca899 #ece9d8;
     scrollbar-gutter: stable;
-    scrollbar-width: auto;
     padding-left: 1px;
     border-left: 1px solid #6f6f6f;
     background-color: #f1f1f1;
     position: relative;
-  }
-  .ie__content *,
-  .ie__content {
-    scrollbar-color: #aca899 #ece9d8;
-  }
-  .ie__content::-webkit-scrollbar,
-  .ie__content *::-webkit-scrollbar {
-    width: 17px;
-    height: 17px;
-    background-color: #ece9d8;
-  }
-  .ie__content::-webkit-scrollbar-track,
-  .ie__content *::-webkit-scrollbar-track {
-    background-color: #ece9d8;
-    border-left: 1px solid #aca899;
-    box-shadow: inset 1px 0 #ffffff;
-  }
-  .ie__content::-webkit-scrollbar-thumb,
-  .ie__content *::-webkit-scrollbar-thumb {
-    min-height: 28px;
-    background: linear-gradient(90deg, #f8f7f2 0%, #d7d2c1 100%);
-    border: 1px solid #aca899;
-    box-shadow: inset 1px 1px #ffffff, inset -1px -1px #716f64;
-  }
-  .ie__content::-webkit-scrollbar-thumb:hover,
-  .ie__content *::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(90deg, #ffffff 0%, #ddd8c8 100%);
-  }
-  .ie__content::-webkit-scrollbar-button,
-  .ie__content *::-webkit-scrollbar-button {
-    width: 17px;
-    height: 17px;
-    background: linear-gradient(135deg, #ffffff 0%, #ece9d8 45%, #c9c3ad 100%);
-    border: 1px solid #aca899;
-    box-shadow: inset 1px 1px #ffffff, inset -1px -1px #716f64;
-  }
-  .ie__content::-webkit-scrollbar-corner,
-  .ie__content *::-webkit-scrollbar-corner {
-    background-color: #ece9d8;
   }
   .ie__content__inner {
     position: relative;
