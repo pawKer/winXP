@@ -212,11 +212,10 @@ function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
                     highlight: true,
                   },
                   {
-                    title: 'Subscribe to my newsletter',
-                    subtitle: 'Get updates in your inbox',
-                    onClick: () =>
-                      setState(s => ({ ...s, contentView: 'newsletter' })),
-                    iconNode: <FaEnvelope />,
+                    title: 'Winamp',
+                    subtitle: 'Play my music',
+                    onClick: onFocusWinamp,
+                    iconNode: <FaMusic />,
                   },
                   {
                     title: 'anii 2000 (Guitar Hero Files)',
@@ -224,6 +223,13 @@ function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
                     url:
                       'https://drive.google.com/drive/folders/1g7SefzKNeO9_EjYc6GEQu-hWvagXgfV9?usp=drive_link',
                     iconNode: <FaFolderOpen />,
+                  },
+                  {
+                    title: 'Subscribe to my newsletter',
+                    subtitle: 'Get updates in your inbox',
+                    onClick: () =>
+                      setState(s => ({ ...s, contentView: 'newsletter' })),
+                    iconNode: <FaEnvelope />,
                   },
                   // {
                   //   title: 'Subscribe to my newsletter',
@@ -249,12 +255,6 @@ function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
                     subtitle: 'Open in Notepad',
                     onClick: () => onOpenNote('midiPedal'),
                     iconNode: <FaGamepad />,
-                  },
-                  {
-                    title: 'Winamp',
-                    subtitle: 'Play my music',
-                    onClick: onFocusWinamp,
-                    iconNode: <FaMusic />,
                   },
                 ]}
                 footer="Made with Notepad"
