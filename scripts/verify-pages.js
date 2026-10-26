@@ -12,6 +12,8 @@ const paths = [
   ...releases.map(release => release.path),
 ];
 const sitemap = fs.readFileSync(path.join(buildDir, 'sitemap.xml'), 'utf8');
+const seenTitles = new Set();
+const seenDescriptions = new Set();
 
 for (const pagePath of paths) {
   const file = path.join(
@@ -36,7 +38,39 @@ for (const pagePath of paths) {
     1,
     `${pagePath}: description`,
   );
+  const title = html.match(/<title>(.*?)<\/title>/)[1];
+  const description = html.match(
+    /<meta name="description" content="(.*?)">/,
+  )[1];
+  assert(!seenTitles.has(title), `${pagePath}: unique title`);
+  assert(!seenDescriptions.has(description), `${pagePath}: unique description`);
+  seenTitles.add(title);
+  seenDescriptions.add(description);
+  assert.equal((html.match(/<h1>/g) || []).length, 1, `${pagePath}: heading`);
+  assert(
+    html.includes(`<meta property="og:url" content="${canonical}">`),
+    `${pagePath}: social URL`,
+  );
+  assert(
+    !html.includes('name="robots" content="noindex"'),
+    `${pagePath}: indexable`,
+  );
+  const jsonLd = html.match(
+    /<script type="application\/ld\+json">(.*?)<\/script>/,
+  );
+  assert(jsonLd, `${pagePath}: structured data`);
+  assert.equal(
+    JSON.parse(jsonLd[1])['@context'],
+    'https://schema.org',
+    `${pagePath}: valid JSON-LD`,
+  );
 }
+
+const homepage = fs.readFileSync(path.join(buildDir, 'index.html'), 'utf8');
+const music = fs.readFileSync(path.join(buildDir, 'music.html'), 'utf8');
+const notesIndex = fs.readFileSync(path.join(buildDir, 'notes.html'), 'utf8');
+assert(homepage.includes('href="/music?view=read"'), 'homepage links to music');
+assert(homepage.includes('href="/notes?view=read"'), 'homepage links to notes');
 
 for (const release of releases) {
   const html = fs.readFileSync(
@@ -48,6 +82,31 @@ for (const release of releases) {
     `${release.slug}: listening link`,
   );
   assert(html.includes(release.trackUrl), `${release.slug}: audio`);
+  for (const other of releases.filter(item => item.slug !== release.slug)) {
+    assert(
+      html.includes(`href="${other.path}?view=read"`),
+      `${release.slug}: related release link`,
+    );
+  }
+  assert(
+    homepage.includes(release.listeningUrl.replace(/&/g, '&amp;')),
+    `${release.slug}: direct homepage listening link`,
+  );
+  assert(
+    music.includes(release.listeningUrl.replace(/&/g, '&amp;')),
+    `${release.slug}: direct music listening link`,
+  );
+  assert(
+    music.includes(`href="${release.path}?view=read"`),
+    `${release.slug}: release detail link`,
+  );
+}
+
+for (const note of notes) {
+  assert(
+    notesIndex.includes(`href="${note.path}?view=read"`),
+    `${note.id}: note index link`,
+  );
 }
 
 const parts = fs.readFileSync(

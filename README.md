@@ -30,6 +30,7 @@ it and serves generated HTML at extensionless paths. Cloudflare must also
 redirect HTTP to HTTPS, and its crawler, caching, and robots settings need
 verification after deployment. Search Console and Bing property setup and
 baseline measurements require access to those accounts.
+See `SEO_EVALUATION.md` for the local, production, and search performance checks.
 
 ## [Try it!](https://winxp.now.sh)
 
