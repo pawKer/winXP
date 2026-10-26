@@ -1,19 +1,13 @@
 import React from 'react';
-import {
-  BrowserRouter as Router,
-  Route,
-  Switch,
-  useLocation,
-} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import WinXP from 'WinXP';
 import { useGA } from 'hooks';
 import { getAllNotes } from 'WinXP/apps/notesConfig';
 
 const AppContent = () => {
-  const location = useLocation();
   const measurementId = process.env.REACT_APP_GA_MEASUREMENT_ID;
-  useGA(measurementId, location.pathname);
+  useGA(measurementId);
 
   const notes = getAllNotes();
 

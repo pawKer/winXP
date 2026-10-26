@@ -1,28 +1,19 @@
 import { useEffect } from 'react';
 import ReactGA from 'react-ga4';
 
-function useGA(measurementId, route) {
+function useGA(measurementId) {
   useEffect(() => {
     if (!measurementId) return;
 
-    // Initialize GA4
+    // GA4 sends the initial page_view during configuration and, when enabled,
+    // Enhanced Measurement tracks subsequent browser-history changes.
     ReactGA.initialize(measurementId);
-
-    // Send pageview
-    ReactGA.send({
-      hitType: 'pageview',
-      page: route || window.location.pathname,
-    });
-  }, [measurementId, route]);
+  }, [measurementId]);
 }
 
-// Utility function to track custom events
+// Use the GA4 event API so all supplied event parameters are sent.
 export const trackEvent = (eventName, parameters = {}) => {
-  ReactGA.event({
-    category: 'User Interaction',
-    action: eventName,
-    ...parameters,
-  });
+  ReactGA.event(eventName, parameters);
 };
 
 export default useGA;
