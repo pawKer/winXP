@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "author": "ShizukuIchi <shizukuichi@gmail.com>",
-  "homepage": "https://winxp.now.sh",
+  "homepage": "https://reshra.xyz",
   "dependencies": {
     "lodash.samplesize": "^4.2.0",
     "react": "^18.3.1",
@@ -18,11 +18,12 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && node scripts/generate-pages.js",
+    "test:seo": "node scripts/verify-pages.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "now-build": "react-scripts build",
-    "lint": "eslint src"
+    "lint": "node scripts/lint.js"
   },
   "eslintConfig": {
     "extends": [
