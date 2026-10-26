@@ -38,26 +38,36 @@ const profileLinks = Object.entries(profile.socialLinks)
 const homepage = `<h1>reshra</h1><p>${escapeHtml(
   profile.bio,
 )}</p><img class="portrait" src="/reshra_low_res.jpg" alt="reshra" width="180" height="180"><h2>Official profiles</h2><ul>${profileLinks}</ul><h2>Music</h2><ul>${releases
-  .map(release => `<li>${internal(release.path, release.title)}</li>`)
+  .map(
+    release =>
+      `<li>${internal(release.path, release.title)} - ${external(
+        release.listeningUrl,
+        'Listen now',
+      )}</li>`,
+  )
   .join('')}</ul><p>${internal(
   '/music',
   'Browse all releases',
 )}</p><h2>Notes</h2><p>${internal('/notes', 'Browse notes and resources')}</p>`;
 
-const musicIndex = `<h1>Music by reshra</h1><p>Published releases and listening links.</p><ul>${releases
+const musicIndex = `<header class="music-hero"><p>reshra audio archive</p><h1>Music by reshra</h1><p>Listen now, or open a release for more information.</p></header><ul class="music-releases">${releases
   .map(
     release =>
-      `<li>${internal(release.path, release.title)} — ${external(
+      `<li class="music-release"><span class="music-disc" aria-hidden="true"></span><div><h2>${escapeHtml(
+        release.title,
+      )}</h2><p>${escapeHtml(
+        release.description,
+      )}</p><div class="music-actions">${external(
         release.listeningUrl,
-        'Listen on music services',
-      )}</li>`,
+        'Listen now',
+      )}${internal(release.path, 'Release details')}</div></div></li>`,
   )
   .join('')}</ul>`;
 
 const releasePage = release =>
-  `<h1>${escapeHtml(release.title)}</h1><p>Music by reshra. ${escapeHtml(
-    release.description,
-  )}</p>${
+  `<header class="music-hero"><p>reshra release</p><h1>${escapeHtml(
+    release.title,
+  )}</h1><p>${escapeHtml(release.description)}</p></header>${
     release.artwork
       ? `<img class="portrait" src="${escapeHtml(
           release.artwork,
@@ -71,19 +81,28 @@ const releasePage = release =>
     release.credits.length
       ? `<p>Credits: ${escapeHtml(release.credits.join(', '))}</p>`
       : ''
-  }<p>${external(
+  }<div class="music-actions">${external(
     release.listeningUrl,
-    'Listen on music services',
-  )}</p><audio controls preload="none" src="${escapeHtml(
+    'Listen now',
+  )}</div><section class="music-player"><h2>Listen here</h2><audio controls preload="none" src="${escapeHtml(
     release.trackUrl,
-  )}">Your browser does not support audio playback.</audio>${
+  )}">Your browser does not support audio playback.</audio></section>${
     release.guitarHeroUrl
       ? `<p>${external(
           release.guitarHeroUrl,
           'Guitar Hero files for anii 2000',
         )}</p>`
       : ''
-  }<p>${internal('/music', 'All music')}</p>`;
+  }<section class="music-related"><h2>More from reshra</h2><ul>${releases
+    .filter(item => item.slug !== release.slug)
+    .map(
+      item =>
+        `<li>${internal(item.path, item.title)} - ${external(
+          item.listeningUrl,
+          'Listen now',
+        )}</li>`,
+    )
+    .join('')}</ul></section><p>${internal('/music', 'All music')}</p>`;
 
 const notesIndex = `<h1>Notes from reshra</h1><p>Music and guitar project resources shared from reshra’s desktop.</p><ul>${notes
   .map(
@@ -200,6 +219,21 @@ const styles = `<style>
   #static-content audio { max-width: 100%; }
   #static-content .disclosure { background: #fff4ce; padding: 10px; }
   #static-content nav ul { display: flex; gap: 18px; flex-wrap: wrap; list-style: none; padding: 0; }
+  #static-content .music-hero { margin: 18px -22px; padding: 18px 22px; color: #fff; background: linear-gradient(#3266b8, #173c82); border-bottom: 3px solid #ffbb46; }
+  #static-content .music-hero h1 { margin: 4px 0; }
+  #static-content .music-hero p { margin: 0 0 5px; }
+  #static-content .music-releases { list-style: none; padding: 0; }
+  #static-content .music-release { display: flex; gap: 14px; margin: 12px 0; padding: 16px; border: 1px solid #96add7; background: #f5f9ff; box-shadow: 2px 2px 0 #acc4ed; }
+  #static-content .music-release h2 { margin: 0 0 4px; }
+  #static-content .music-release p { margin: 0 0 12px; }
+  #static-content .music-disc { display: block; flex: none; width: 54px; height: 54px; border-radius: 50%; background: radial-gradient(circle, #e9f3ff 0 7px, #18377d 8px 11px, #4f7dcb 12px 100%); border: 2px solid #18377d; }
+  #static-content .music-actions { display: flex; gap: 10px; flex-wrap: wrap; margin: 14px 0; }
+  #static-content .music-actions a { display: inline-block; padding: 7px 12px; border: 1px solid #7c9aca; background: #fff; text-decoration: none; font-weight: bold; box-shadow: 1px 1px 0 #afc4eb; }
+  #static-content .music-actions a:first-child { color: #fff; background: #1c56ab; border-color: #0c3983; }
+  #static-content .music-player { padding: 12px; background: #f5f9ff; border: 1px solid #96add7; }
+  #static-content .music-player h2 { margin: 0 0 12px; font-size: 18px; }
+  #static-content .music-related { margin-top: 18px; padding: 12px; background: #f5f9ff; border: 1px solid #96add7; }
+  #static-content .music-related h2 { margin: 0; font-size: 18px; }
   html.desktop-ready:not(.reading-view) #root { display: block; }
   html.desktop-ready:not(.reading-view) #static-content { display: none; }
   html.reading-view #root { display: none; }

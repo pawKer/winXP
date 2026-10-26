@@ -208,14 +208,15 @@ function InternetExplorer({ onClose, onOpenNote, onFocusWinamp, onPlayTrack }) {
                 links={[
                   ...releases.map((release, index) => ({
                     title: `reshra - ${release.title}`,
-                    subtitle: 'Release page and listening links',
-                    url: release.path,
-                    onClick: () => routerHistory.push(release.path),
+                    subtitle: 'Listen on music services',
+                    url: release.listeningUrl,
+                    analyticsEvent: 'music_listen_click',
+                    releaseSlug: release.slug,
                     highlight: index === 0,
                   })),
                   {
-                    title: 'Music',
-                    subtitle: 'Browse releases',
+                    title: 'Music on this desktop',
+                    subtitle: 'Browse releases and play in Winamp',
                     url: '/music',
                     onClick: () => routerHistory.push('/music'),
                     iconNode: <FaMusic />,
@@ -316,6 +317,127 @@ const Div = styled.div`
   .ie-page a:focus-visible,
   .ie-page button:focus-visible {
     outline: 3px solid #ffbf00;
+  }
+  .ie-page--music {
+    background: #e6efff;
+  }
+  .music-hero {
+    padding: 18px;
+    margin: -20px -20px 18px;
+    background: linear-gradient(#3266b8, #173c82);
+    color: #fff;
+    border-bottom: 3px solid #ffbb46;
+  }
+  .music-hero h1 {
+    margin: 6px 0;
+    color: #fff;
+  }
+  .music-hero p {
+    margin: 0;
+  }
+  .music-hero a {
+    display: inline-block;
+    margin-bottom: 12px;
+    color: #fff;
+  }
+  .music-eyebrow {
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 10px;
+    font-weight: bold;
+  }
+  .music-releases {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .music-release {
+    display: flex;
+    gap: 14px;
+    padding: 16px;
+    margin-bottom: 12px;
+    background: #fff;
+    border: 1px solid #96add7;
+    box-shadow: 2px 2px 0 #acc4ed;
+  }
+  .music-release h2 {
+    margin: 0 0 3px;
+    font-size: 18px;
+  }
+  .music-release p {
+    margin: 0 0 12px;
+  }
+  .music-disc {
+    width: 54px;
+    height: 54px;
+    flex: none;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      #e9f3ff 0 7px,
+      #18377d 8px 11px,
+      #4f7dcb 12px 100%
+    );
+    border: 2px solid #18377d;
+  }
+  .music-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .music-actions a,
+  .music-actions button {
+    display: inline-block;
+    padding: 7px 12px;
+    border: 1px solid #7c9aca;
+    background: #fff;
+    color: #183b7c;
+    font: bold 12px Tahoma, Arial, sans-serif;
+    text-decoration: none;
+    box-shadow: 1px 1px 0 #afc4eb;
+  }
+  .music-actions .music-primary {
+    color: #fff;
+    background: #1c56ab;
+    border-color: #0c3983;
+  }
+  .music-actions--release {
+    margin: 18px 0;
+  }
+  .music-artwork {
+    display: block;
+    width: 180px;
+    max-width: 100%;
+  }
+  .music-details,
+  .music-resource,
+  .music-related {
+    padding: 12px;
+    background: #fff;
+    border: 1px solid #96add7;
+  }
+  .music-details h2 {
+    margin: 0;
+    font-size: 15px;
+  }
+  .music-related h2 {
+    margin: 0 0 8px;
+    font-size: 15px;
+  }
+  .music-related ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .music-related li {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .music-back {
+    margin-top: 18px;
   }
   height: 100%;
   width: 100%;

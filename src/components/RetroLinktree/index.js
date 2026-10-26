@@ -222,6 +222,12 @@ function RetroLinktree({
                       ? 'external'
                       : 'internal',
                   });
+                  if (item.analyticsEvent) {
+                    trackEvent(item.analyticsEvent, {
+                      release: item.releaseSlug,
+                      destination: href,
+                    });
+                  }
                 } catch (err) {
                   // Best-effort tracking; don't break navigation
                 }

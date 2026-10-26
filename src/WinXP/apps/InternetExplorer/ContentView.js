@@ -17,21 +17,32 @@ const trackListen = release => {
 export default function ContentView({ path, onPlayTrack }) {
   if (path === '/music') {
     return (
-      <article className="ie-page">
-        <h1>Music by reshra</h1>
-        <p>Published releases and listening links.</p>
-        <ul>
+      <article className="ie-page ie-page--music">
+        <header className="music-hero">
+          <span className="music-eyebrow">reshra audio archive</span>
+          <h1>Music by reshra</h1>
+          <p>Listen now, or open a release to play it in Winamp.</p>
+        </header>
+        <ul className="music-releases">
           {releases.map(release => (
-            <li key={release.slug}>
-              <Link to={release.path}>{release.title}</Link> —{' '}
-              <a
-                href={release.listeningUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => trackListen(release)}
-              >
-                Listen on music services
-              </a>
+            <li className="music-release" key={release.slug}>
+              <span className="music-disc" aria-hidden="true" />
+              <div>
+                <h2>{release.title}</h2>
+                <p>{release.description}</p>
+                <div className="music-actions">
+                  <a
+                    className="music-primary"
+                    href={release.listeningUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => trackListen(release)}
+                  >
+                    Listen now
+                  </a>
+                  <Link to={release.path}>Release details</Link>
+                </div>
+              </div>
             </li>
           ))}
         </ul>
@@ -42,35 +53,45 @@ export default function ContentView({ path, onPlayTrack }) {
   const release = releases.find(item => item.path === path);
   if (release) {
     return (
-      <article className="ie-page">
-        <h1>{release.title}</h1>
-        <p>Music by reshra. {release.description}</p>
+      <article className="ie-page ie-page--music">
+        <header className="music-hero">
+          <Link to="/music">Music</Link>
+          <span className="music-eyebrow">reshra release</span>
+          <h1>{release.title}</h1>
+          <p>{release.description}</p>
+        </header>
         {release.artwork && (
           <img
+            className="music-artwork"
             src={release.artwork}
             alt={`${release.title} cover artwork`}
-            width="180"
           />
         )}
-        {release.releaseDate && <p>Released {release.releaseDate}</p>}
-        {release.credits.length > 0 && (
-          <p>Credits: {release.credits.join(', ')}</p>
-        )}
-        <p>
+        <div className="music-actions music-actions--release">
           <a
+            className="music-primary"
             href={release.listeningUrl}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => trackListen(release)}
           >
-            Listen on music services
+            Listen now
           </a>
-        </p>
-        <button type="button" onClick={() => onPlayTrack(release.trackUrl)}>
-          Play in Winamp
-        </button>
+          <button type="button" onClick={() => onPlayTrack(release.trackUrl)}>
+            Play in Winamp
+          </button>
+        </div>
+        {(release.releaseDate || release.credits.length > 0) && (
+          <section className="music-details">
+            <h2>Release information</h2>
+            {release.releaseDate && <p>Released {release.releaseDate}</p>}
+            {release.credits.length > 0 && (
+              <p>Credits: {release.credits.join(', ')}</p>
+            )}
+          </section>
+        )}
         {release.guitarHeroUrl && (
-          <p>
+          <p className="music-resource">
             <a
               href={release.guitarHeroUrl}
               target="_blank"
@@ -80,7 +101,29 @@ export default function ContentView({ path, onPlayTrack }) {
             </a>
           </p>
         )}
-        <Link to="/music">All music</Link>
+        <section className="music-related">
+          <h2>More from reshra</h2>
+          <ul>
+            {releases
+              .filter(item => item.slug !== release.slug)
+              .map(item => (
+                <li key={item.slug}>
+                  <Link to={item.path}>{item.title}</Link>
+                  <a
+                    href={item.listeningUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => trackListen(item)}
+                  >
+                    Listen now
+                  </a>
+                </li>
+              ))}
+          </ul>
+        </section>
+        <p className="music-back">
+          <Link to="/music">All music</Link>
+        </p>
       </article>
     );
   }
