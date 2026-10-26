@@ -95,7 +95,8 @@ Keep app labels consistent across Start menu data, `onClickMenuItem`, and `appSe
 Configured `.txt` documents use a central registry:
 
 - `src/WinXP/apps/notesConfig.js`: note ID, window title, URL path, desktop title, and header component.
-- `src/WinXP/apps/Notepad/headerConfig.js`: structured titles, sections, external links, and actions rendered above the textarea.
+- `src/content/site.js`: canonical profile, releases, notes, and their URL paths.
+- `src/content/noteSections.js`: structured note sections, external links, and actions rendered above the textarea.
 - `src/WinXP/apps/Notepad/headerComponents.js`: small React wrappers connecting configs to `HeaderRenderer` and translating action names into callbacks.
 - `src/WinXP/apps/Notepad/components/HeaderRenderer.js`: shared ASCII-style rendering and link analytics.
 
@@ -116,7 +117,7 @@ It does **not** automatically create a RetroLinktree entry. Add that separately 
 }
 ```
 
-A typical external link item in `headerConfig.js` is:
+A typical external link item in `src/content/noteSections.js` is:
 
 ```js
 {
@@ -129,7 +130,7 @@ A typical external link item in `headerConfig.js` is:
 
 Important behavior:
 
-- `headerConfig.js` is the source of persistent, predefined note content.
+- `src/content/noteSections.js` is the source of persistent, predefined note content.
 - The Notepad textarea starts empty and is local React state. User edits are lost when the window closes or the page reloads.
 - `HeaderRenderer` supports `external` and `action` item types. New action names need handling in the appropriate wrapper in `headerComponents.js`.
 - A header component receives callbacks because Notepad clones it with `onOpenNewNotepad` and `onFocusWinamp`.
@@ -172,6 +173,7 @@ Important behavior:
 - Do not commit `node_modules`, local environment overrides, or `public/songs`.
 - Preserve unrelated work in a dirty worktree. Check `git status --short` before and after editing.
 - Some source and documentation text currently contains visible mojibake (for example `â...` or `đ...`). Do not perform broad encoding cleanup as part of an unrelated task; it creates noisy diffs and may change intentionally displayed retro text. Fix only text explicitly in scope and verify the rendered result.
+- CRA's cached ESLint results can report old Prettier errors after formatting on Windows. If build output disagrees with the file on disk, remove only `node_modules/.cache/.eslintcache` before rebuilding.
 - Several components contain legacy or commented code. Prefer the active centralized patterns over reviving old per-icon `headerContent` code.
 - Avoid adding `console.log`; there is currently a debug log in the direct-note opening effect, but it is not a convention to copy.
 
@@ -194,7 +196,8 @@ Choose checks proportional to the change:
 ## Deployment
 
 - `Dockerfile` builds with Yarn in Node Alpine and serves the CRA build from nginx.
-- `nginx.conf` uses an SPA fallback (`try_files ... /index.html`), required for direct note routes.
+- `scripts/generate-pages.js` runs after CRA build and writes route-specific HTML, sitemap.xml, and robots.txt. `scripts/verify-pages.js` checks the generated output.
+- `nginx.conf` resolves extensionless content URLs to generated `.html` files and returns 404 for unknown paths.
 - `docker-compose.yml` builds the app, forwards host port `14567` to nginx port `80`, and mounts local songs.
 - `docker-compose.pi.yml` is the Raspberry Pi deployment variant; inspect it before changing container assumptions.
 - `now.json` is a legacy Vercel/Now deployment configuration and also rewrites all non-static routes to `index.html`.
