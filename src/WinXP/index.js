@@ -1,4 +1,10 @@
-import React, { useReducer, useRef, useCallback, useEffect } from 'react';
+import React, {
+  useReducer,
+  useRef,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import styled, { keyframes } from 'styled-components';
 import useMouse from 'react-use/lib/useMouse';
 
@@ -176,6 +182,7 @@ const reducer = (state, action = { type: '' }) => {
 };
 function WinXP({ defaultPath = '/' }) {
   const [state, dispatch] = useReducer(reducer, initState);
+  const [playRequest, setPlayRequest] = useState(null);
   const ref = useRef(null);
   const mouse = useMouse(ref);
   const focusedAppId = getFocusedAppId();
@@ -210,7 +217,6 @@ function WinXP({ defaultPath = '/' }) {
   // Open appropriate notepad file based on path
   useEffect(() => {
     const noteFromPath = getNoteByPath(defaultPath);
-    console.log(noteFromPath);
     if (noteFromPath) {
       openNote(noteFromPath.id);
     } else if (defaultPath === '/') {
@@ -366,6 +372,10 @@ function WinXP({ defaultPath = '/' }) {
       dispatch({ type: ADD_APP, payload: appSettings.Winamp });
     }
   }
+  function onPlayTrack(url) {
+    setPlayRequest({ url, requestId: Date.now() });
+    onFocusWinamp();
+  }
   return (
     <Container
       ref={ref}
@@ -394,6 +404,8 @@ function WinXP({ defaultPath = '/' }) {
         onOpenNote={openNote}
         onOpenNewNotepad={onOpenNewNotepad}
         onFocusWinamp={onFocusWinamp}
+        onPlayTrack={onPlayTrack}
+        playRequest={playRequest}
       />
       <Footer
         apps={state.apps}

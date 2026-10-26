@@ -226,8 +226,15 @@ function RetroLinktree({
                   // Best-effort tracking; don't break navigation
                 }
 
-                if (typeof item.onClick === 'function') {
-                  // For action links, prevent navigation and run callback
+                if (
+                  typeof item.onClick === 'function' &&
+                  !e.defaultPrevented &&
+                  e.button === 0 &&
+                  !e.metaKey &&
+                  !e.ctrlKey &&
+                  !e.shiftKey &&
+                  !e.altKey
+                ) {
                   e.preventDefault();
                   item.onClick();
                 }

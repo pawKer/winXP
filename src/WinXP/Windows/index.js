@@ -15,6 +15,8 @@ function Windows({
   onOpenNote,
   onOpenNewNotepad,
   onFocusWinamp,
+  onPlayTrack,
+  playRequest,
 }) {
   return (
     <div style={{ position: 'relative', zIndex: 0 }}>
@@ -31,6 +33,8 @@ function Windows({
           onOpenNote={onOpenNote}
           onOpenNewNotepad={onOpenNewNotepad}
           onFocusWinamp={onFocusWinamp}
+          onPlayTrack={onPlayTrack}
+          playRequest={playRequest}
           {...app}
         />
       ))}
@@ -58,6 +62,8 @@ const Window = memo(function({
   onOpenNote,
   onOpenNewNotepad,
   onFocusWinamp,
+  onPlayTrack,
+  playRequest,
 }) {
   function _onMouseDown() {
     onMouseDown(id);
@@ -148,6 +154,8 @@ const Window = memo(function({
           onOpenNote,
           onOpenNewNotepad,
           onFocusWinamp,
+          onPlayTrack,
+          playRequest,
           ...injectProps,
         })}
       </div>

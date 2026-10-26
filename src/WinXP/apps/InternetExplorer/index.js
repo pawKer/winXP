@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { WindowDropDowns, Google, Linktree, RetroLinktree } from 'components';
 import dropDownData from './dropDownData';
@@ -33,8 +34,12 @@ import {
 import NewsletterView from './NewsletterView';
 import SubstackView from './SubstackView';
 import './xpScrollbar.css';
+import { profile, releases, notes } from 'content/site';
+import ContentView from './ContentView';
 
-function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
+function InternetExplorer({ onClose, onOpenNote, onFocusWinamp, onPlayTrack }) {
+  const routerHistory = useHistory();
+  const location = useLocation();
   const [state, setState] = useState({
     route: 'main',
     query: '',
@@ -49,6 +54,7 @@ function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
     }
   }
   function goMain() {
+    routerHistory.push('/');
     setState({
       route: 'main',
       query: '',
@@ -151,10 +157,12 @@ function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
         <div className="ie__address_bar__content">
           <img src={ie} alt="ie" className="ie__address_bar__content__img" />
           <div className="ie__address_bar__content__text">
-            {`https://www.reshra.xyz${
+            {`https://reshra.xyz${
               state.route === 'search'
                 ? `/search?q=${encodeURIComponent(state.query)}`
-                : ''
+                : location.pathname === '/'
+                ? ''
+                : location.pathname
             }`}
           </div>
           <img
@@ -183,6 +191,10 @@ function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
             <NewsletterView onBack={goMain} />
           ) : state.contentView === 'substack' ? (
             <SubstackView onBack={goMain} />
+          ) : location.pathname === '/music' ||
+            location.pathname === '/notes' ||
+            releases.some(release => release.path === location.pathname) ? (
+            <ContentView path={location.pathname} onPlayTrack={onPlayTrack} />
           ) : (
             <>
               {/* <Google
@@ -192,29 +204,21 @@ function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
                 goMain={goMain}
               /> */}
               <RetroLinktree
-                profile={{
-                  name: 'reshra',
-                  handle: 'reshra',
-                  bio: 'Links, projects, and notes.',
-                  avatarSrc: '/reshra_low_res.jpg',
-                  socialLinks: {
-                    instagram: 'reshnocash',
-                    tiktok: 'reshra',
-                    youtube: 'reshra',
-                    spotify: '781EBVicrg3Ry3uWjwQLD8',
-                  },
-                }}
+                profile={profile}
                 links={[
+                  ...releases.map((release, index) => ({
+                    title: `reshra - ${release.title}`,
+                    subtitle: 'Release page and listening links',
+                    url: release.path,
+                    onClick: () => routerHistory.push(release.path),
+                    highlight: index === 0,
+                  })),
                   {
-                    title: '🎵 reshra - bruises 🎵',
-                    url:
-                      'https://distrokid.com/hyperfollow/reshra/bruises?ref=release',
-                    highlight: true,
-                  },
-                  {
-                    title: '🎵 reshra - anii 2000 🎵',
-                    url:
-                      'https://distrokid.com/hyperfollow/reshra/anii-2000?ref=release',
+                    title: 'Music',
+                    subtitle: 'Browse releases',
+                    url: '/music',
+                    onClick: () => routerHistory.push('/music'),
+                    iconNode: <FaMusic />,
                   },
                   {
                     title: 'Winamp',
@@ -225,8 +229,8 @@ function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
                   {
                     title: 'anii 2000 (Guitar Hero Files)',
                     subtitle: 'Google Drive folder',
-                    url:
-                      'https://drive.google.com/drive/folders/1g7SefzKNeO9_EjYc6GEQu-hWvagXgfV9?usp=drive_link',
+                    url: releases.find(release => release.slug === 'anii-2000')
+                      .guitarHeroUrl,
                     iconNode: <FaFolderOpen />,
                   },
                   {
@@ -243,24 +247,26 @@ function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
                   //     setState(s => ({ ...s, contentView: 'substack' })),
                   //   iconNode: <FaEnvelope />,
                   // },
-                  {
-                    title: 'NAM Amp Capture Links.txt',
-                    subtitle: 'Open in Notepad',
-                    onClick: () => onOpenNote('namAmpCaptureLinks'),
-                    iconNode: <FaVolumeUp />,
-                  },
-                  {
-                    title: 'Guitar Parts.txt',
-                    subtitle: 'Open in Notepad',
-                    onClick: () => onOpenNote('guitarParts'),
-                    iconNode: <FaGuitar />,
-                  },
-                  {
-                    title: 'Midi Pedal.txt',
-                    subtitle: 'Open in Notepad',
-                    onClick: () => onOpenNote('midiPedal'),
-                    iconNode: <FaGamepad />,
-                  },
+                  ...notes
+                    .filter(note => note.id !== 'thankYou')
+                    .map(note => ({
+                      title: note.title,
+                      subtitle: 'Open in Notepad',
+                      url: note.path,
+                      onClick: () => {
+                        if (location.pathname === note.path)
+                          onOpenNote(note.id);
+                        else routerHistory.push(note.path);
+                      },
+                      iconNode:
+                        note.id === 'guitarParts' ? (
+                          <FaGuitar />
+                        ) : note.id === 'midiPedal' ? (
+                          <FaGamepad />
+                        ) : (
+                          <FaVolumeUp />
+                        ),
+                    })),
                 ]}
                 footer="Made with Notepad"
               />
@@ -288,6 +294,29 @@ function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
 }
 
 const Div = styled.div`
+  .ie-page {
+    box-sizing: border-box;
+    min-height: 100%;
+    padding: 20px;
+    background: #f7fbff;
+    color: #10213a;
+    font: 14px/1.5 Tahoma, Arial, sans-serif;
+  }
+  .ie-page h1 {
+    font-size: 22px;
+    margin: 0 0 12px;
+  }
+  .ie-page a {
+    color: #0645ad;
+  }
+  .ie-page button {
+    cursor: pointer;
+    padding: 6px 12px;
+  }
+  .ie-page a:focus-visible,
+  .ie-page button:focus-visible {
+    outline: 3px solid #ffbf00;
+  }
   height: 100%;
   width: 100%;
   position: absolute;

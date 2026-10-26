@@ -84,7 +84,7 @@ const Section = ({ title, items, onAction }) => {
           <a
             href={item.url}
             target="_blank"
-            rel="noopener noreferrer"
+            rel={`noopener noreferrer${item.affiliate ? ' sponsored' : ''}`}
             onClick={() => {
               try {
                 trackEvent('notes_link_click', {
@@ -168,6 +168,9 @@ const Section = ({ title, items, onAction }) => {
 
 const HeaderRenderer = ({ config, onAction }) => {
   const { title, sections } = config;
+  const hasAffiliateLinks = sections.some(section =>
+    section.items.some(item => item.affiliate),
+  );
 
   const handleAction = action => {
     if (onAction) {
@@ -208,6 +211,13 @@ const HeaderRenderer = ({ config, onAction }) => {
 
   return (
     <HeaderText>
+      {hasAffiliateLinks && (
+        <>
+          {
+            'Some product links are affiliate links. I may earn a commission if you buy through them.\n\n'
+          }
+        </>
+      )}
       {title &&
         (() => {
           const { topBorder, titleLine, bottomBorder } = createTitleBorder(

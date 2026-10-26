@@ -18,13 +18,37 @@ function hasWebGL() {
   }
 }
 
-function Winamp({ onClose, onMinimize }) {
+function Winamp({ onClose, onMinimize, playRequest }) {
   const ref = useRef(null);
   const webamp = useRef(null);
   const movedToContainer = useRef(false);
   // React 18 StrictMode runs effects twice in dev; we need to ignore
   // the first run so Webamp is only created/disposed once.
   const didInitEffect = useRef(false);
+  const pendingPlay = useRef(null);
+  const ready = useRef(false);
+
+  function playRequestedTrack() {
+    if (!ready.current || !webamp.current || !pendingPlay.current) return;
+    const request = pendingPlay.current;
+    const tracks = webamp.current.getPlaylistTracks();
+    let index = tracks.findIndex(track => track.url === request.url);
+    if (index < 0) {
+      const track = initialTracks.find(item => item.url === request.url);
+      if (!track) return;
+      webamp.current.appendTracks([track]);
+      index = tracks.length;
+    }
+    webamp.current.setCurrentTrack(index);
+    webamp.current.play();
+    pendingPlay.current = null;
+  }
+
+  useEffect(() => {
+    if (!playRequest) return;
+    pendingPlay.current = playRequest;
+    playRequestedTrack();
+  }, [playRequest]);
 
   function getWebampNode() {
     return document.getElementById('webamp');
@@ -109,11 +133,14 @@ function Winamp({ onClose, onMinimize }) {
     webampInstance.renderWhenReady(target).then(() => {
       if (!disposed) {
         attachToContainer();
+        ready.current = true;
+        playRequestedTrack();
       }
     });
 
     return () => {
       disposed = true;
+      ready.current = false;
       detachToBody();
       webampInstance.dispose();
       if (webamp.current === webampInstance) {
