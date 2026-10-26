@@ -10,7 +10,8 @@ const HeaderText = styled.div`
   white-space: pre;
   outline: none;
   resize: none;
-  a {
+  a,
+  button {
     color: #0000ff;
     text-decoration: underline;
     cursor: pointer;
@@ -22,6 +23,12 @@ const HeaderText = styled.div`
     &:visited {
       color: #800080;
     }
+  }
+  button {
+    border: 0;
+    background: none;
+    padding: 0;
+    font: inherit;
   }
 `;
 
@@ -108,10 +115,9 @@ const Section = ({ title, items, onAction }) => {
       return (
         <React.Fragment key={index}>
           {'  '}
-          <a
-            href="#"
-            onClick={e => {
-              e.preventDefault();
+          <button
+            type="button"
+            onClick={() => {
               try {
                 trackEvent('notes_link_click', {
                   label: displayText,
@@ -127,7 +133,7 @@ const Section = ({ title, items, onAction }) => {
             }}
           >
             {displayText}
-          </a>
+          </button>
           {'\n\n'}
         </React.Fragment>
       );

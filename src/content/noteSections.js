@@ -57,42 +57,49 @@ const guitarPartsConfig = {
           url: 'https://s.click.aliexpress.com/e/_EJ0db1o',
           displayText: 'https://s.click.aliexpress.com/e/_EJ0db1o',
           type: 'external',
+          affiliate: true,
         },
         {
           label: 'Roller bridge -',
           url: 'https://s.click.aliexpress.com/e/_EIGnDN0',
           displayText: 'https://s.click.aliexpress.com/e/_EIGnDN0',
           type: 'external',
+          affiliate: true,
         },
         {
           label: 'Push-Push Pots -',
           url: 'https://s.click.aliexpress.com/e/_Exo98qq',
           displayText: 'https://s.click.aliexpress.com/e/_Exo98qq',
           type: 'external',
+          affiliate: true,
         },
         {
           label: '3-way Toggle -',
           url: 'https://s.click.aliexpress.com/e/_EvvmiWq',
           displayText: 'https://s.click.aliexpress.com/e/_EvvmiWq',
           type: 'external',
+          affiliate: true,
         },
         {
           label: 'Guitar Jack -',
           url: 'https://s.click.aliexpress.com/e/_Ez24I94',
           displayText: 'https://s.click.aliexpress.com/e/_Ez24I94',
           type: 'external',
+          affiliate: true,
         },
         {
           label: 'Volume/Tone Knobs -',
           url: 'https://s.click.aliexpress.com/e/_EHBVnuO',
           displayText: 'https://s.click.aliexpress.com/e/_EHBVnuO',
           type: 'external',
+          affiliate: true,
         },
         {
           label: 'Capacitors -',
           url: 'https://s.click.aliexpress.com/e/_EuXuhHY',
           displayText: 'https://s.click.aliexpress.com/e/_EuXuhHY',
           type: 'external',
+          affiliate: true,
         },
       ],
     },
@@ -104,36 +111,42 @@ const guitarPartsConfig = {
           url: 'https://s.click.aliexpress.com/e/_Ex7wIwm',
           displayText: 'https://s.click.aliexpress.com/e/_Ex7wIwm',
           type: 'external',
+          affiliate: true,
         },
         {
           label: '22AWG wire -',
           url: 'https://s.click.aliexpress.com/e/_EzKZi6e',
           displayText: 'https://s.click.aliexpress.com/e/_EzKZi6e',
           type: 'external',
+          affiliate: true,
         },
         {
           label: 'Feeler gauge -',
           url: 'https://s.click.aliexpress.com/e/_EwoJdlg',
           displayText: 'https://s.click.aliexpress.com/e/_EwoJdlg',
           type: 'external',
+          affiliate: true,
         },
         {
           label: 'Step Drill Bit -',
           url: 'https://s.click.aliexpress.com/e/_EQk4Dn8',
           displayText: 'https://s.click.aliexpress.com/e/_EQk4Dn8',
           type: 'external',
+          affiliate: true,
         },
         {
           label: 'Carpet Mouse Pad -',
           url: 'https://s.click.aliexpress.com/e/_EvaTjiK',
           displayText: 'https://s.click.aliexpress.com/e/_EvaTjiK',
           type: 'external',
+          affiliate: true,
         },
         {
           label: 'Guitar String Tool -',
           url: 'https://s.click.aliexpress.com/e/_EIyWYrC',
           displayText: 'https://s.click.aliexpress.com/e/_EIyWYrC',
           type: 'external',
+          affiliate: true,
         },
       ],
     },
@@ -209,6 +222,7 @@ const midiPedalConfig = {
             'https://www.lilygo.cc/products/t-display-s3?variant=42351558590645',
           displayText: 'https://www.lilygo.cc/products/t-displ....',
           type: 'external',
+          affiliate: true,
         },
         {
           label: 'LILYGO T-Display TF Shield -',
@@ -216,42 +230,49 @@ const midiPedalConfig = {
             'https://www.lilygo.cc/products/t-display-tf-shied?variant=42729797025973',
           displayText: 'https://www.lilygo.cc/products/t-displ....',
           type: 'external',
+          affiliate: true,
         },
         {
           label: 'Momentary SPST Foot Switches -',
           url: 'https://s.click.aliexpress.com/e/_c4tcOgwB',
           displayText: 'https://s.click.aliexpress.com/e/_c4tcOgwB',
           type: 'external',
+          affiliate: true,
         },
         {
           label: 'TRS 1/4 inch Female Jack -',
           url: 'https://s.click.aliexpress.com/e/_c3qoTJib',
           displayText: 'https://s.click.aliexpress.com/e/_c3qoTJib',
           type: 'external',
+          affiliate: true,
         },
         {
           label: 'Schottky Rectifier Diode -',
           url: 'https://s.click.aliexpress.com/e/_c32kpU7h',
           displayText: 'https://s.click.aliexpress.com/e/_c32kpU7h',
           type: 'external',
+          affiliate: true,
         },
         {
           label: 'TRS 3.5mm Female Jack (style 1) -',
           url: 'https://s.click.aliexpress.com/e/_c3QmQcxt',
           displayText: 'https://s.click.aliexpress.com/e/_c3QmQcxt',
           type: 'external',
+          affiliate: true,
         },
         {
           label: 'TRS 3.5mm Female Jack (style 2) -',
           url: 'https://s.click.aliexpress.com/e/_c3FZY3Zv',
           displayText: 'https://s.click.aliexpress.com/e/_c3FZY3Zv',
           type: 'external',
+          affiliate: true,
         },
         {
           label: 'WS2812B Addressable LED Strip -',
           url: 'https://s.click.aliexpress.com/e/_c3dAmgfh',
           displayText: 'https://s.click.aliexpress.com/e/_c3dAmgfh',
           type: 'external',
+          affiliate: true,
         },
         {
           label: '24 AWG Wire Box Kit -',
@@ -259,6 +280,7 @@ const midiPedalConfig = {
             'https://www.aliexpress.com/item/1005005888991575.html?spm=a2g0o.order_list.order_list_main.76.599618022DTviZ',
           displayText: 'https://www.aliexpress.com/item/100500....',
           type: 'external',
+          affiliate: true,
         },
         {
           label: 'M3 10mm Hex Screws -',
@@ -266,6 +288,7 @@ const midiPedalConfig = {
             'https://www.aliexpress.com/item/32969042589.html?spm=a2g0o.order_list.order_list_main.51.599618022DTviZ',
           displayText: 'https://www.aliexpress.com/item/329690....',
           type: 'external',
+          affiliate: true,
         },
       ],
     },
@@ -277,12 +300,14 @@ const midiPedalConfig = {
           url: 'https://s.click.aliexpress.com/e/_c36APv0r',
           displayText: 'https://s.click.aliexpress.com/e/_c36APv0r',
           type: 'external',
+          affiliate: true,
         },
         {
           label: 'Wire Stripper Tool -',
           url: 'https://s.click.aliexpress.com/e/_c4OWWP8n',
           displayText: 'https://s.click.aliexpress.com/e/_c4OWWP8n',
           type: 'external',
+          affiliate: true,
         },
       ],
     },
@@ -336,17 +361,6 @@ const namAmpCaptureLinksConfig = {
     },
   ],
 };
-
-// Keep the disclosure flag on each link so every renderer treats it consistently.
-[guitarPartsConfig, midiPedalConfig].forEach(config => {
-  config.sections.forEach(section => {
-    if (/affiliate links/i.test(section.title)) {
-      section.items.forEach(item => {
-        item.affiliate = true;
-      });
-    }
-  });
-});
 
 module.exports = {
   socialMediaConfig,
