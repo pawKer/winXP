@@ -5,7 +5,7 @@ import {
   guitarPartsConfig,
   midiPedalConfig,
   namAmpCaptureLinksConfig,
-} from './headerConfig';
+} from 'content/noteSections';
 
 // Wrapper components that maintain the same API for backward compatibility
 export const SocialMediaHeader = ({ onOpenNewNotepad, onFocusWinamp }) => {

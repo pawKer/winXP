@@ -1,7 +1,7 @@
 // Configuration file for Notepad header content
 // Easy to maintain and add new links
 
-export const socialMediaConfig = {
+const socialMediaConfig = {
   title: 'Thank you for visiting!',
   sections: [
     {
@@ -47,7 +47,7 @@ export const socialMediaConfig = {
   ],
 };
 
-export const guitarPartsConfig = {
+const guitarPartsConfig = {
   sections: [
     {
       title: 'Guitar Parts (affiliate links)',
@@ -160,7 +160,7 @@ export const guitarPartsConfig = {
   ],
 };
 
-export const midiPedalConfig = {
+const midiPedalConfig = {
   sections: [
     {
       title: 'Resources',
@@ -289,7 +289,7 @@ export const midiPedalConfig = {
   ],
 };
 
-export const namAmpCaptureLinksConfig = {
+const namAmpCaptureLinksConfig = {
   title: 'NAM Amp Capture Links',
   sections: [
     {
@@ -335,4 +335,22 @@ export const namAmpCaptureLinksConfig = {
       ],
     },
   ],
+};
+
+// Keep the disclosure flag on each link so every renderer treats it consistently.
+[guitarPartsConfig, midiPedalConfig].forEach(config => {
+  config.sections.forEach(section => {
+    if (/affiliate links/i.test(section.title)) {
+      section.items.forEach(item => {
+        item.affiliate = true;
+      });
+    }
+  });
+});
+
+module.exports = {
+  socialMediaConfig,
+  guitarPartsConfig,
+  midiPedalConfig,
+  namAmpCaptureLinksConfig,
 };
