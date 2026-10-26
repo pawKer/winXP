@@ -206,10 +206,15 @@ function InternetExplorer({ onClose, onOpenNote, onFocusWinamp }) {
                 }}
                 links={[
                   {
+                    title: '🎵 reshra - bruises 🎵',
+                    url:
+                      'https://distrokid.com/hyperfollow/reshra/bruises?ref=release',
+                    highlight: true,
+                  },
+                  {
                     title: '🎵 reshra - anii 2000 🎵',
                     url:
                       'https://distrokid.com/hyperfollow/reshra/anii-2000?ref=release',
-                    highlight: true,
                   },
                   {
                     title: 'Winamp',
