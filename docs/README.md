@@ -29,4 +29,5 @@ root unless stated otherwise.
 - [Article drafts and source notes](../content-drafts/README.md) stay together in `content-drafts/`.
 - [Source evidence](../content-sources/) contains public video metadata and implementation baselines.
 - [Font documentation and license](../src/assets/fonts/README.md) stay beside the font assets.
+- [Optional XP boot screen](../src/components/XPBootScreen/README.md) documents the saved loading-screen component, which is currently unused.
 - [Agent/contributor instructions](../AGENTS.md) remain at the repository root.
