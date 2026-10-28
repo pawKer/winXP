@@ -1,5 +1,6 @@
 const videos = require('./videos.json');
 const audioManifest = require('./audioManifest.json');
+const artwork = require('./artwork.json');
 
 const videoById = id => videos.find(video => video.id === id);
 const archive = [
@@ -153,6 +154,7 @@ const releases = [
 ];
 
 releases.forEach(release => {
+  release.artwork = artwork[release.slug] ? artwork[release.slug].url : null;
   if (audioManifest[release.slug])
     release.webAudioUrl = audioManifest[release.slug].url;
 });

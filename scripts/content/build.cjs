@@ -33,6 +33,7 @@ function references() {
     'noteSections',
     'videos.json',
     'audioManifest.json',
+    'artwork.json',
   ]) {
     delete require.cache[require.resolve(`../../src/content/${name}`)];
   }

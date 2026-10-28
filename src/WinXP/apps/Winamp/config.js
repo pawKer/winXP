@@ -1,4 +1,5 @@
 import { releases } from 'content/site';
+import artwork from 'content/artwork.json';
 
 const order = [
   'bruises',
@@ -18,7 +19,11 @@ export const initialTracks = [
     .map(release => ({
       url: release.webAudioUrl || release.trackUrl,
       duration: release.duration,
-      metaData: { title: release.title, artist: 'reshra' },
+      metaData: {
+        title: release.title,
+        artist: 'reshra',
+        albumArtUrl: release.artwork || undefined,
+      },
     })),
   ...[
     ['twilight', 'wav', 167],
@@ -27,6 +32,10 @@ export const initialTracks = [
   ].map(([title, extension, duration]) => ({
     url: `/songs/(drafts) reshra - ${title}.${extension}`,
     duration,
-    metaData: { title, artist: '(drafts) reshra' },
+    metaData: {
+      title,
+      artist: '(drafts) reshra',
+      albumArtUrl: artwork.drafts.url,
+    },
   })),
 ];

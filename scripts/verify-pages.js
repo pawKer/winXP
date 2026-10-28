@@ -63,6 +63,30 @@ for (const page of pages) {
     )[1],
   );
   assert.equal(schema['@context'], 'https://schema.org');
+  if (page.image && page.image.startsWith('/artwork/')) {
+    assert(
+      fs.existsSync(path.join(buildDir, page.image)),
+      `${page.path}: cover included in build`,
+    );
+    assert(
+      html.includes(
+        `<meta property="og:image" content="${siteUrl}${page.image}">`,
+      ),
+      `${page.path}: cover used for sharing`,
+    );
+    assert(
+      schema['@graph'].some(
+        entity =>
+          ['MusicRecording', 'BlogPosting'].includes(entity['@type']) &&
+          entity.image === `${siteUrl}${page.image}`,
+      ),
+      `${page.path}: cover in structured data`,
+    );
+    assert(
+      html.includes(`src="${page.image}"`),
+      `${page.path}: cover visible on page`,
+    );
+  }
   assert(
     schema['@graph'].some(
       entity => entity['@type'] === 'Person' && entity.name === 'reshra',

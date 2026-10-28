@@ -59,9 +59,12 @@ function buildPages() {
       post,
       title: `${post.title} — reshra’s Blog`,
       description: post.excerpt,
-      image: post.videoId
-        ? `https://i.ytimg.com/vi/${post.videoId}/hqdefault.jpg`
-        : null,
+      image:
+        (releases.find(release => release.slug === post.releaseId) || {})
+          .artwork ||
+        (post.videoId
+          ? `https://i.ytimg.com/vi/${post.videoId}/hqdefault.jpg`
+          : null),
     })),
   ];
   const total = Math.max(1, Math.ceil(publishedPosts.length / pageSize));

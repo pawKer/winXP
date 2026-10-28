@@ -7,7 +7,11 @@ function renderMusicIndex(options) {
     .map(
       release =>
         `<li class="music-release">${
-          release.video
+          release.artwork
+            ? `<img class="release-thumbnail album-cover" src="${escapeHtml(
+                release.artwork,
+              )}" width="120" height="120" alt="" loading="lazy">`
+            : release.video
             ? `<img class="release-thumbnail" src="https://i.ytimg.com/vi/${release.video.id}/hqdefault.jpg" width="120" height="90" alt="" loading="lazy">`
             : icon('music')
         }<div><p class="eyebrow">${

@@ -25,7 +25,15 @@ function renderPost(page, options) {
     post.author,
   )}</div><h1 tabindex="-1">${escapeHtml(
     post.title,
-  )}</h1><p class="article-intro">${escapeHtml(post.excerpt)}</p>${
+  )}</h1><div class="post-intro">${
+    release && release.artwork
+      ? `<img class="article-cover" src="${escapeHtml(
+          release.artwork,
+        )}" alt="${escapeHtml(
+          release.title,
+        )} cover artwork" width="120" height="120">`
+      : ''
+  }<p class="article-intro">${escapeHtml(post.excerpt)}</p></div>${
     post.videoId
       ? renderVideo(videoById(post.videoId), options, post.releaseId || '')
       : ''

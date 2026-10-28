@@ -307,6 +307,36 @@ html.app-ready #static-content {
   padding: 2px;
   background: #fff;
 }
+.release-thumbnail.album-cover {
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+.release-cover,
+.article-cover {
+  flex: none;
+  object-fit: contain;
+  border: 1px solid #b5bdd0;
+  padding: 3px;
+  background: #fff;
+}
+.release-cover {
+  width: 160px;
+  height: 160px;
+}
+.article-cover {
+  width: 120px;
+  height: 120px;
+}
+.post-intro {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+.post-intro .article-intro {
+  min-width: 0;
+}
 .music-actions {
   display: flex;
   flex-wrap: wrap;
@@ -750,6 +780,11 @@ html.app-ready #static-content {
   }
 }
 @container (max-width: 420px) {
+  .release-cover,
+  .article-cover {
+    width: 80px;
+    height: 80px;
+  }
   .public-page .blog-title,
   .public-page .blog-article h1 {
     font-size: 27px;

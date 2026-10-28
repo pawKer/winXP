@@ -35,7 +35,8 @@
     "content:build": "node scripts/content/build.cjs",
     "post:new": "node scripts/content/new-post.cjs",
     "test:content": "node --test scripts/content/build.test.cjs",
-    "pretest": "node scripts/content/build.cjs"
+    "pretest": "node scripts/content/build.cjs",
+    "media:artwork": "node scripts/prepare-artwork.cjs"
   },
   "eslintConfig": {
     "extends": [

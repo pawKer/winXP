@@ -1,0 +1,34 @@
+{
+  "anii-2000": {
+    "source": "reshra - anii 2000.jpg",
+    "url": "/artwork/anii-2000.jpg"
+  },
+  "bruises": {
+    "source": "reshra - bruises.jpg",
+    "url": "/artwork/bruises.jpg"
+  },
+  "forever": {
+    "source": "reshra - forever.jpg",
+    "url": "/artwork/forever.jpg"
+  },
+  "oh-doamne": {
+    "source": "reshra - oh, doamne.jpg",
+    "url": "/artwork/oh-doamne.jpg"
+  },
+  "somn": { "source": "reshra - somn.jpg", "url": "/artwork/somn.jpg" },
+  "minimal": {
+    "source": "reshra - minimal.jpg",
+    "url": "/artwork/minimal.jpg"
+  },
+  "phantom": {
+    "source": "reshra - phantom.jpg",
+    "url": "/artwork/phantom.jpg"
+  },
+  "muzica": { "source": "reshra - muzica.jpg", "url": "/artwork/muzica.jpg" },
+  "vise": { "source": "reshra - vise.jpg", "url": "/artwork/vise.jpg" },
+  "down": { "source": "reshra - down.jpg", "url": "/artwork/down.jpg" },
+  "drafts": {
+    "source": "reshra-drafts-cover.jpg",
+    "url": "/artwork/drafts.jpg"
+  }
+}

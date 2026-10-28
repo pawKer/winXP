@@ -64,6 +64,13 @@ an original article separately while still embedding a video, set
 `dateSource: article` and supply `publishedAt`. `updatedAt` records a later edit;
 it does not reorder the archive. Dates use `YYYY-MM-DD` or full ISO timestamps.
 
+Song covers are mapped in `src/content/artwork.json`. Put originals in
+`public/songs/` and run `yarn media:artwork` with FFmpeg available (or set
+`FFMPEG_PATH`). This creates 800-pixel JPEG copies in `public/artwork/` for
+song pages, music/blog archives, related articles and share metadata. Commit
+these small web copies with the mapping; the originals stay local. The shared
+draft entry supplies artwork metadata for all draft tracks in Winamp. Missing
+song artwork falls back to the existing video thumbnail where available.
 
 For a new video, first add its real title, publication timestamp and other
 metadata to `videos.json`, following an existing entry. Do not invent metadata

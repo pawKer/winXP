@@ -1219,6 +1219,28 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
     await navigate('/music/forever?view=read');
     let mediaTiming;
+    await waitFor(
+      'document.querySelector(".release-cover")?.complete && document.querySelector(".release-cover")?.naturalWidth === 800',
+      'Album cover loads in reading view',
+    );
+    await cdp('Emulation.setDeviceMetricsOverride', {
+      width: 320,
+      height: 800,
+      deviceScaleFactor: 1,
+      mobile: false,
+    });
+    assert(
+      await evaluate(
+        'document.documentElement.scrollWidth <= window.innerWidth',
+      ),
+      'Album artwork preserves narrow reading layout',
+    );
+    await cdp('Emulation.setDeviceMetricsOverride', {
+      width: 1366,
+      height: 900,
+      deviceScaleFactor: 1,
+      mobile: false,
+    });
     if (hasTestMedia) {
       await cdp('Network.emulateNetworkConditions', {
         offline: false,

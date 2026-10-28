@@ -1,11 +1,13 @@
 const { categorySlug } = require('../../categories');
 const { videoById } = require('../../catalogue');
 const { postDateLabel, internal, escapeHtml, external } = require('../helpers');
-const { profile } = require('../../site');
+const { profile, releases } = require('../../site');
 const { publishedPosts, categories } = require('../../registry');
 
 function postPreview(post, options) {
   const video = post.videoId && videoById(post.videoId);
+  const release = releases.find(item => item.slug === post.releaseId);
+  const cover = release && release.artwork;
   return `<article class="post-preview"><div class="post-meta"><span class="category-label">${escapeHtml(
     post.type,
   )}</span> ${postDateLabel(post)}</div><h2>${internal(
@@ -13,7 +15,13 @@ function postPreview(post, options) {
     post.title,
     options,
   )}</h2>${
-    video
+    cover
+      ? `<a href="${
+          post.path
+        }" class="post-thumbnail album-cover" tabindex="-1" aria-hidden="true"><img src="${escapeHtml(
+          cover,
+        )}" alt="" width="120" height="120" loading="lazy"></a>`
+      : video
       ? `<a href="${post.path}" class="post-thumbnail" tabindex="-1" aria-hidden="true"><img src="https://i.ytimg.com/vi/${video.id}/hqdefault.jpg" alt="" width="480" height="360" loading="lazy"></a>`
       : ''
   }<p>${escapeHtml(post.excerpt)}</p><p>${internal(

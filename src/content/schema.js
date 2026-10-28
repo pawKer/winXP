@@ -39,6 +39,7 @@ function structuredData(page) {
       recording.datePublished = release.releaseDate;
     if (release.video)
       recording.video = { '@id': `${release.video.sourceUrl}#video` };
+    if (release.artwork) recording.image = absolute(release.artwork);
     graph.push(recording);
     if (release.video) graph.push(videoData(release.video));
   }
@@ -55,6 +56,7 @@ function structuredData(page) {
       inLanguage: post.language,
     };
     if (post.updatedAt) article.dateModified = post.updatedAt;
+    if (page.image) article.image = absolute(page.image);
     if (post.videoId)
       article.video = { '@id': `${videoById(post.videoId).sourceUrl}#video` };
     graph.push(article);

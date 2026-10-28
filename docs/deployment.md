@@ -41,6 +41,9 @@ In either setup, nginx then serves the example file at `https://reshra.xyz/songs
 
 ## Public edge checks
 
+Optimized covers in `public/artwork/` ship with the normal build and need no
+separate songs-mount copy. Their original JPEGs in `public/songs/` stay local;
+use `yarn media:artwork` to refresh the web copies after replacing an original.
 
 - Verify Home, `/music`, an older recording, `/blog`, a post, and an existing note as raw HTML and after JavaScript.
 - Unknown content and missing assets must return 404. `/robots.txt` must be plain text; `/sitemap.xml` and `/feed.xml` must be XML.

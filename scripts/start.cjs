@@ -28,6 +28,7 @@ const watchers = [
         'noteSections.js',
         'videos.json',
         'audioManifest.json',
+        'artwork.json',
       ].includes(String(filename))
     )
       refresh();

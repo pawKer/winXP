@@ -17,11 +17,15 @@ function renderRelease(release, options) {
     '/music',
     'Music archive',
     options,
-  )} / ${escapeHtml(
-    release.title,
-  )}</div><header class="document-heading">${icon(
-    'music',
-  )}<div><p class="eyebrow">${
+  )} / ${escapeHtml(release.title)}</div><header class="document-heading">${
+    release.artwork
+      ? `<img class="release-cover" src="${escapeHtml(
+          release.artwork,
+        )}" width="160" height="160" alt="${escapeHtml(
+          release.title,
+        )} cover artwork">`
+      : icon('music')
+  }<div><p class="eyebrow">${
     release.releaseStatus === 'upcoming'
       ? 'Upcoming recording'
       : 'From the music archive'
