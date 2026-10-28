@@ -229,6 +229,71 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
         Buffer.from(capture.data, 'base64'),
       );
     };
+    const checkWinampMovement = async () => {
+      const rootPosition = await evaluate(() => {
+        const box = document.querySelector('#webamp').getBoundingClientRect();
+        return { left: Math.round(box.left), top: Math.round(box.top) };
+      });
+      assert.deepEqual(
+        rootPosition,
+        { left: 0, top: 0 },
+        'Webamp retains viewport coordinates without an extra DOM offset',
+      );
+      await evaluate(
+        '[...document.querySelectorAll("button.footer__window")].find(button=>button.textContent.includes("Winamp")).click()',
+      );
+      const before = await evaluate(() => {
+        const box = document
+          .querySelector('#webamp #main-window')
+          .getBoundingClientRect();
+        return { left: box.left, top: box.top };
+      });
+      const start = { x: before.left + 110, y: before.top + 7 };
+      const end = { x: start.x + 65, y: start.y + 30 };
+      await cdp('Input.dispatchMouseEvent', { type: 'mouseMoved', ...start });
+      await cdp('Input.dispatchMouseEvent', {
+        type: 'mousePressed',
+        ...start,
+        button: 'left',
+        clickCount: 1,
+      });
+      await cdp('Input.dispatchMouseEvent', {
+        type: 'mouseMoved',
+        ...end,
+        button: 'left',
+        buttons: 1,
+      });
+      await cdp('Input.dispatchMouseEvent', {
+        type: 'mouseReleased',
+        ...end,
+        button: 'left',
+        clickCount: 1,
+      });
+      await delay(150);
+      const after = await evaluate(() => {
+        const box = document
+          .querySelector('#webamp #main-window')
+          .getBoundingClientRect();
+        return { left: box.left, top: box.top };
+      });
+      assert.equal(
+        Math.round(after.left - before.left),
+        65,
+        'Winamp follows horizontal dragging',
+      );
+      assert.equal(
+        Math.round(after.top - before.top),
+        30,
+        'Winamp follows vertical dragging',
+      );
+      await viewport(800, 900);
+      await waitFor(
+        `Array.from(document.querySelectorAll('#webamp .window')).filter(panel=>panel.getClientRects().length).every(panel=>{const box=panel.getBoundingClientRect();return box.left>=-1&&box.top>=-1&&box.right<=innerWidth+1&&box.bottom<=innerHeight+1;})`,
+        'Winamp keeps all open panels and controls inside the resized viewport',
+      );
+      await viewport(1366, 900);
+      console.log('Verified native Winamp dragging and viewport boundaries.');
+    };
     await cdp('Page.enable');
     await cdp('Runtime.enable');
     await cdp('Network.enable');
@@ -317,6 +382,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
         { left: 321, top: 243 },
         'Winamp startup matches the measured production layout',
       );
+      await checkWinampMovement();
       await click('.ie__content a[href="/music"]');
       await click('.ie__content a[href="/music/forever"]');
       await click('.ie__content button[data-play-winamp="forever"]');
@@ -819,6 +885,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
       'Original title font loads locally with Google font servers blocked',
     );
     console.log('Verified desktop startup, including Winamp.');
+    await checkWinampMovement();
     await click('.ie__content a[href="/music"]');
     await assertHead('/music');
     assert.equal(

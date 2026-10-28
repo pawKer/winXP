@@ -119,6 +119,7 @@ export default function Winamp({
     }
     if (!target.current) return;
     let disposed = false;
+    let renderFrame;
     const Ctor = hasWebGL() ? WebampWithVisualizers : Webamp;
     const current = new Ctor({
       initialSkin: { url: '/winamp_skin/modern.wsz', name: 'Modern' },
@@ -198,59 +199,48 @@ export default function Winamp({
       previousStatus = status;
       previousTime = time;
     }, 300);
-    current
-      .renderWhenReady(target.current)
-      .then(() => {
-        if (disposed) return;
-        const node = document.getElementById('webamp');
-        if (node && target.current && node.parentElement !== target.current) {
-          const outer = target.current.getBoundingClientRect();
-          const inner = node.getBoundingClientRect();
-          const panels = [...node.querySelectorAll('.window')]
-            .map(panel => panel.getBoundingClientRect())
-            .filter(box => box.width && box.height);
-          const left = Math.min(...panels.map(box => box.left));
-          const top = Math.min(...panels.map(box => box.top));
-          const width = Math.max(...panels.map(box => box.right)) - left;
-          const height = Math.max(...panels.map(box => box.bottom)) - top;
-          // The production desktop centers the complete player group on its
-          // mount point, not at (0, 0). Preserve that placement across Webamp's
-          // absolute default layouts, then reparent without moving the group.
-          const groupLeft = Math.max(
-            0,
-            Math.min(
-              window.innerWidth - width,
-              Math.round(outer.left + outer.width / 2 - width / 2),
-            ),
-          );
-          const groupTop = Math.max(
-            0,
-            Math.min(
-              window.innerHeight - 30 - height,
-              Math.round(outer.top + outer.height / 2 - height / 2),
-            ),
-          );
-          target.current.appendChild(node);
-          node.style.left = `${Math.round(
-            inner.left - outer.left + groupLeft - left,
-          )}px`;
-          node.style.top = `${Math.round(
-            inner.top - outer.top + groupTop - top,
-          )}px`;
-        }
-        ready.current = true;
-        playPending.current();
-      })
-      .catch(() => {
-        if (!disposed)
-          announce(
-            '',
-            'Winamp could not start. You can still use the music links.',
-          );
-      });
+    function renderWhenVisible() {
+      if (disposed) return;
+      const mount = target.current;
+      // Unlike master, the lazy desktop initially hides #root. Let Webamp
+      // measure the visible mount and own all window coordinates/boundaries.
+      if (!mount?.getClientRects().length) {
+        renderFrame = requestAnimationFrame(renderWhenVisible);
+        return;
+      }
+      const initialBounds = mount.getBoundingClientRect();
+      current
+        .renderWhenReady(mount)
+        .then(() => {
+          if (disposed) return;
+          const node = document.getElementById('webamp');
+          if (node && node.parentElement !== mount) {
+            const outer = mount.getClientRects().length
+              ? mount.getBoundingClientRect()
+              : initialBounds;
+            const inner = node.getBoundingClientRect();
+            // Preserve master's reparenting without adding a visual offset
+            // that Webamp's dragging/viewport constraints cannot see.
+            mount.appendChild(node);
+            node.style.left = `${Math.round(inner.left - outer.left)}px`;
+            node.style.top = `${Math.round(inner.top - outer.top)}px`;
+          }
+          ready.current = true;
+          playPending.current();
+        })
+        .catch(() => {
+          if (!disposed)
+            announce(
+              '',
+              'Winamp could not start. You can still use the music links.',
+            );
+        });
+    }
+    renderFrame = requestAnimationFrame(renderWhenVisible);
     return () => {
       disposed = true;
       ready.current = false;
+      cancelAnimationFrame(renderFrame);
       clearInterval(timer);
       unregister();
       unsubscribeTrack();
