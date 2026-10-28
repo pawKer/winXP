@@ -5,7 +5,9 @@ const os = require('os');
 const assert = require('assert');
 const { spawn } = require('child_process');
 const { createPreview } = require('./preview.cjs');
-const audioManifest = require('../src/content/audioManifest.json');
+const { releases } = require('../src/content/catalogue');
+const testRelease = releases.find(release => release.slug === 'forever');
+const testAudioUrl = testRelease.webAudioUrl || testRelease.trackUrl;
 const { getPage, structuredData } = require('../src/content/pages');
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -30,7 +32,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
       path.resolve(
         __dirname,
         process.env.TEST_BASE_URL ? '../public' : '../build',
-        '.' + audioManifest.forever.url,
+        '.' + testAudioUrl,
       ),
     );
   const server = process.env.TEST_BASE_URL
@@ -103,7 +105,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
         const url = message.params.request.url;
         if (url.startsWith(origin) && /\.js(?:\?|$)/.test(url))
           scripts.push(url);
-        if (url === origin + audioManifest.forever.url)
+        if (url === new URL(testAudioUrl, origin).href)
           mediaBytes.set(message.params.requestId, 0);
       }
       if (
@@ -1426,7 +1428,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
           )} ms; ${[...mediaBytes.values()].reduce(
             (sum, bytes) => sum + bytes,
             0,
-          )} MP3 bytes received during playback checks (local server).`
+          )} audio bytes received during playback checks (local server).`
         : 'Verified empty-mount errors, no false playback starts, and Winamp minimize/restore/close/reopen. Successful playback requires the separately deployed recordings.',
     );
 

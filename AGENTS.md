@@ -30,6 +30,7 @@ Notes:
 - The local development server normally runs at `http://localhost:3000`.
 - `yarn start` is a long-running process. Start it in the background when working through an agent shell.
 - `.env` provides `REACT_APP_GA_MEASUREMENT_ID`. CRA embeds this at build time.
+- WAV playback is the default. Set `REACT_APP_PREFER_MP3=true` at build time only after the compressed songs have been deployed; `audioManifest.json` records local preparation rather than server availability.
 - The Docker production app is exposed at `http://localhost:14567` by `docker-compose.yml`.
 
 ## Repository map

@@ -6,6 +6,7 @@ services:
       context: .
       args:
         - REACT_APP_GA_MEASUREMENT_ID=${REACT_APP_GA_MEASUREMENT_ID}
+        - REACT_APP_PREFER_MP3=${REACT_APP_PREFER_MP3:-false}
     ports:
       - "14567:80"
     volumes:

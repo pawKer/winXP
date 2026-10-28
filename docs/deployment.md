@@ -41,6 +41,11 @@ In either setup, nginx then serves the example file at `https://reshra.xyz/songs
 
 ## Public edge checks
 
+The live server currently hosts WAV recordings. WAV playback is the default.
+Set `REACT_APP_PREFER_MP3=true` at build time only after copying the compressed
+`web/` directory into the songs mount and checking its public URLs. A manifest
+entry alone does not establish that the corresponding MP3 has been deployed.
+
 Optimized covers in `public/artwork/` ship with the normal build and need no
 separate songs-mount copy. Their original JPEGs in `public/songs/` stay local;
 use `yarn media:artwork` to refresh the web copies after replacing an original.

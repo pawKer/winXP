@@ -155,7 +155,10 @@ const releases = [
 
 releases.forEach(release => {
   release.artwork = artwork[release.slug] ? artwork[release.slug].url : null;
-  if (audioManifest[release.slug])
+  if (
+    process.env.REACT_APP_PREFER_MP3 === 'true' &&
+    audioManifest[release.slug]
+  )
     release.webAudioUrl = audioManifest[release.slug].url;
 });
 

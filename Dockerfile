@@ -18,6 +18,8 @@ COPY . .
 
 ARG REACT_APP_GA_MEASUREMENT_ID
 ENV REACT_APP_GA_MEASUREMENT_ID=${REACT_APP_GA_MEASUREMENT_ID}
+ARG REACT_APP_PREFER_MP3=false
+ENV REACT_APP_PREFER_MP3=${REACT_APP_PREFER_MP3}
 
 # Build the app
 RUN yarn build
@@ -38,4 +40,4 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 EXPOSE 80
 
 # Start nginx
-CMD ["nginx", "-g", "daemon off;"] 
+CMD ["nginx", "-g", "daemon off;"]
