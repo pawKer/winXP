@@ -6,6 +6,8 @@ This is a client-only Windows XP desktop recreation built with Create React App,
 
 The project is also customized as `reshra`'s personal desktop. Preserve that identity and the retro Windows XP aesthetic unless a task explicitly asks for a redesign.
 
+Project plans, reviews, analytics and release notes are indexed in [docs/README.md](docs/README.md). Keep this agent instruction file at the repository root; editorial drafts and asset-specific documentation stay with their related files.
+
 ## Commands
 
 Use Yarn because `yarn.lock` is the committed lockfile.
@@ -33,6 +35,7 @@ Notes:
 ## Repository map
 
 ```text
+docs/                           Plans, implementation status, deployment and analytics
 public/                         Static files served from site root
   songs/                        Local Winamp tracks; intentionally gitignored
   winamp_skin/modern.wsz        Winamp skin

@@ -4,9 +4,9 @@ Reports were retrieved from property **502513568 — reshra-xyz** using the user
 
 ## Open the dashboard
 
-Open [.local/analytics/2026-10-27/index.html](.local/analytics/2026-10-27/index.html) in a browser. It contains a period/scope selector, totals, a daily trend, searchable tables, and CSV/JSON downloads. It works offline and contains no credentials.
+Open [.local/analytics/2026-10-27/index.html](../../.local/analytics/2026-10-27/index.html) in a browser. It contains a period/scope selector, totals, a daily trend, searchable tables, and CSV/JSON downloads. It works offline and contains no credentials.
 
-Seven report types are available for each of four views, yielding **28 CSV tables** plus the dashboard and a complete [snapshot.json](.local/analytics/2026-10-27/snapshot.json):
+Seven report types are available for each of four views, yielding **28 CSV tables** plus the dashboard and a complete [snapshot.json](../../.local/analytics/2026-10-27/snapshot.json):
 
 | Report | Dimensions / grouping | Metrics |
 | --- | --- | --- |

@@ -51,7 +51,7 @@ In either setup, nginx then serves the example file at `https://reshra.xyz/songs
 
 ## Analytics release stages
 
-The approved connection to property **502513568** has prepared four dimensions; [GA4_CHANGE_REPORT.md](GA4_CHANGE_REPORT.md) records the readback. [GA4_REPORTS.md](GA4_REPORTS.md) provides the pre-release baseline, including the legacy event names and public-host scope. Existing automatic tracking remains enabled until the manual release.
+The approved connection to property **502513568** has prepared four dimensions; [GA4 change report](analytics/change-report.md) records the readback. [historical GA4 reports](analytics/reports.md) provides the pre-release baseline, including the legacy event names and public-host scope. Existing automatic tracking remains enabled until the manual release.
 
 After the user confirms deployment and the public analytics-version marker is present:
 
@@ -73,7 +73,7 @@ Neither stage proves ingestion merely by succeeding. Record live-event evidence 
 
 ## Baseline obtained during implementation
 
-[content-sources/production-baseline.json](content-sources/production-baseline.json) records raw responses checked on 27 October 2026 before deployment. At that time:
+[content-sources/production-baseline.json](../content-sources/production-baseline.json) records raw responses checked on 27 October 2026 before deployment. At that time:
 
 - Home, music, blog, and a note all returned the old shared `reshra's desktop` HTML.
 - Unknown paths returned 200 rather than 404.

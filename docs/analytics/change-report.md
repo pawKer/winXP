@@ -27,4 +27,4 @@ Existing legacy dimensions **Link destination**, **Link label**, **Link type**, 
 
 The old production site's automatic tracking stays active until deployment. The current historical report has no rows for either new music event, so key-event marking is intentionally deferred. The after-deployment tool checks the live analytics version before activation; key-event marking is a separate subsequent phase.
 
-The actual historical baseline and refresh instructions are in [GA4_REPORTS.md](GA4_REPORTS.md). GA4 preparation, live-site analytics compatibility, event ingestion, and final key-event marking are separate pieces of evidence. DebugView and deployed-event counts are still pending the user's manual deployment.
+The actual historical baseline and refresh instructions are in [historical GA4 reports](reports.md). GA4 preparation, live-site analytics compatibility, event ingestion, and final key-event marking are separate pieces of evidence. DebugView and deployed-event counts are still pending the user's manual deployment.

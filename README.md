@@ -9,6 +9,11 @@ Features:
 - Minesweeper, Internet Explorer, My Computer, Notepad, Winamp, Paint
 - Power off menu
 
+## Documentation
+
+Use the [documentation index](docs/README.md) for implementation status,
+deployment instructions, analytics, and the blog/SEO plans.
+
 ## Site content and SEO
 
 The production build generates 35 HTML pages: the desktop reading view, ten
@@ -54,11 +59,11 @@ Direct note/music URLs maximize their target window; ordinary internal launches
 use the normal window sizes, with existing window sizes preserved. Direct blog
 URLs continue to open the standalone blog. Window titles use the original Noto
 Sans typeface, now served locally.
-See [GA4_SETUP.md](GA4_SETUP.md) for instrumentation and account setup and
-[DEPLOYMENT_CHECKLIST.md](DEPLOYMENT_CHECKLIST.md) for media and server checks.
+See [GA4 setup](docs/analytics/setup.md) for instrumentation and account setup and
+[deployment checklist](docs/deployment.md) for media and server checks.
 
 `yarn ga4:reports` creates the historical analytics dashboard and CSV tables with
-the approved local GA credentials. See [GA4_REPORTS.md](GA4_REPORTS.md) for the
+the approved local GA credentials. See [historical GA4 reports](docs/analytics/reports.md) for the
 actual pre-release baseline. Generated data stay in `.local/analytics/`, excluded
 from Git and Docker. Analytics delivery is limited to the canonical public host
 and its subdomains; an explicit `REACT_APP_GA_DEBUG=true` build enables deliberate
@@ -69,7 +74,8 @@ it and serves generated HTML at extensionless paths. Cloudflare must also
 redirect HTTP to HTTPS, and its crawler, caching, and robots settings need
 verification after deployment. Search Console and Bing property setup and
 baseline measurements require access to those accounts.
-See `SEO_EVALUATION.md` for the local, production, and search performance checks.
+See the [SEO evaluation guide](docs/seo/evaluation.md) for the local, production,
+and search performance checks.
 
 ## [Try it!](https://winxp.now.sh)
 

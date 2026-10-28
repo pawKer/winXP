@@ -1,6 +1,6 @@
 # GA4 setup for the blog and music archive
 
-The approved Desktop OAuth connection has been verified against property **502513568** (`reshra-xyz`) and web stream **12074125440** (`G-W085VX12Y0`). Four reporting dimensions have been created and read back. Automatic page-history/video collection and key-event markers remain unchanged until the manual release and event verification. See the actual [change report](GA4_CHANGE_REPORT.md) and [historical reports](GA4_REPORTS.md).
+The approved Desktop OAuth connection has been verified against property **502513568** (`reshra-xyz`) and web stream **12074125440** (`G-W085VX12Y0`). Four reporting dimensions have been created and read back. Automatic page-history/video collection and key-event markers remain unchanged until the manual release and event verification. See the actual [change report](change-report.md) and [historical reports](reports.md).
 
 ## Alternative service account access
 
@@ -94,7 +94,7 @@ This staging preserves the old production code's automatic tracking until the us
 
 ## Historical metrics and reports
 
-`yarn.cmd ga4:reports` uses the same approved credentials and queries the account read-only. It creates an offline dashboard and 28 CSV tables for legacy events, with public-site and all-host scopes. The default cutoff is frozen at 27 October 2026. See [GA4_REPORTS.md](GA4_REPORTS.md) for the dashboard, actual baseline, refresh command, missing-parameter limits, and equivalent manual GA Report Library configurations. No saved Report Library screens were created through the APIs.
+`yarn.cmd ga4:reports` uses the same approved credentials and queries the account read-only. It creates an offline dashboard and 28 CSV tables for legacy events, with public-site and all-host scopes. The default cutoff is frozen at 27 October 2026. See [historical GA4 reports](reports.md) for the dashboard, actual baseline, refresh command, missing-parameter limits, and equivalent manual GA Report Library configurations. No saved Report Library screens were created through the APIs.
 
 `yarn.cmd test:ga4` runs isolated API/authentication tests for read-only plans, correct stream selection, idempotent preparation, post-deployment activation, preserved unrelated settings, failed deployment checks, readback and partial failures. It also exercises the loopback OAuth callback with simulated credentials: state/PKCE validation, correct credential output, graceful response/close, secret-free logs and refusal to overwrite/write inside the checkout. These tests do not use real credentials and do not prove production account access or ingestion.
 

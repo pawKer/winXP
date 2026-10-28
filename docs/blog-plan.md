@@ -1,6 +1,6 @@
 # reshra's blog and music archive
 
-Proposed 27 October 2026, following the review in [SEO_FOLLOWUPS.md](SEO_FOLLOWUPS.md). The direct/embedded blog and archive are implemented locally; [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md) records current evidence, source limitations, and external work still required. The requirements below preserve the plan rather than declaring every acceptance gate complete.
+Proposed 27 October 2026, following the review in [SEO follow-ups](seo/followups.md). The direct/embedded blog and archive are implemented locally; [implementation status](implementation-status.md) records current evidence, source limitations, and external work still required. The requirements below preserve the plan rather than declaring every acceptance gate complete.
 
 ## Direction
 

@@ -1,12 +1,12 @@
 # SEO implementation review and follow-ups
 
-Reviewed 27 October 2026 against [SEO_PLAN.md](SEO_PLAN.md), on `feat/seo-static-pages` at `a58de15`. The implementation reviewed spans `608be07` through `a58de15`. This document proposes follow-up work; it does not change application behavior.
+Reviewed 27 October 2026 against [SEO plan](plan.md), on `feat/seo-static-pages` at `a58de15`. The implementation reviewed spans `608be07` through `a58de15`. This document proposes follow-up work; it does not change application behavior.
 
-Local implementation now includes the direct/embedded blog, full identified music archive, shared XP content styling, navigation and playback repairs. See [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md) for verification evidence and remaining account, editorial and deployment work; the findings below describe the original reviewed state.
+Local implementation now includes the direct/embedded blog, full identified music archive, shared XP content styling, navigation and playback repairs. See [implementation status](../implementation-status.md) for verification evidence and remaining account, editorial and deployment work; the findings below describe the original reviewed state.
 
 The static-page foundation is sound, but the HTML-to-desktop prototype still needs usability fixes before it meets the plan's completion criteria. Keep the architecture and the personal XP desktop. Prioritize readable pages, reliable mode switching, and coherent navigation, then refine the new content views around the existing XP controls.
 
-**Expanded content direction:** The requested follow-up now includes the older song catalogue and a Myspace/Piczo-inspired blog at `/blog`, available both inside IE and as a standalone website with direct post URLs. Release posts, tutorials, and other original videos can use reviewed AI-assisted article drafts. See [BLOG_PLAN.md](BLOG_PLAN.md) for the page structure, design, publishing workflow, and acceptance criteria.
+**Expanded content direction:** The requested follow-up now includes the older song catalogue and a Myspace/Piczo-inspired blog at `/blog`, available both inside IE and as a standalone website with direct post URLs. Release posts, tutorials, and other original videos can use reviewed AI-assisted article drafts. See [blog plan](../blog-plan.md) for the page structure, design, publishing workflow, and acceptance criteria.
 
 ## What is working
 
@@ -48,7 +48,7 @@ P1 means a core visitor journey is broken or misleading. P2 means a usability, a
 
 ### F1 — P1: Restore scrolling and reflow in reading view
 
-**Evidence:** [src/index.css](src/index.css) sets `body { overflow-y: hidden; }`. The generated reading styles in [scripts/generate-pages.js](scripts/generate-pages.js) never restore document scrolling. In Chrome, `/notes/guitar-parts?view=read` was about 1500 px tall in an 844 px viewport; a 650 px wheel gesture left `scrollY` at zero. The JavaScript-disabled page inherits the same restriction.
+**Evidence:** [src/index.css](../../src/index.css) sets `body { overflow-y: hidden; }`. The generated reading styles in [scripts/generate-pages.js](../../scripts/generate-pages.js) never restore document scrolling. In Chrome, `/notes/guitar-parts?view=read` was about 1500 px tall in an 844 px viewport; a 650 px wheel gesture left `scrollY` at zero. The JavaScript-disabled page inherits the same restriction.
 
 Long resource URLs also widened that note to **449 px in a 390 px viewport**. At 320 px, the music catalogue's nested padding and horizontal icon layout turn each release into a very tall, cramped card.
 
@@ -58,7 +58,7 @@ Long resource URLs also widened that note to **449 px in a 390 px viewport**. At
 
 ### F2 — P1: Keep the presentation switch available in both modes
 
-**Evidence:** [src/App.js](src/App.js) renders `#view-toggle` inside `#root`, while the generator hides `#root` in reading mode. Chrome confirmed that clicking “Reading view” hides the toggle itself. The remaining “Desktop view” anchor performs a full page load, discarding the live desktop session. Its apparent reversibility therefore differs from the first switch.
+**Evidence:** [src/App.js](../../src/App.js) renders `#view-toggle` inside `#root`, while the generator hides `#root` in reading mode. Chrome confirmed that clicking “Reading view” hides the toggle itself. The remaining “Desktop view” anchor performs a full page load, discarding the live desktop session. Its apparent reversibility therefore differs from the first switch.
 
 Reading links also perform document navigations, so browsing notes and returning to the desktop loses open windows and unsaved Notepad text. The mode state is initialized from the query string once and changed with raw `history.replaceState`, outside the router's location updates.
 
@@ -68,7 +68,7 @@ Reading links also perform document navigations, so browsing notes and returning
 
 ### F3 — P1: Update document metadata after internal navigation
 
-**Evidence:** Navigating `/` → `/music` → `/music/bruises` changed the visible page and fetched reading content, but Chrome still reported the homepage title and `https://reshra.xyz/` canonical. [src/App.js](src/App.js) copies only the fetched `#static-content` body; it never updates the document head.
+**Evidence:** Navigating `/` → `/music` → `/music/bruises` changed the visible page and fetched reading content, but Chrome still reported the homepage title and `https://reshra.xyz/` canonical. [src/App.js](../../src/App.js) copies only the fetched `#static-content` body; it never updates the document head.
 
 Directly loading a release has the correct metadata. This is an SPA consistency defect, not a claim that the generated release files lack SEO metadata.
 
@@ -78,9 +78,9 @@ Directly loading a release has the correct metadata. This is an SPA consistency 
 
 ### F4 — P1: Make browser history select the corresponding XP window
 
-**Evidence:** In Chrome, opening Guitar Parts from `/notes` and pressing browser Back returned the URL to `/notes`, but Notepad remained over the index. [src/WinXP/index.js](src/WinXP/index.js) opens notes on path changes but does not restore/focus Internet Explorer for index or music routes. Desktop note shortcuts and header callbacks can open documents without updating the URL at all.
+**Evidence:** In Chrome, opening Guitar Parts from `/notes` and pressing browser Back returned the URL to `/notes`, but Notepad remained over the index. [src/WinXP/index.js](../../src/WinXP/index.js) opens notes on path changes but does not restore/focus Internet Explorer for index or music routes. Desktop note shortcuts and header callbacks can open documents without updating the URL at all.
 
-The simulated IE Back control in [InternetExplorer/index.js](src/WinXP/apps/InternetExplorer/index.js) calls `goMain()`, which pushes `/`; it does not go back. It also appears disabled while browsing new content routes because its appearance still depends on the old `state.route` value.
+The simulated IE Back control in [InternetExplorer/index.js](../../src/WinXP/apps/InternetExplorer/index.js) calls `goMain()`, which pushes `/`; it does not go back. It also appears disabled while browsing new content routes because its appearance still depends on the old `state.route` value.
 
 **Follow-up:** Establish one route-to-window navigation helper: note paths open/focus the matching Notepad, and home/music/index paths open/restore/focus IE. Use it from links, shortcuts, and browser history. Keep other open windows intact. Wire IE Back/Forward to real supported history behavior and use actual disabled buttons when unavailable.
 
@@ -88,7 +88,7 @@ The simulated IE Back control in [InternetExplorer/index.js](src/WinXP/apps/Inte
 
 ### F5 — P2: Make reading content refresh recover from failures
 
-**Evidence:** [src/App.js](src/App.js) fetches an entire HTML document after every path change, even while reading content is hidden. It does not check `response.ok`. If a 404, challenge page, or development-server response lacks `#static-content`, the page can stay on “Loading page…” indefinitely. CRA's `yarn start` does not run the generator, so that workflow also lacks the production reading view and toggle.
+**Evidence:** [src/App.js](../../src/App.js) fetches an entire HTML document after every path change, even while reading content is hidden. It does not check `response.ok`. If a 404, challenge page, or development-server response lacks `#static-content`, the page can stay on “Loading page…” indefinitely. CRA's `yarn start` does not run the generator, so that workflow also lacks the production reading view and toggle.
 
 **Follow-up:** Prefer shared content rendering or route-specific content output over fetching a whole second page. If retaining this approach, check status and the returned page identity, preserve useful content during loading, and provide a retry/open-page fallback. Make the production-like preview command explicit in the README and development workflow.
 
@@ -104,7 +104,7 @@ The simulated IE Back control in [InternetExplorer/index.js](src/WinXP/apps/Inte
 
 ### F7 — P2: Give published pages a dependable media delivery path
 
-**Evidence:** Both public release records in [src/content/site.js](src/content/site.js) use WAV URLs. The local `bruises` file is approximately 100 MiB; the local `anii 2000` file is missing. Songs are intentionally gitignored and mounted separately in Docker, so this does **not** establish a production outage.
+**Evidence:** Both public release records in [src/content/site.js](../../src/content/site.js) use WAV URLs. The local `bruises` file is approximately 100 MiB; the local `anii 2000` file is missing. Songs are intentionally gitignored and mounted separately in Docker, so this does **not** establish a production outage.
 
 **Follow-up:** Verify both published files in the deployment media mount. Add compressed web playback versions and point public playback at them while retaining masters in the existing storage workflow. Centralize release-to-playlist mapping so changing a URL cannot silently break Winamp selection. Keep `preload="none"` for native audio and inspect actual network loading before choosing further optimizations.
 
@@ -112,9 +112,9 @@ The simulated IE Back control in [InternetExplorer/index.js](src/WinXP/apps/Inte
 
 ### F8 — P2: Make public notes understandable and keyboard usable
 
-**Evidence:** The XP [HeaderRenderer](src/WinXP/apps/Notepad/components/HeaderRenderer.js) renders sections as ASCII text inside a `div`, with `white-space: pre`. The newly added disclosure becomes one long unwrapped line; it was clipped horizontally even in the inspected desktop Notepad. Note descriptions exist in shared data but are not shown in Notepad. The reading renderer also omits the optional configured welcome title.
+**Evidence:** The XP [HeaderRenderer](../../src/WinXP/apps/Notepad/components/HeaderRenderer.js) renders sections as ASCII text inside a `div`, with `white-space: pre`. The newly added disclosure becomes one long unwrapped line; it was clipped horizontally even in the inspected desktop Notepad. Note descriptions exist in shared data but are not shown in Notepad. The reading renderer also omits the optional configured welcome title.
 
-The existing [Notepad textarea](src/WinXP/apps/Notepad/index.js) is unlabeled and intercepts Tab to insert a character. This is inherited behavior that the new public routes now expose more directly; a keyboard escape path needs verification and documentation.
+The existing [Notepad textarea](../../src/WinXP/apps/Notepad/index.js) is unlabeled and intercepts Tab to insert a character. This is inherited behavior that the new public routes now expose more directly; a keyboard escape path needs verification and documentation.
 
 **Follow-up:** Preserve the monospace identity while rendering real headings, paragraphs, and lists. Keep decorative borders out of the accessibility tree. Wrap disclosures and long URLs independently of the textarea's Word Wrap setting. Show the same introduction in both modes. Label the scratchpad, explain that edits are temporary, and provide a standard keyboard exit if Tab insertion remains.
 
@@ -190,7 +190,7 @@ Keep each release's artist entity understandable when that page is read alone. C
 
 ### S2 — P2: Turn verification into a repeatable gate
 
-[scripts/verify-pages.js](scripts/verify-pages.js) checks useful static strings, but it cannot detect the scrolling, hidden-toggle, stale-head, or window-focus defects above. Its JSON-LD check validates parsing and `@context`, not full schema correctness.
+[scripts/verify-pages.js](../../scripts/verify-pages.js) checks useful static strings, but it cannot detect the scrolling, hidden-toggle, stale-head, or window-focus defects above. Its JSON-LD check validates parsing and `@context`, not full schema correctness.
 
 Add a small browser smoke suite around those visitor journeys, and a production-like nginx status check. Keep these outcome-focused: assert what visitors can read, activate, and navigate to. Include JavaScript-disabled output, content/link parity, one missing-media case, and a failed reading-content request.
 
@@ -198,7 +198,7 @@ Run generation and the SEO assertions in the normal CI/release gate. `yarn lint`
 
 ### S3 — Deployment gate: Verify the effective public responses
 
-Use the existing [SEO_EVALUATION.md](SEO_EVALUATION.md) checklist after deployment. Record raw and rendered evidence for a home, release, and note URL; preferred-host and HTTPS redirects; correct discovery-file content types; missing assets and unknown content returning 404; and updated HTML reaching visitors through Cloudflare.
+Use the existing [SEO evaluation](evaluation.md) checklist after deployment. Record raw and rendered evidence for a home, release, and note URL; preferred-host and HTTPS redirects; correct discovery-file content types; missing assets and unknown content returning 404; and updated HTML reaching visitors through Cloudflare.
 
 Also check `.html` aliases and trailing slashes, choosing either a deliberate redirect to the clean URL or a documented canonical policy. Verify media availability on the actual mount. Confirm that Cloudflare's effective robots and bot rules preserve the already-approved search/training policy; this review proposes no policy change.
 
@@ -206,7 +206,7 @@ The legacy `now-build` script bypasses generation and `now.json` still rewrites 
 
 ### S4 — P2: Measure useful listening actions consistently
 
-[useGA.js](src/hooks/useGA.js) relies on GA4 Enhanced Measurement for history page views. Verify that setting in the actual property and use DebugView to check initial loads, internal navigation, Back/Forward, and mode changes. Decide whether a presentation-only switch should count as another page view before comparing results.
+[useGA.js](../../src/hooks/useGA.js) relies on GA4 Enhanced Measurement for history page views. Verify that setting in the actual property and use DebugView to check initial loads, internal navigation, Back/Forward, and mode changes. Decide whether a presentation-only switch should count as another page view before comparing results.
 
 External `music_listen_click` events exist, but Winamp and native playback are not represented by the same listening funnel. Add distinct playback-request and playback-start events, including release, player, and presentation/source. Keep external clicks separate from successful local starts, and ensure one action is not double-counted by overlapping listeners. Compare these outcomes with the planned search baseline after deployment.
 
@@ -242,7 +242,7 @@ Add optional video metadata to the release record in `src/content/site.js`, star
 
 ### V2 — P2: Extend the catalogue beyond current releases
 
-The requested scope now includes older songs, expanding the original two-page milestone into a fuller archive. The channel exposes the following official video candidates. Confirm missing release details and preferred videos as content is added. Keep drafts clearly labeled and separate from released music. Each song can also have a blog post with its story or release context, linked to its evergreen listening page; see [BLOG_PLAN.md](BLOG_PLAN.md).
+The requested scope now includes older songs, expanding the original two-page milestone into a fuller archive. The channel exposes the following official video candidates. Confirm missing release details and preferred videos as content is added. Keep drafts clearly labeled and separate from released music. Each song can also have a blog post with its story or release context, linked to its evergreen listening page; see [blog plan](../blog-plan.md).
 
 | Song | Video found on the channel |
 | --- | --- |
@@ -295,7 +295,7 @@ The channel provides original material that can make the existing notes more use
 - NAM note: [Vox AC15 capture, Part 1](https://www.youtube.com/watch?v=Ies6tZhKJwk) and [comparison, Part 2](https://www.youtube.com/watch?v=axaDts9Rjeg).
 - Guitar Parts note: [Harley Benton JA-25th transformation](https://www.youtube.com/watch?v=cL6FpPPRb8k).
 
-Add a short personal explanation, the relevant tutorial link, and what each parts/resource list supports. Pair the reference note with a fuller blog tutorial when it adds a distinct explanation, using the transcript-grounded drafting workflow in [BLOG_PLAN.md](BLOG_PLAN.md). Start with links or one optional embed rather than loading a video for every section. For Romanian-language tutorials, label the language in English navigation. Link video descriptions back to the matching canonical article, note, or song page when updating the channel; these external edits have not been made.
+Add a short personal explanation, the relevant tutorial link, and what each parts/resource list supports. Pair the reference note with a fuller blog tutorial when it adds a distinct explanation, using the transcript-grounded drafting workflow in [blog plan](../blog-plan.md). Start with links or one optional embed rather than loading a video for every section. For Romanian-language tutorials, label the language in English navigation. Link video descriptions back to the matching canonical article, note, or song page when updating the channel; these external edits have not been made.
 
 ### G3 — Later: Add useful artist context and small everyday conveniences
 
@@ -311,6 +311,6 @@ For everyday use, consider “Copy page link,” an explicit scratchpad save/dow
 | 2. Unify the XP content design | D1–D3, D5, F8 | Catalogue, release, and note layouts reviewed at default IE size, resized narrow windows, 320/390 px, and zoom; keyboard checks pass. |
 | 3. Make listening and loading dependable | F5–F7, V1, S4, A2 once account access exists | One intended recording per player, useful YouTube embeds, no permanent loading states or competing hidden players; media and event counts verified. |
 | 4. Complete discovery evidence | S1–S3 | Confirmed content added, repeatable checks run, public edge responses recorded, and search baselines established. |
-| 5. Build the blog and full archive | BLOG_PLAN.md, V2, G2 | A Myspace/Piczo-inspired blog works inside IE and at direct URLs; an older song and a transcript-grounded tutorial establish the format before expanding the catalogue. |
+| 5. Build the blog and full archive | [Blog plan](../blog-plan.md), V2, G2 | A Myspace/Piczo-inspired blog works inside IE and at direct URLs; an older song and a transcript-grounded tutorial establish the format before expanding the catalogue. |
 
-Implement the relevant regression checks from S2 alongside each batch. Release metadata and source transcripts can be collected in parallel with the usability repairs. The blog/archive is now a requested content direction, with its own rollout in BLOG_PLAN.md. G3 contains optional convenience work. Keep optional AI-specific exports and a framework migration below these concrete visitor improvements.
+Implement the relevant regression checks from S2 alongside each batch. Release metadata and source transcripts can be collected in parallel with the usability repairs. The blog/archive is now a requested content direction, with its own rollout in the [blog plan](../blog-plan.md). G3 contains optional convenience work. Keep optional AI-specific exports and a framework migration below these concrete visitor improvements.
