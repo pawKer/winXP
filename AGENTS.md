@@ -20,8 +20,11 @@ yarn lint
 
 Notes:
 
-- There are currently no repository test files. `yarn build`, `yarn lint`, and focused manual testing are the useful checks.
+- `apply_patch` rejects multiple operations for the same path within one patch, including separate Update File blocks. Group edits into one block per file; use separate calls for deleting and recreating a file.
+
+- Playback/analytics unit tests and isolated GA tooling tests are available. Use `yarn test --watchAll=false --runInBand`, `yarn test:ga4`, build/lint, and focused browser/nginx checks as appropriate.
 - `react-scripts` is only available after dependencies are installed.
+- If PowerShell blocks `yarn.ps1`, use `yarn.cmd` with the same arguments; no execution-policy change is needed.
 - The local development server normally runs at `http://localhost:3000`.
 - `yarn start` is a long-running process. Start it in the background when working through an agent shell.
 - `.env` provides `REACT_APP_GA_MEASUREMENT_ID`. CRA embeds this at build time.
@@ -153,7 +156,7 @@ Important behavior:
 - Docker Compose mounts `./public/songs` read-only into nginx, so do not bake large/private audio into source without explicit direction.
 - The Winamp integration has deliberate React 18 StrictMode guards and DOM reparenting. Preserve these when changing lifecycle code.
 - Paint embeds `https://jspaint.app` in an iframe and therefore requires network access to work.
-- The desktop imports a Google-hosted Noto Sans font from styled-components, so offline rendering can fall back to Tahoma/sans-serif.
+- Window titles use locally served Noto Sans bold subsets from `src/assets/fonts`, with their SIL license included. Tahoma remains the desktop/fallback font; Google font servers are not required.
 
 ## Styling and assets
 
@@ -167,6 +170,7 @@ Important behavior:
 ## Code conventions and cautions
 
 - JavaScript and JSX only; there is no TypeScript setup.
+- Build/browser-shared content renderers use CommonJS in `.js` files so the generator can load them directly. Avoid object spread in these CommonJS modules: CRA injects ESM helper imports and then fails to expose the CommonJS exports. Use `Object.assign` or property assignments instead. CRA treats `.cjs` source as an asset URL, so do not rename shared renderers to `.cjs`. Prettier 1 needs `--parser babel` for standalone `.cjs` tooling scripts.
 - Prettier uses single quotes and trailing commas. Existing code generally uses two-space indentation.
 - Do not add package manager lockfiles other than `yarn.lock`.
 - Do not edit generated `build/` output.
@@ -174,8 +178,14 @@ Important behavior:
 - Preserve unrelated work in a dirty worktree. Check `git status --short` before and after editing.
 - Some source and documentation text currently contains visible mojibake (for example `â...` or `đ...`). Do not perform broad encoding cleanup as part of an unrelated task; it creates noisy diffs and may change intentionally displayed retro text. Fix only text explicitly in scope and verify the rendered result.
 - CRA's cached ESLint results can report old Prettier errors after formatting on Windows. If build output disagrees with the file on disk, remove only `node_modules/.cache/.eslintcache` before rebuilding.
+- A running CRA development compiler can also retain stale lint errors in `node_modules/.cache/default-development`. If direct lint and the build pass but dev still reports old line contents, stop only the task-owned QA server, verify the cache paths are within this workspace, clear that development cache and `.eslintcache`, then restart it. Do not stop unrelated development servers.
+- CRA clears `build/` while rebuilding. Wait for the active build to finish before browser/nginx checks; running them concurrently creates misleading 404s.
+- Use literal PowerShell here-strings piped to Node for scripts containing quote-heavy regular expressions. Shell-escaped JavaScript strings are easy to misparse.
 - Several components contain legacy or commented code. Prefer the active centralized patterns over reviving old per-icon `headerContent` code.
 - Avoid adding `console.log`; there is currently a debug log in the direct-note opening effect, but it is not a convention to copy.
+- Keep Webamp's imperative mount in an empty, dedicated DOM node. Rendering conditional React feedback into that same node can remove the player controls while its audio continues; render feedback as a sibling and verify the actual controls after playback starts.
+- Webamp 2.2's bundled Milkdrop presets can throw `float unrepresentable in integer range` in WASM and tear down its separate React root. Start with the built-in default preset and automatic randomization/cycling off; use the basic player on software WebGL/reduced-motion systems. Test visible controls after actual playback rather than only the `#webamp` root's existence.
+- Webamp 2.2 documents `setCurrentTrack` as accepting an index, but its implementation dispatches that argument as a track ID. Use the selected entry's `id` from `getPlaylistTracks()`, including after reopening/reordering. Its `pause()` also toggles to play when already paused/stopped: check `getMediaStatus()` before pausing programmatically. Verify the requested song's marquee and actual playback event, not just any playing state.
 
 ## Verification checklist
 

@@ -1,0 +1,43 @@
+name: Site checks
+
+on:
+  pull_request:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - run: npm install --global yarn@1.22.22
+      - run: yarn install --frozen-lockfile
+      - run: yarn lint
+      - run: yarn test --watchAll=false --runInBand
+      - run: yarn test:ga4
+      - name: Build and verify generated pages
+        run: yarn build
+        env:
+          # CRA otherwise fails on inherited warnings in untouched XP apps.
+          CI: 'false'
+      - name: Browser journeys with the empty media mount
+        run: yarn test:browser
+        env:
+          QA_MISSING_MEDIA: '1'
+      - name: Desktop failure and offline reading recovery
+        run: yarn test:browser
+        env:
+          QA_FAILED_DESKTOP: '1'
+      - name: Install the production server for routing checks
+        run: sudo apt-get update && sudo apt-get install --yes nginx
+      - run: yarn test:nginx
+        env:
+          NGINX_PATH: /usr/sbin/nginx
+          NGINX_MIME_PATH: /etc/nginx/mime.types

@@ -1,0 +1,29 @@
+{
+  "source": "https://reshra.xyz/",
+  "retrievedAt": "2026-10-28",
+  "note": "Read-only production browser measurement with analytics blocked. Reference for the pre-branch Winamp startup placement; coordinates include the open Milkdrop window.",
+  "viewport": { "width": 1366, "height": 900 },
+  "panels": [
+    {
+      "id": "main-window",
+      "left": 321,
+      "top": 243,
+      "width": 275,
+      "height": 116
+    },
+    {
+      "id": "equalizer-window",
+      "left": 321,
+      "top": 359,
+      "width": 275,
+      "height": 116
+    },
+    {
+      "id": "playlist-window",
+      "left": 321,
+      "top": 475,
+      "width": 275,
+      "height": 232
+    }
+  ]
+}

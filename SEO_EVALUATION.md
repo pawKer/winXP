@@ -4,7 +4,7 @@ There is no useful single "SEO score." Check that pages can be fetched and under
 
 ## 1. Local technical gate
 
-Run `yarn build`, `yarn test:seo`, and `yarn lint`. The SEO check validates the generated pages, unique titles and descriptions, canonical and social URLs, structured data syntax, the sitemap, and direct listening links from the homepage and music catalogue. Also inspect `/`, `/music`, one release, and one note with JavaScript disabled and enabled at desktop and phone widths. The same substantive text and links should be available both ways.
+Run `yarn build`, `yarn lint`, the playback unit tests, `yarn test:browser`, and `yarn test:nginx` (with nginx installed). Build includes the generated-page assertions; `yarn test:seo` can rerun them independently. They validate unique metadata, artist/article/video relationships, canonical and social URLs, public links, the sitemap, RSS, and draft exclusion. Inspect `/`, `/music`, a release, a note, `/blog`, and a post with JavaScript disabled and enabled at desktop and phone widths. The same substantive text and links should be available both ways.
 
 ## 2. Production crawl gate
 
@@ -12,11 +12,11 @@ After deployment, check actual HTTP responses from the public edge:
 
 | URL or test | Expected result |
 | --- | --- |
-| `https://reshra.xyz/`, `/music`, `/music/bruises`, `/notes/guitar-parts` | HTTP 200, HTML with the correct title, canonical, heading, and ordinary links in the raw response |
+| `https://reshra.xyz/`, `/music`, `/music/bruises`, `/notes/guitar-parts`, `/blog`, `/blog/building-my-midi-pedal` | HTTP 200, HTML with the correct title, canonical, heading, and ordinary links in the raw response |
 | `https://reshra.xyz/does-not-exist` | HTTP 404 |
 | `https://www.reshra.xyz/music/bruises` | Redirect to the same path on `https://reshra.xyz` |
 | `http://reshra.xyz/music/bruises` | Redirect to HTTPS, preserving the path |
-| `/robots.txt` and `/sitemap.xml` | HTTP 200, current content and appropriate text/XML content types |
+| `/robots.txt`, `/sitemap.xml`, `/feed.xml` | HTTP 200, current content and appropriate text/XML content types |
 
 Use Google Search Console's [URL Inspection](https://support.google.com/webmasters/answer/9012289?hl=en) live test on the homepage, `/music`, a release, and a note. Check the fetched HTML, rendered screenshot, resources, indexability, and later the Google-selected canonical. Run [Bing URL Inspection](https://www.bing.com/webmasters/help/URL-Inspection-55a30305) for the same representative URLs. Validate the MusicRecording JSON-LD with the [Schema Markup Validator](https://developers.google.com/search/docs/appearance/structured-data); a valid schema type does not by itself promise a Google rich result.
 
@@ -30,4 +30,8 @@ In analytics, count `music_listen_click` by release and destination from the lin
 
 ## Current evidence and limits
 
-The local generator produces nine pages and `yarn test:seo` checks their structure. This is evidence of technical readiness in the repository, not evidence of indexing or ranking. Production responses and Search Console/Bing properties have not yet been verified. The release pages intentionally have minimal copy; adding accurate artwork, dates, credits, and descriptions in `src/content/site.js` will give visitors and search engines more useful information.
+The local generator now produces 35 pages, including ten recordings and thirteen blog entries. Generated-page assertions, browser journeys, playback tests, and actual nginx checks provide local technical evidence. [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md) records their scope and remaining inputs. The new GitHub Actions workflow runs these checks without private audio; a local run with the media files additionally verifies successful playback.
+
+The pre-deployment public-response baseline is saved in [content-sources/production-baseline.json](content-sources/production-baseline.json). It shows the old shared HTML, fallback-200 responses and incorrect discovery MIME types at the public edge; the new implementation has not been deployed or checked in Search Console/Bing. Local results do not establish indexing or ranking.
+
+The approved GA connection has now verified property 502513568 and prepared four reporting dimensions; [GA4_CHANGE_REPORT.md](GA4_CHANGE_REPORT.md) records the actual changes. [GA4_REPORTS.md](GA4_REPORTS.md) contains the historical event baseline and downloadable reports, separating the public site from substantial localhost activity. Compare later periods with the same hostname scope and distinguish legacy link events from the new music events. Automatic collection switches, deployed-event verification, and final key-event marking still follow the user's manual deployment. Approved artwork, original release dates, and personal artist notes remain useful editorial additions to `src/content/catalogue.js` and `src/content/posts.js`.

@@ -1,0 +1,96 @@
+{
+  "checkedAt": "2026-10-27T22:28:32.292Z",
+  "note": "Pre-deployment baseline only; these responses do not verify the local implementation.",
+  "results": [
+    {
+      "url": "https://reshra.xyz/",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html",
+      "cacheControl": null,
+      "edgeCache": "DYNAMIC",
+      "title": "reshra's desktop",
+      "robots": null
+    },
+    {
+      "url": "https://reshra.xyz/music",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html",
+      "cacheControl": null,
+      "edgeCache": "DYNAMIC",
+      "title": "reshra's desktop",
+      "robots": null
+    },
+    {
+      "url": "https://reshra.xyz/blog",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html",
+      "cacheControl": null,
+      "edgeCache": "DYNAMIC",
+      "title": "reshra's desktop",
+      "robots": null
+    },
+    {
+      "url": "https://reshra.xyz/notes/guitar-parts",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html",
+      "cacheControl": null,
+      "edgeCache": "DYNAMIC",
+      "title": "reshra's desktop",
+      "robots": null
+    },
+    {
+      "url": "https://reshra.xyz/robots.txt",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html",
+      "cacheControl": "max-age=14400",
+      "edgeCache": "MISS",
+      "title": "reshra's desktop",
+      "robots": null
+    },
+    {
+      "url": "https://reshra.xyz/sitemap.xml",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html",
+      "cacheControl": null,
+      "edgeCache": "DYNAMIC",
+      "title": "reshra's desktop",
+      "robots": null
+    },
+    {
+      "url": "https://reshra.xyz/not-in-the-archive-qa",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html",
+      "cacheControl": null,
+      "edgeCache": "DYNAMIC",
+      "title": "reshra's desktop",
+      "robots": null
+    },
+    {
+      "url": "https://www.reshra.xyz/music",
+      "status": 200,
+      "location": null,
+      "contentType": "text/html",
+      "cacheControl": null,
+      "edgeCache": "DYNAMIC",
+      "title": "reshra's desktop",
+      "robots": null
+    },
+    {
+      "url": "http://reshra.xyz/music",
+      "status": 301,
+      "location": "https://reshra.xyz/music",
+      "contentType": "text/html; charset=UTF-8",
+      "cacheControl": null,
+      "edgeCache": null,
+      "title": "301 Moved Permanently",
+      "robots": null
+    }
+  ]
+}
