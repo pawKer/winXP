@@ -18,6 +18,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "preview": "node scripts/preview.cjs",
+    "test:browser": "node scripts/test-browser.cjs",
+    "test:nginx": "node scripts/test-nginx.cjs",
     "build": "react-scripts build && node scripts/generate-pages.js && node scripts/verify-pages.js",
     "test:seo": "node scripts/verify-pages.js",
     "media:prepare": "node scripts/prepare-audio.js",
