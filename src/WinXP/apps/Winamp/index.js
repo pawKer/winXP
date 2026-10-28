@@ -59,7 +59,14 @@ export default function Winamp({
     announce(request.url, 'Loading the recording in Winamp…');
     try {
       const response = await fetch(request.url, { method: 'HEAD' });
-      if (!response.ok) throw new Error('Missing recording');
+      // SPA development servers can return index.html with status 200 for
+      // absent media. Loading it makes Webamp skip to the following song.
+      const contentType = response.headers.get('content-type') || '';
+      if (
+        !response.ok ||
+        /(?:text\/html|application\/xhtml\+xml)/i.test(contentType)
+      )
+        throw new Error('Missing recording');
       if (
         instance.current !== current ||
         !active.current ||

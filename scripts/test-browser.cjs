@@ -1384,6 +1384,48 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
         : 'Verified empty-mount errors, no false playback starts, and Winamp minimize/restore/close/reopen. Successful playback requires the separately deployed recordings.',
     );
 
+    // CRA can return the HTML app shell with 200 for an absent audio file.
+    // It must never reach Webamp, which would skip to the following song.
+    await navigate('/music/anii-2000?view=desktop');
+    await waitFor(
+      '!!document.querySelector("#webamp #marquee")',
+      'Winamp ready for missing-file regression',
+    );
+    const previousTrackLabel = await evaluate(
+      'document.querySelector("#webamp #marquee").textContent',
+    );
+    await evaluate(() => {
+      window.__qaFetch = window.fetch;
+      window.fetch = (input, options) => {
+        if (options?.method === 'HEAD' && String(input).includes('/songs/'))
+          return Promise.resolve(
+            new Response('', {
+              status: 200,
+              headers: { 'Content-Type': 'text/html; charset=utf-8' },
+            }),
+          );
+        return window.__qaFetch(input, options);
+      };
+    });
+    await click('.ie__content button[data-play-winamp="anii-2000"]');
+    await waitFor(
+      'document.querySelector("[data-play-status]")?.textContent.includes("unavailable")',
+      'HTML fallback rejected as missing audio',
+    );
+    assert.equal(
+      await evaluate('document.querySelector("#webamp #marquee").textContent'),
+      previousTrackLabel,
+      'Missing recording does not select another song',
+    );
+    assert.equal(
+      await evaluate(
+        'window.__analytics.filter(event=>event.eventName==="music_play_start").length',
+      ),
+      0,
+      'HTML fallback never starts music',
+    );
+    await evaluate('window.fetch = window.__qaFetch; delete window.__qaFetch');
+
     await viewport(390, 844);
     await navigate('/music/bruises');
     assert(
