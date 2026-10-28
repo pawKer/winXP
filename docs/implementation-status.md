@@ -1,6 +1,6 @@
 # Blog and SEO implementation status
 
-Updated 28 October 2026. This tracks the full objective in [blog plan](blog-plan.md) and [SEO follow-ups](seo/followups.md). The implementation is local. Authenticated GA preparation and historical reports are complete; manual deployment, live-event verification, final analytics activation, and search-account verification remain outstanding.
+Updated 28 October 2026. This tracks the full objective in [blog plan](blog-plan.md) and [SEO follow-ups](seo/followups.md). The user deployed the initial release on 28 October. Live browser/edge checks and GA activation with verified realtime ingestion and key events are complete. Homepage startup, default-WAV playback and proxy-redirect fixes are ready locally for the next manual deployment. Search-account inspection and Bing verification remain outstanding; see [release verification](release-verification.md).
 
 ## What is available
 
@@ -71,13 +71,13 @@ Direct blog entry requested only CRA's main entry bundle, approximately **78.27 
 
 In the latest production-build playback run, native audio's play promise resolved in **428 ms** with a local preview throttled to 1 Mbps and 150 ms latency; playback then advanced. The whole native/Winamp lifecycle sequence received 6,553,600 MP3 bytes across its media requests, including restarts. Those bytes are not a single song's full size or a production transfer measurement. nginx independently returned HTTP 206 and 32 bytes for the requested MP3 range.
 
-No deployment has been performed by this work. [content-sources/production-baseline.json](../content-sources/production-baseline.json) shows the old shared HTML and fallback-200 behavior at the public edge when checked on 27 October. That historical evidence does not establish current Cloudflare crawler access or search indexing of the new pages. On 28 October the user confirmed production is `https://reshra.xyz` and instructed that they will deploy manually, after being asked at the very end. No production connection is needed for that release workflow. The approved user OAuth connection has completed GA preparation and historical reporting; it does not use the separately created service-account identity.
+The user confirmed the initial release is live on 28 October; no deployment was performed by the agent. [Release verification](release-verification.md) records actual public responses, WAV availability, real event collection and GA realtime counts. The older [production baseline](../content-sources/production-baseline.json) remains historical evidence. GA activation and key-event marking have now been applied and read back. Search indexing has not been established. The small follow-up fixes remain local until the user deploys them manually.
 
 ## Next inputs and actions
 
 The pre-commit review's findings **1, 3 and 5** are addressed: alias redirects exclude query strings from their path captures; desktop and reading mains use separate IDs so the skip link focuses visible content; manual YouTube events carry the verified `video_title`. Finding **2** is now addressed by restoring master's native Webamp movement/viewport coordinates, with dragging and viewport-shrink regression checks. Finding **4** (completed native-audio replay not sending another successful-start event) remains a follow-up.
 
 1. Review the blog copy and unpublished MIDI draft. Keep the description-based draft as requested; transcript-based expansion is deferred.
-2. Supply approved song artwork/context and a bruises video if one exists; restore the anii 2000 local master if local playback is wanted.
+2. Artwork is supplied. Add approved artist context, original release dates and a bruises video if available. The anii 2000 WAV exists in production but is still absent from the local checkout.
 3. Use [historical GA4 reports](analytics/reports.md) as the pre-release event baseline. Keep the frozen snapshot; compare later periods using the same hostname scope and event definitions.
-4. At the very end, ask the user to deploy the built site and compressed songs manually. After confirmation, perform [deployment checklist](deployment.md), including GA activation, real-event verification before key-event marking, Search Console/Bing and the approved crawler policy.
+4. Manually deploy the tested startup/WAV-default/proxy-redirect follow-ups, then recheck those fixes publicly. WAV is the default; MP3 deployment is optional. GA activation and key-event marking are complete. Search Console sitemap/URL Inspection and Bing verification/submission still need account access or user confirmation.

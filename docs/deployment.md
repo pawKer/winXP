@@ -1,6 +1,6 @@
 # Deployment and discovery checks
 
-The implementation targets the existing Docker/nginx deployment. It has not been deployed to the public site during this work. The legacy `now.json` deployment is unsupported for the new route/status behavior; `now-build` now generates content, but the old Vercel rewrites still do not provide nginx parity.
+The implementation targets the existing Docker/nginx deployment. The user confirmed the initial release is live on 28 October 2026; see [release verification](release-verification.md). The startup, WAV-default and proxy-redirect follow-ups are local and await a further manual deployment. The legacy `now.json` deployment is unsupported for the new route/status behavior; `now-build` now generates content, but the old Vercel rewrites still do not provide nginx parity.
 
 **User-confirmed release workflow, 28 October:** production is `https://reshra.xyz`. Finish local implementation, verification and GA preparation first; then ask the user to deploy manually at the very end. Do not deploy automatically. After the user confirms deployment, perform the public-edge checks below and coordinate any GA automatic-measurement switches with the released code.
 

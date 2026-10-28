@@ -28,3 +28,18 @@ Existing legacy dimensions **Link destination**, **Link label**, **Link type**, 
 The old production site's automatic tracking stays active until deployment. The current historical report has no rows for either new music event, so key-event marking is intentionally deferred. The after-deployment tool checks the live analytics version before activation; key-event marking is a separate subsequent phase.
 
 The actual historical baseline and refresh instructions are in [historical GA4 reports](reports.md). GA4 preparation, live-site analytics compatibility, event ingestion, and final key-event marking are separate pieces of evidence. DebugView and deployed-event counts are still pending the user's manual deployment.
+
+
+## Post-deployment verification ? 28 October 2026
+
+The user confirmed deployment. The live manual-tracking marker was verified,
+automatic history-change/video-engagement collection was disabled, and the
+settings were read back. A live browser session and the later GA realtime
+report matched: three page views, one music playback request/start, one
+listening click and one presentation change. Mode switching added no view.
+The intended two music events were then marked as key events, counted once
+per event, with successful readback. Existing dimensions were preserved.
+See [release verification](../release-verification.md) for test traffic,
+evidence limits, current media deployment and remaining search-account work.
+The preparation-stage table above is historical; its activation deferrals
+have now been completed. Frozen historical reports remain unchanged.
