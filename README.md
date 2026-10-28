@@ -24,9 +24,11 @@ Both modes have readable HTML before JavaScript. The reading switch lives in
 the taskbar, with a return control on standalone pages.
 
 Edit `src/content/site.js` for the profile and notes, `catalogue.js` for song
-records, `posts.js` for blog entries, and `noteSections.js` for reference links.
-`pages.js` supplies shared semantic markup, metadata, and public routes to both
-the generator and browser. Posts have a publication state; only published
+records, `content/posts/*.md` for blog entries, and `noteSections.js` for reference links.
+Run `yarn post:new my-post-title` to create a draft, then `yarn start` to preview
+edits. See the [authoring guide](docs/content-authoring.md) for metadata, videos
+and publishing. Shared layouts live in `src/content/templates/`; `pages.js`
+provides their common entry point to the generator and browser. Posts have a publication state; only published
 entries receive public routes, sitemap entries, and RSS items. Video-based archive
 posts use their main YouTube video's publication timestamp as the post date and
 are labeled "Video published"; the archive, related-post navigation and RSS run

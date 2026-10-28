@@ -10,6 +10,7 @@ The implementation targets the existing Docker/nginx deployment. It has not been
 yarn.cmd lint
 yarn.cmd test --watchAll=false --runInBand
 yarn.cmd test:ga4
+yarn.cmd test:content
 yarn.cmd build
 yarn.cmd test:seo
 yarn.cmd test:browser
@@ -39,6 +40,7 @@ The songs mount already exists; no new service or volume is needed. It makes a s
 In either setup, nginx then serves the example file at `https://reshra.xyz/songs/web/forever.mp3`. Confirm the configuration used by the manual deployment before choosing the copy destination.
 
 ## Public edge checks
+
 
 - Verify Home, `/music`, an older recording, `/blog`, a post, and an existing note as raw HTML and after JavaScript.
 - Unknown content and missing assets must return 404. `/robots.txt` must be plain text; `/sitemap.xml` and `/feed.xml` must be XML.

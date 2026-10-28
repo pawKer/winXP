@@ -1,3 +1,4 @@
+require('./content/build.cjs').buildContent();
 const { spawnSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
@@ -12,8 +13,12 @@ const result = spawnSync(process.execPath, [eslint, 'src', 'scripts'], {
   stdio: 'inherit',
 });
 if (result.status !== 0) process.exit(result.status || 1);
-for (const file of fs.readdirSync(path.join(__dirname))) {
-  if (!file.endsWith('.cjs')) continue;
+for (const file of fs.readdirSync(__dirname, { recursive: true })) {
+  if (
+    !file.endsWith('.cjs') ||
+    !fs.statSync(path.join(__dirname, file)).isFile()
+  )
+    continue;
   const syntax = spawnSync(
     process.execPath,
     ['--check', path.join(__dirname, file)],

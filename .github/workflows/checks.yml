@@ -21,6 +21,7 @@ jobs:
       - run: yarn install --frozen-lockfile
       - run: yarn lint
       - run: yarn test --watchAll=false --runInBand
+      - run: yarn test:content
       - run: yarn test:ga4
       - name: Build and verify generated pages
         run: yarn build

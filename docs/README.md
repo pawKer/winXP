@@ -9,6 +9,7 @@ root unless stated otherwise.
 
 - [Implementation status](implementation-status.md): completed work, verification evidence, remaining inputs and review follow-ups.
 - [Deployment checklist](deployment.md): manual release, music files, public-site checks and staged GA activation.
+- [Content authoring and templates](content-authoring.md): Markdown posts, video metadata, previews and the shared page layouts.
 
 ## Analytics
 

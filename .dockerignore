@@ -13,3 +13,4 @@ Dockerfile
 .dockerignore
 public/songs
 .local
+src/content/generated

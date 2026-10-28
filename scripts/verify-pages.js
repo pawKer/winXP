@@ -1,3 +1,4 @@
+require('./content/build.cjs').buildContent();
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');

@@ -142,6 +142,15 @@ Important behavior:
 - A header component receives callbacks because Notepad clones it with `onOpenNewNotepad` and `onFocusWinamp`.
 - Keep note IDs unique and paths stable. Changing a path breaks saved/shared links.
 
+## Blog content and templates
+
+- Author posts in `content/posts/*.md` with YAML frontmatter. Run `yarn post:new my-slug` for a draft and see `docs/content-authoring.md` for the field reference.
+- `yarn start` compiles and watches posts; `yarn build` compiles before CRA bundles the shared renderer. Only published posts enter the ignored `src/content/generated/posts.json`; do not edit or commit that file.
+- `src/content/registry.js` supplies routes/order/categories, `schema.js` supplies structured data, and `templates/` supplies shared HTML functions. `pages.js` is the compatibility entry point for browser and Node consumers.
+- `scripts/templates/` owns full HTML and discovery documents; `scripts/generate-pages.js` only writes their output. Keep shared browser templates in CommonJS `.js` files and avoid object spread in them because CRA can otherwise mix ESM helpers with CommonJS exports.
+- Run `yarn test:content` for Markdown validation, draft exclusion, automatic route/category discovery, and reading-link checks. Notes and music catalogue records retain their existing formats.
+- When checking documentation links, ignore fenced and inline code examples; example post URLs and assets need not exist in the repository.
+
 ## Internet Explorer and RetroLinktree
 
 - `src/WinXP/apps/InternetExplorer/index.js` owns the actual profile and link list shown in Internet Explorer.

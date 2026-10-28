@@ -1,0 +1,56 @@
+const { siteUrl } = require('../site');
+
+const escapeHtml = value =>
+  String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+const absolute = url => new URL(url, siteUrl).href;
+const formatDate = date =>
+  new Intl.DateTimeFormat('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(new Date(date));
+const dateLabel = date =>
+  date ? `<time datetime="${escapeHtml(date)}">${formatDate(date)}</time>` : '';
+const postDateLabel = post =>
+  `${post.dateSource === 'video' ? 'Video published ' : ''}${dateLabel(
+    post.publishedAt,
+  )}`;
+const external = (url, label, attributes = '') =>
+  `<a href="${escapeHtml(
+    url,
+  )}" target="_blank" rel="noopener noreferrer" ${attributes}>${escapeHtml(
+    label,
+  )}<span class="external-mark" aria-label=" (opens in new tab)"> ↗</span></a>`;
+const internal = (path, label, options = {}, attributes = '') => {
+  const href =
+    options.reading && !path.startsWith('/blog')
+      ? `${path}${path.includes('?') ? '&' : '?'}view=read`
+      : path;
+  return `<a href="${escapeHtml(href)}" ${attributes}>${escapeHtml(label)}</a>`;
+};
+const listenLink = (release, placement) =>
+  external(
+    release.listeningUrl,
+    release.listeningLabel,
+    `class="xp-button primary" data-listen="${release.slug}" data-placement="${placement}"`,
+  );
+const icon = type =>
+  `<img class="file-icon" src="/icons/${type}.png" alt="" width="32" height="32">`;
+
+module.exports = {
+  escapeHtml,
+  absolute,
+  formatDate,
+  dateLabel,
+  postDateLabel,
+  external,
+  internal,
+  listenLink,
+  icon,
+};
