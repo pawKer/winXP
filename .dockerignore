@@ -11,4 +11,5 @@ README.md
 .env.production.local
 Dockerfile
 .dockerignore
-public/songs 
+public/songs
+.local

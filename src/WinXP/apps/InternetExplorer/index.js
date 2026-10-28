@@ -1,224 +1,259 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { useHistory, useLocation } from 'react-router-dom';
-
-import { WindowDropDowns, Google, Linktree, RetroLinktree } from 'components';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import { WindowDropDowns, RetroLinktree } from 'components';
+import PublicPage from 'components/PublicPage';
+import { useSiteNavigation } from 'navigation/SiteNavigation';
+import pageContent from 'content/pages';
+import { profile, releases, notes } from 'content/site';
+import { FaBookOpen, FaMusic, FaEnvelope, FaFolderOpen } from 'react-icons/fa';
 import dropDownData from './dropDownData';
+import NewsletterView from './NewsletterView';
+import Div from './styles';
+import './xpScrollbar.css';
+import back from 'assets/windowsIcons/back.png';
+import forward from 'assets/windowsIcons/forward.png';
+import home from 'assets/windowsIcons/home.png';
+import refresh from 'assets/windowsIcons/refresh.png';
 import ie from 'assets/windowsIcons/ie-paper.png';
-import printer from 'assets/windowsIcons/17(32x32).png';
-import go from 'assets/windowsIcons/290.png';
-import links from 'assets/windowsIcons/links.png';
+import earth from 'assets/windowsIcons/earth.png';
+import windows from 'assets/windowsIcons/windows.png';
+import stop from 'assets/windowsIcons/stop.png';
 import search from 'assets/windowsIcons/299(32x32).png';
 import favorite from 'assets/windowsIcons/744(32x32).png';
-import back from 'assets/windowsIcons/back.png';
-import earth from 'assets/windowsIcons/earth.png';
-import edit from 'assets/windowsIcons/edit.png';
-import forward from 'assets/windowsIcons/forward.png';
 import history from 'assets/windowsIcons/history.png';
-import home from 'assets/windowsIcons/home.png';
 import mail from 'assets/windowsIcons/mail.png';
+import printer from 'assets/windowsIcons/17(32x32).png';
+import edit from 'assets/windowsIcons/edit.png';
 import msn from 'assets/windowsIcons/msn.png';
-import refresh from 'assets/windowsIcons/refresh.png';
-import stop from 'assets/windowsIcons/stop.png';
-import windows from 'assets/windowsIcons/windows.png';
+import go from 'assets/windowsIcons/290.png';
+import links from 'assets/windowsIcons/links.png';
 import dropdown from 'assets/windowsIcons/dropdown.png';
-import {
-  FaGamepad,
-  FaGuitar,
-  FaFolderOpen,
-  FaMusic,
-  FaEnvelope,
-  FaVolumeUp,
-} from 'react-icons/fa';
 
-import NewsletterView from './NewsletterView';
-import SubstackView from './SubstackView';
-import './xpScrollbar.css';
-import { profile, releases, notes } from 'content/site';
-import ContentView from './ContentView';
+const { getPage } = pageContent;
 
-function InternetExplorer({ onClose, onOpenNote, onFocusWinamp, onPlayTrack }) {
-  const routerHistory = useHistory();
+export default function InternetExplorer({
+  onClose,
+  onOpenNote,
+  onFocusWinamp,
+  onPlayTrack,
+  isVisible = true,
+}) {
   const location = useLocation();
-  const [state, setState] = useState({
-    route: 'main',
-    query: '',
-    contentView: 'linktree', // 'linktree' | 'newsletter' | 'substack'
-  });
-  function onSearch(str) {
-    if (str.length) {
-      setState({
-        route: 'search',
-        query: str,
-      });
+  const {
+    navigate,
+    goBack,
+    goForward,
+    canGoBack,
+    canGoForward,
+  } = useSiteNavigation();
+  const [newsletter, setNewsletter] = useState(false);
+  const currentAddress = new URL(
+    `${location.pathname}${location.search}${location.hash}`,
+    window.location.origin,
+  ).href;
+  const [address, setAddress] = useState(currentAddress);
+  useEffect(() => {
+    setNewsletter(false);
+    setAddress(currentAddress);
+  }, [currentAddress]);
+  const page = getPage(location.pathname);
+  const showContent = page && !['home', 'note'].includes(page.kind);
+
+  function goHome() {
+    setNewsletter(false);
+    navigate('/');
+  }
+  function menuAction(item) {
+    if (item === 'Close') onClose();
+    else if (item === 'Home Page') goHome();
+    else if (item === 'Back') goBack();
+    else if (item === 'Forward') goForward();
+  }
+  function submitAddress(event) {
+    event.preventDefault();
+    try {
+      const url = new URL(address, window.location.origin);
+      if (
+        (url.origin === window.location.origin ||
+          url.hostname === 'reshra.xyz') &&
+        getPage(url.pathname)
+      )
+        navigate(`${url.pathname}${url.search}${url.hash}`);
+      else setAddress(currentAddress);
+    } catch (_) {
+      setAddress(currentAddress);
     }
   }
-  function goMain() {
-    routerHistory.push('/');
-    setState({
-      route: 'main',
-      query: '',
-      contentView: 'linktree',
-    });
-  }
-  function onClickOptionItem(item) {
-    switch (item) {
-      case 'Close':
-        onClose();
-        break;
-      case 'Home Page':
-      case 'Back':
-        goMain();
-        break;
-      default:
-    }
-  }
+
   return (
     <Div>
       <section className="ie__toolbar">
         <div className="ie__options">
           <WindowDropDowns
             items={dropDownData}
-            onClickItem={onClickOptionItem}
+            onClickItem={menuAction}
             height={21}
           />
         </div>
-        <img className="ie__windows-logo" src={windows} alt="windows" />
+        <img className="ie__windows-logo" src={windows} alt="" />
       </section>
-      <section className="ie__function_bar">
-        <div
-          onClick={goMain}
-          className={`ie__function_bar__button${
-            state.route === 'main' ? '--disable' : ''
-          }`}
+      <nav className="ie__function_bar" aria-label="Browser controls">
+        <button
+          className="ie__function_bar__button"
+          type="button"
+          disabled={!canGoBack}
+          onClick={goBack}
+          aria-label="Back"
         >
-          <img className="ie__function_bar__icon" src={back} alt="" />
-          <span className="ie__function_bar__text">Back</span>
-          <div className="ie__function_bar__arrow" />
-        </div>
-        <div className="ie__function_bar__button--disable">
-          <img className="ie__function_bar__icon" src={forward} alt="" />
-          <div className="ie__function_bar__arrow" />
-        </div>
-        <div className="ie__function_bar__button">
-          <img className="ie__function_bar__icon--margin-1" src={stop} alt="" />
-        </div>
-        <div className="ie__function_bar__button">
+          <img src={back} className="ie__function_bar__icon" alt="" />
+          <span>Back</span>
+          <span className="ie__function_bar__arrow" aria-hidden="true" />
+        </button>
+        <button
+          className="ie__function_bar__button"
+          type="button"
+          disabled={!canGoForward}
+          onClick={goForward}
+          aria-label="Forward"
+        >
+          <img src={forward} className="ie__function_bar__icon" alt="" />
+          <span className="ie__function_bar__arrow" aria-hidden="true" />
+        </button>
+        <button
+          className="ie__function_bar__button"
+          type="button"
+          disabled
+          aria-label="Stop loading"
+        >
+          <img src={stop} className="ie__function_bar__icon--margin-1" alt="" />
+        </button>
+        <button
+          className="ie__function_bar__button"
+          type="button"
+          onClick={() => {
+            setNewsletter(false);
+            document.querySelector('.ie__content')?.scrollTo(0, 0);
+          }}
+          aria-label="Return to top"
+        >
+          <img src={refresh} className="ie__function_bar__icon" alt="" />
+        </button>
+        <button
+          className="ie__function_bar__button"
+          type="button"
+          onClick={goHome}
+          aria-label="Home"
+        >
+          <img src={home} className="ie__function_bar__icon" alt="" />
+        </button>
+        <span className="ie__function_bar__separate" />
+        {/* Preserve the original chrome; unsupported tools are decorative. */}
+        <span className="ie__function_bar__decoration" aria-hidden="true">
           <img
-            className="ie__function_bar__icon--margin-1"
-            src={refresh}
-            alt=""
-          />
-        </div>
-        <div className="ie__function_bar__button" onClick={goMain}>
-          <img className="ie__function_bar__icon--margin-1" src={home} alt="" />
-        </div>
-        <div className="ie__function_bar__separate" />
-        <div className="ie__function_bar__button">
-          <img
-            className="ie__function_bar__icon--normalize "
             src={search}
+            className="ie__function_bar__icon--normalize"
             alt=""
           />
           <span className="ie__function_bar__text">Search</span>
-        </div>
-        <div className="ie__function_bar__button">
+        </span>
+        <span className="ie__function_bar__decoration" aria-hidden="true">
           <img
-            className="ie__function_bar__icon--normalize"
             src={favorite}
+            className="ie__function_bar__icon--normalize"
             alt=""
           />
           <span className="ie__function_bar__text">Favorites</span>
-        </div>
-        <div className="ie__function_bar__button">
-          <img className="ie__function_bar__icon" src={history} alt="" />
-        </div>
-        <div className="ie__function_bar__separate" />
-        <div className="ie__function_bar__button">
-          <img className="ie__function_bar__icon--margin-1" src={mail} alt="" />
-          <div className="ie__function_bar__arrow--margin-11" />
-        </div>
-        <div className="ie__function_bar__button">
-          <img
-            className="ie__function_bar__icon--margin12"
-            src={printer}
-            alt=""
-          />
-        </div>
-        <div className="ie__function_bar__button--disable">
-          <img className="ie__function_bar__icon" src={edit} alt="" />
-        </div>
-        <div className="ie__function_bar__button">
-          <img className="ie__function_bar__icon--margin12" src={msn} alt="" />
-        </div>
-      </section>
-      <section className="ie__address_bar">
-        <div className="ie__address_bar__title">Address</div>
+        </span>
+        <span className="ie__function_bar__decoration" aria-hidden="true">
+          <img src={history} className="ie__function_bar__icon" alt="" />
+        </span>
+        <span className="ie__function_bar__separate" />
+        <span className="ie__function_bar__decoration" aria-hidden="true">
+          <img src={mail} className="ie__function_bar__icon--margin-1" alt="" />
+          <span className="ie__function_bar__arrow--margin-11" />
+        </span>
+        {[printer, edit, msn].map((icon, index) => (
+          <span
+            className="ie__function_bar__decoration"
+            aria-hidden="true"
+            key={icon}
+          >
+            <img
+              src={icon}
+              className={
+                index === 1
+                  ? 'ie__function_bar__icon'
+                  : 'ie__function_bar__icon--margin12'
+              }
+              alt=""
+            />
+          </span>
+        ))}
+      </nav>
+      <form className="ie__address_bar" onSubmit={submitAddress}>
+        <label className="ie__address_bar__title" htmlFor="ie-address">
+          Address
+        </label>
         <div className="ie__address_bar__content">
-          <img src={ie} alt="ie" className="ie__address_bar__content__img" />
-          <div className="ie__address_bar__content__text">
-            {`https://reshra.xyz${
-              state.route === 'search'
-                ? `/search?q=${encodeURIComponent(state.query)}`
-                : location.pathname === '/'
-                ? ''
-                : location.pathname
-            }`}
-          </div>
+          <img src={ie} alt="" className="ie__address_bar__content__img" />
+          <input
+            id="ie-address"
+            aria-label="Page address"
+            value={address}
+            onChange={event => setAddress(event.target.value)}
+          />
           <img
             src={dropdown}
-            alt="dropdown"
+            alt=""
             className="ie__address_bar__content__img"
           />
         </div>
-        <div className="ie__address_bar__go">
-          <img className="ie__address_bar__go__img" src={go} alt="go" />
-          <span className="ie__address_bar__go__text">Go</span>
-        </div>
-        <div className="ie__address_bar__separate" />
-        <div className="ie__address_bar__links">
+        <button className="ie__address_bar__go" type="submit">
+          <img src={go} alt="" className="ie__address_bar__go__img" />
+          <span>Go</span>
+        </button>
+        <span className="ie__address_bar__separate" />
+        <span className="ie__address_bar__links" aria-hidden="true">
           <span className="ie__address_bar__links__text">Links</span>
-          <img
-            className="ie__address_bar__links__img"
-            src={links}
-            alt="links"
-          />
-        </div>
-      </section>
+          <img src={links} alt="" className="ie__address_bar__links__img" />
+        </span>
+      </form>
       <div className="ie__content">
         <div className="ie__content__inner">
-          {state.contentView === 'newsletter' ? (
-            <NewsletterView onBack={goMain} />
-          ) : state.contentView === 'substack' ? (
-            <SubstackView onBack={goMain} />
-          ) : location.pathname === '/music' ||
-            location.pathname === '/notes' ||
-            releases.some(release => release.path === location.pathname) ? (
-            <ContentView path={location.pathname} onPlayTrack={onPlayTrack} />
+          {newsletter ? (
+            <NewsletterView onBack={goHome} />
+          ) : showContent ? (
+            <PublicPage
+              path={location.pathname}
+              embedded
+              active={isVisible}
+              onPlayTrack={onPlayTrack}
+            />
           ) : (
-            <>
-              {/* <Google
-                route={state.route}
-                query={state.query}
-                onSearch={onSearch}
-                goMain={goMain}
-              /> */}
+            <div role={page?.kind === 'home' ? 'main' : undefined}>
               <RetroLinktree
                 profile={profile}
                 links={[
-                  ...releases.map((release, index) => ({
+                  ...releases.slice(0, 2).map((release, index) => ({
                     title: `reshra - ${release.title}`,
-                    subtitle: 'Listen on music services',
+                    subtitle: release.listeningLabel,
                     url: release.listeningUrl,
                     analyticsEvent: 'music_listen_click',
                     releaseSlug: release.slug,
                     highlight: index === 0,
                   })),
                   {
-                    title: 'Music on this desktop',
-                    subtitle: 'Browse releases and play in Winamp',
+                    title: 'My blog',
+                    subtitle: 'Songs, guitar builds & experiments',
+                    url: '/blog',
+                    onClick: () => navigate('/blog'),
+                    iconNode: <FaBookOpen />,
+                  },
+                  {
+                    title: 'Music archive',
+                    subtitle: 'All recordings, videos & credits',
                     url: '/music',
-                    onClick: () => routerHistory.push('/music'),
+                    onClick: () => navigate('/music'),
                     iconNode: <FaMusic />,
                   },
                   {
@@ -230,48 +265,36 @@ function InternetExplorer({ onClose, onOpenNote, onFocusWinamp, onPlayTrack }) {
                   {
                     title: 'anii 2000 (Guitar Hero Files)',
                     subtitle: 'Google Drive folder',
-                    url: releases.find(release => release.slug === 'anii-2000')
+                    url: releases.find(item => item.slug === 'anii-2000')
                       .guitarHeroUrl,
                     iconNode: <FaFolderOpen />,
                   },
                   {
                     title: 'Subscribe to my newsletter',
                     subtitle: 'Get updates in your inbox',
-                    onClick: () =>
-                      setState(s => ({ ...s, contentView: 'newsletter' })),
+                    onClick: () => setNewsletter(true),
                     iconNode: <FaEnvelope />,
                   },
-                  // {
-                  //   title: 'Subscribe to my newsletter',
-                  //   subtitle: 'Get updates in your inbox',
-                  //   onClick: () =>
-                  //     setState(s => ({ ...s, contentView: 'substack' })),
-                  //   iconNode: <FaEnvelope />,
-                  // },
+                  {
+                    title: 'Notes & resources',
+                    subtitle: 'Parts lists, files & tutorials',
+                    url: '/notes',
+                    onClick: () => navigate('/notes'),
+                    iconNode: <FaFolderOpen />,
+                  },
                   ...notes
                     .filter(note => note.id !== 'thankYou')
                     .map(note => ({
                       title: note.title,
                       subtitle: 'Open in Notepad',
                       url: note.path,
-                      onClick: () => {
-                        if (location.pathname === note.path)
-                          onOpenNote(note.id);
-                        else routerHistory.push(note.path);
-                      },
-                      iconNode:
-                        note.id === 'guitarParts' ? (
-                          <FaGuitar />
-                        ) : note.id === 'midiPedal' ? (
-                          <FaGamepad />
-                        ) : (
-                          <FaVolumeUp />
-                        ),
+                      onClick: () => onOpenNote(note.id),
+                      iconNode: <FaBookOpen />,
                     })),
                 ]}
                 footer="Made with Notepad"
               />
-            </>
+            </div>
           )}
         </div>
       </div>
@@ -280,446 +303,11 @@ function InternetExplorer({ onClose, onOpenNote, onFocusWinamp, onPlayTrack }) {
           <img className="ie__footer__status__img" src={ie} alt="" />
           <span className="ie__footer__status__text">Done</span>
         </div>
-        <div className="ie__footer__block" />
-        <div className="ie__footer__block" />
-        <div className="ie__footer__block" />
-        <div className="ie__footer__block" />
         <div className="ie__footer__right">
           <img className="ie__footer__right__img" src={earth} alt="" />
           <span className="ie__footer__right__text">Internet</span>
-          <div className="ie__footer__right__dots" />
         </div>
       </footer>
     </Div>
   );
 }
-
-const Div = styled.div`
-  .ie-page {
-    box-sizing: border-box;
-    min-height: 100%;
-    padding: 20px;
-    background: #f7fbff;
-    color: #10213a;
-    font: 14px/1.5 Tahoma, Arial, sans-serif;
-  }
-  .ie-page h1 {
-    font-size: 22px;
-    margin: 0 0 12px;
-  }
-  .ie-page a {
-    color: #0645ad;
-  }
-  .ie-page button {
-    cursor: pointer;
-    padding: 6px 12px;
-  }
-  .ie-page a:focus-visible,
-  .ie-page button:focus-visible {
-    outline: 3px solid #ffbf00;
-  }
-  .ie-page--music {
-    background: #e6efff;
-  }
-  .music-hero {
-    padding: 18px;
-    margin: -20px -20px 18px;
-    background: linear-gradient(#3266b8, #173c82);
-    color: #fff;
-    border-bottom: 3px solid #ffbb46;
-  }
-  .music-hero h1 {
-    margin: 6px 0;
-    color: #fff;
-  }
-  .music-hero p {
-    margin: 0;
-  }
-  .music-hero a {
-    display: inline-block;
-    margin-bottom: 12px;
-    color: #fff;
-  }
-  .music-eyebrow {
-    display: block;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    font-size: 10px;
-    font-weight: bold;
-  }
-  .music-releases {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .music-release {
-    display: flex;
-    gap: 14px;
-    padding: 16px;
-    margin-bottom: 12px;
-    background: #fff;
-    border: 1px solid #96add7;
-    box-shadow: 2px 2px 0 #acc4ed;
-  }
-  .music-release h2 {
-    margin: 0 0 3px;
-    font-size: 18px;
-  }
-  .music-release p {
-    margin: 0 0 12px;
-  }
-  .music-disc {
-    width: 54px;
-    height: 54px;
-    flex: none;
-    border-radius: 50%;
-    background: radial-gradient(
-      circle,
-      #e9f3ff 0 7px,
-      #18377d 8px 11px,
-      #4f7dcb 12px 100%
-    );
-    border: 2px solid #18377d;
-  }
-  .music-actions {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap;
-  }
-  .music-actions a,
-  .music-actions button {
-    display: inline-block;
-    padding: 7px 12px;
-    border: 1px solid #7c9aca;
-    background: #fff;
-    color: #183b7c;
-    font: bold 12px Tahoma, Arial, sans-serif;
-    text-decoration: none;
-    box-shadow: 1px 1px 0 #afc4eb;
-  }
-  .music-actions .music-primary {
-    color: #fff;
-    background: #1c56ab;
-    border-color: #0c3983;
-  }
-  .music-actions--release {
-    margin: 18px 0;
-  }
-  .music-artwork {
-    display: block;
-    width: 180px;
-    max-width: 100%;
-  }
-  .music-details,
-  .music-resource,
-  .music-related {
-    padding: 12px;
-    background: #fff;
-    border: 1px solid #96add7;
-  }
-  .music-details h2 {
-    margin: 0;
-    font-size: 15px;
-  }
-  .music-related h2 {
-    margin: 0 0 8px;
-    font-size: 15px;
-  }
-  .music-related ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-  .music-related li {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-  .music-back {
-    margin-top: 18px;
-  }
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  display: flex;
-  overflow: hidden;
-  flex-direction: column;
-  background: linear-gradient(to right, #edede5 0%, #ede8cd 100%);
-
-  .ie__toolbar {
-    position: relative;
-    display: flex;
-    align-items: center;
-    line-height: 100%;
-    height: 24px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.7);
-    flex-shrink: 0;
-  }
-  .ie__options {
-    height: 23px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-    border-right: 1px solid rgba(0, 0, 0, 0.15);
-    padding-left: 2px;
-    flex: 1;
-  }
-  .ie__windows-logo {
-    height: 100%;
-    border-left: 1px solid white;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  }
-  .ie__function_bar {
-    height: 36px;
-    display: flex;
-    align-items: center;
-    font-size: 11px;
-    padding: 1px 3px 0;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-  }
-  .ie__function_bar__button {
-    display: flex;
-    height: 100%;
-    align-items: center;
-    border: 1px solid rgba(0, 0, 0, 0);
-    border-radius: 3px;
-    &:hover {
-      border: 1px solid rgba(0, 0, 0, 0.1);
-      box-shadow: inset 0 -1px 1px rgba(0, 0, 0, 0.1);
-    }
-    &:hover:active {
-      border: 1px solid rgb(185, 185, 185);
-      background-color: #dedede;
-      box-shadow: inset 0 -1px 1px rgba(255, 255, 255, 0.7);
-      color: rgba(255, 255, 255, 0.7);
-      & > * {
-        transform: translate(1px, 1px);
-      }
-    }
-  }
-  .ie__function_bar__button--disable {
-    filter: grayscale(1);
-    opacity: 0.7;
-    display: flex;
-    height: 100%;
-    align-items: center;
-    border: 1px solid rgba(0, 0, 0, 0);
-  }
-  .ie__function_bar__text {
-    margin-right: 4px;
-  }
-  .ie__function_bar__icon {
-    height: 30px;
-    width: 30px;
-    &--normalize {
-      height: 22px;
-      width: 22px;
-      margin: 0 4px 0 1px;
-    }
-    &--margin12 {
-      height: 22px;
-      width: 22px;
-      margin: 0 1px 0 2px;
-    }
-    &--margin-1 {
-      margin: 0 -1px;
-      height: 30px;
-      width: 30px;
-    }
-  }
-  .ie__function_bar__separate {
-    height: 90%;
-    width: 1px;
-    background-color: rgba(0, 0, 0, 0.2);
-    margin: 0 2px;
-  }
-  .ie__function_bar__arrow {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    margin: 0 4px;
-    &:before {
-      content: '';
-      display: block;
-      border-width: 3px 3px 0;
-      border-color: #000 transparent;
-      border-style: solid;
-    }
-  }
-  .ie__function_bar__arrow--margin-11 {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    margin: 0 1px 0 -1px;
-    &:before {
-      content: '';
-      display: block;
-      border-width: 3px 3px 0;
-      border-color: #000 transparent;
-      border-style: solid;
-    }
-  }
-  .ie__address_bar {
-    border-top: 1px solid rgba(255, 255, 255, 0.7);
-    height: 22px;
-    font-size: 11px;
-    display: flex;
-    align-items: center;
-    padding: 0 2px 2px;
-    box-shadow: inset 0 -2px 3px -1px #2d2d2d;
-  }
-  .ie__address_bar__title {
-    line-height: 100%;
-    color: rgba(0, 0, 0, 0.5);
-    padding: 5px;
-  }
-  .ie__address_bar__content {
-    border: rgba(122, 122, 255, 0.6) 1px solid;
-    height: 100%;
-    display: flex;
-    flex: 1;
-    align-items: center;
-    background-color: white;
-    position: relative;
-    &__img {
-      width: 14px;
-      height: 14px;
-    }
-    &__img:last-child {
-      width: 15px;
-      height: 15px;
-      right: 1px;
-      position: absolute;
-    }
-    &__img:last-child:hover {
-      filter: brightness(1.1);
-    }
-    &__text {
-      position: absolute;
-      white-space: nowrap;
-      left: 16px;
-      right: 17px;
-      overflow: hidden;
-    }
-  }
-  .ie__address_bar__go {
-    display: flex;
-    align-items: center;
-    padding: 0 18px 0 5px;
-    height: 100%;
-    position: relative;
-    &__img {
-      height: 95%;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      margin-right: 3px;
-    }
-  }
-  .ie__address_bar__links {
-    display: flex;
-    align-items: center;
-    padding: 0 18px 0 5px;
-    height: 100%;
-    position: relative;
-    &__img {
-      position: absolute;
-      right: 2px;
-      top: 3px;
-      height: 5px;
-      width: 8px;
-    }
-    &__text {
-      color: rgba(0, 0, 0, 0.5);
-    }
-  }
-  .ie__address_bar__separate {
-    height: 100%;
-    width: 1px;
-    background-color: rgba(0, 0, 0, 0.1);
-    box-shadow: 1px 0 rgba(255, 255, 255, 0.7);
-  }
-  .ie__content {
-    flex: 1;
-    overflow: auto;
-    scrollbar-gutter: stable;
-    padding-left: 1px;
-    border-left: 1px solid #6f6f6f;
-    background-color: #f1f1f1;
-    position: relative;
-  }
-  .ie__content__inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    min-width: 0;
-    min-height: 0;
-    /* Custom cursor for entire content area (hotspot at top-right corner) */
-    cursor: url('/sword.png') 32 0, auto;
-  }
-  .ie__content__inner a,
-  .ie__content__inner button {
-    /* Ensure links/buttons also use the sword cursor on hover */
-    cursor: url('/sword.png') 32 0, pointer;
-  }
-  .ie__footer {
-    height: 20px;
-    border-top: 1px solid transparent;
-    box-shadow: inset 0 1px 3px rgba(50, 50, 50, 0.8);
-    background-color: rgb(236, 233, 216);
-    display: flex;
-    align-items: center;
-    padding-top: 2px;
-  }
-  .ie__footer__status {
-    flex: 1;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    padding-left: 2px;
-    &__text {
-      font-size: 11px;
-    }
-    &__img {
-      height: 14px;
-      width: 14px;
-      margin-right: 3px;
-    }
-  }
-  .ie__footer__block {
-    height: 85%;
-    width: 22px;
-    border-left: 1px solid rgba(0, 0, 0, 0.15);
-    box-shadow: inset 1px 0 rgba(255, 255, 255, 0.7);
-  }
-  .ie__footer__right {
-    display: flex;
-    align-items: center;
-    width: 150px;
-    height: 80%;
-    border-left: 1px solid rgba(0, 0, 0, 0.11);
-    box-shadow: inset 1px 0 rgba(255, 255, 255, 0.7);
-    padding-left: 5px;
-    position: relative;
-    &__text {
-      font-size: 11px;
-    }
-    &__img {
-      height: 14px;
-      width: 14px;
-      margin-right: 3px;
-    }
-    &__dots {
-      position: absolute;
-      right: 11px;
-      bottom: -1px;
-      width: 2px;
-      height: 2px;
-      box-shadow: 2px 0px rgba(0, 0, 0, 0.25), 5.5px 0px rgba(0, 0, 0, 0.25),
-        9px 0px rgba(0, 0, 0, 0.25), 5.5px -3.5px rgba(0, 0, 0, 0.25),
-        9px -3.5px rgba(0, 0, 0, 0.25), 9px -7px rgba(0, 0, 0, 0.25),
-        3px 1px rgba(255, 255, 255, 1), 6.5px 1px rgba(255, 255, 255, 1),
-        10px 1px rgba(255, 255, 255, 1), 10px -2.5px rgba(255, 255, 255, 1),
-        10px -6px rgba(255, 255, 255, 1);
-    }
-  }
-`;
-
-export default InternetExplorer;

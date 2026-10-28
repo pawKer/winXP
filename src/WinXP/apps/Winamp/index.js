@@ -1,173 +1,271 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import Webamp from 'webamp';
 import WebampWithVisualizers from 'webamp/butterchurn';
 import { initialTracks } from './config';
+import { releases } from 'content/site';
+import { registerPlayer, claimPlayback } from 'media/playback';
+import { trackEvent } from 'hooks/useGA';
 
 const IS_DEV = process.env.NODE_ENV === 'development';
-
 function hasWebGL() {
   try {
     const canvas = document.createElement('canvas');
-    return !!(
-      canvas.getContext('webgl2') ||
-      canvas.getContext('webgl') ||
-      canvas.getContext('experimental-webgl')
-    );
-  } catch (e) {
+    const context = canvas.getContext('webgl2') || canvas.getContext('webgl');
+    if (
+      !context ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    )
+      return false;
+    const debug = context.getExtension('WEBGL_debug_renderer_info');
+    const renderer = debug
+      ? context.getParameter(debug.UNMASKED_RENDERER_WEBGL)
+      : '';
+    // A software WebGL context can exist even when visualizers are unreliable.
+    return !/swiftshader|llvmpipe|software|basic render/i.test(renderer);
+  } catch (_) {
     return false;
   }
 }
 
-function Winamp({ onClose, onMinimize, playRequest }) {
-  const ref = useRef(null);
-  const webamp = useRef(null);
-  const movedToContainer = useRef(false);
-  // React 18 StrictMode runs effects twice in dev; we need to ignore
-  // the first run so Webamp is only created/disposed once.
-  const didInitEffect = useRef(false);
-  const pendingPlay = useRef(null);
+export default function Winamp({
+  onClose,
+  onMinimize,
+  playRequest,
+  desktopActive = true,
+}) {
+  const target = useRef(null);
+  const instance = useRef(null);
   const ready = useRef(false);
+  const didInit = useRef(false);
+  const pending = useRef(null);
+  const latestRequest = useRef(null);
+  const active = useRef(desktopActive);
+  const callbacks = useRef({ onClose, onMinimize });
+  callbacks.current = { onClose, onMinimize };
+  const playPending = useRef(null);
 
-  function playRequestedTrack() {
-    if (!ready.current || !webamp.current || !pendingPlay.current) return;
-    const request = pendingPlay.current;
-    const tracks = webamp.current.getPlaylistTracks();
-    let index = tracks.findIndex(track => track.url === request.url);
-    if (index < 0) {
-      const track = initialTracks.find(item => item.url === request.url);
-      if (!track) return;
-      webamp.current.appendTracks([track]);
-      index = tracks.length;
+  const announce = useCallback((url, message) => {
+    window.dispatchEvent(
+      new CustomEvent('reshra:playback-status', { detail: { url, message } }),
+    );
+  }, []);
+
+  playPending.current = async () => {
+    const request = pending.current;
+    if (!ready.current || !instance.current || !request || !active.current)
+      return;
+    pending.current = null;
+    const current = instance.current;
+    announce(request.url, 'Loading the recording in Winamp…');
+    try {
+      const response = await fetch(request.url, { method: 'HEAD' });
+      if (!response.ok) throw new Error('Missing recording');
+      if (
+        instance.current !== current ||
+        !active.current ||
+        latestRequest.current !== request
+      )
+        return;
+      let tracks = current.getPlaylistTracks();
+      let index = tracks.findIndex(
+        track =>
+          new URL(track.url, window.location.origin).pathname ===
+          new URL(request.url, window.location.origin).pathname,
+      );
+      if (index < 0) {
+        const track = initialTracks.find(item => item.url === request.url);
+        if (!track) throw new Error('Unknown recording');
+        current.appendTracks([track]);
+        index = tracks.length;
+        tracks = current.getPlaylistTracks();
+      }
+      claimPlayback('winamp');
+      // Webamp 2.2 dispatches this value as a track ID, despite documenting an
+      // index. IDs also change after reopening or reordering the playlist.
+      current.setCurrentTrack(tracks[index].id);
+      current.play();
+    } catch (_) {
+      if (latestRequest.current !== request || instance.current !== current)
+        return;
+      announce(
+        request.url,
+        'This local recording is unavailable. Use its YouTube or music-service link.',
+      );
     }
-    webamp.current.setCurrentTrack(index);
-    webamp.current.play();
-    pendingPlay.current = null;
-  }
+  };
+
+  useEffect(() => {
+    active.current = desktopActive;
+    if (!desktopActive) {
+      pending.current = null;
+      latestRequest.current = null;
+      if (instance.current?.getMediaStatus() === 'PLAYING')
+        instance.current.pause();
+    }
+  }, [desktopActive]);
 
   useEffect(() => {
     if (!playRequest) return;
-    pendingPlay.current = playRequest;
-    playRequestedTrack();
+    latestRequest.current = playRequest;
+    pending.current = playRequest;
+    playPending.current();
   }, [playRequest]);
 
-  function getWebampNode() {
-    return document.getElementById('webamp');
-  }
-
-  function attachToContainer() {
-    const container = ref.current;
-    const node = getWebampNode();
-    if (container && node && node.parentElement !== container) {
-      const containerRect = container.getBoundingClientRect();
-      const nodeRect = node.getBoundingClientRect();
-      container.appendChild(node);
-      // Adjust top/left so visual position remains the same, now relative to container
-      const newLeft = nodeRect.left - containerRect.left;
-      const newTop = nodeRect.top - containerRect.top;
-      node.style.left = `${Math.round(newLeft)}px`;
-      node.style.top = `${Math.round(newTop)}px`;
-      movedToContainer.current = true;
-    }
-  }
-
-  function detachToBody() {
-    const node = getWebampNode();
-    if (node && node.parentElement && node.parentElement !== document.body) {
-      document.body.appendChild(node);
-      movedToContainer.current = false;
-    }
-  }
-
   useEffect(() => {
-    // In React 18 StrictMode (development only), effects run twice.
-    // Skip the first run so that Webamp is only initialized on the
-    // "real" second run, avoiding double-dispose issues inside Webamp.
-    if (IS_DEV && !didInitEffect.current) {
-      didInitEffect.current = true;
+    // Preserve the existing React 18 development guard and DOM reparenting.
+    if (IS_DEV && !didInit.current) {
+      didInit.current = true;
       return;
     }
-
-    const target = ref.current;
-    if (!target) {
-      return;
-    }
-
-    const WebampCtor = hasWebGL() ? WebampWithVisualizers : Webamp;
-
-    const webampInstance = new WebampCtor({
-      initialSkin: {
-        url: '/winamp_skin/modern.wsz',
-        name: 'Modern',
-      },
-      initialTracks,
-      // windowLayout: {
-      //   main: {
-      //     position: {},
-      //     shadeMode: false,
-      //     closed: false,
-      //   },
-      //   equalizer: {
-      //     position: {},
-      //     shadeMode: false,
-      //     closed: false,
-      //   },
-      //   playlist: {
-      //     position: {},
-      //     shadeMode: false,
-      //     // Number of additional sprites by which to expand the window.
-      //     size: { extraHeight: 4 },
-      //     closed: false,
-      //   },
-      //   milkdrop: {
-      //     position: {},
-      //     // Number of additional sprites by which to expand the window.
-      //     size: { extraHeight: 5, extraWidth: 5 },
-      //     closed: false,
-      //   },
-      // },
-    });
-
-    webamp.current = webampInstance;
+    if (!target.current) return;
     let disposed = false;
-
-    webampInstance.renderWhenReady(target).then(() => {
-      if (!disposed) {
-        attachToContainer();
-        ready.current = true;
-        playRequestedTrack();
-      }
+    const Ctor = hasWebGL() ? WebampWithVisualizers : Webamp;
+    const current = new Ctor({
+      initialSkin: { url: '/winamp_skin/modern.wsz', name: 'Modern' },
+      initialTracks,
+      // Use Webamp's original layout and open Milkdrop on supported GPUs.
+      // Start with the first preset rather than an untested random selection;
+      // visitors can still choose presets or enable cycling in Milkdrop.
+      __initialState: { milkdrop: { randomize: false, cycling: false } },
     });
-
+    instance.current = current;
+    let currentUrl = initialTracks[0].url;
+    let previousStatus;
+    let started = false;
+    let previousTime = 0;
+    let loadingSince = 0;
+    const unregister = registerPlayer('winamp', () => {
+      // Webamp's pause() toggles playback when already paused/stopped.
+      if (current.getMediaStatus() === 'PLAYING') current.pause();
+    });
+    const unsubscribeTrack = current.onTrackDidChange(track => {
+      currentUrl = track?.url || '';
+      started = false;
+      previousTime = 0;
+      loadingSince = Date.now();
+    });
+    const detach = () => {
+      const node = document.getElementById('webamp');
+      if (node && node.parentElement !== document.body)
+        document.body.appendChild(node);
+    };
+    const unsubscribeClose = current.onClose(() => {
+      detach();
+      callbacks.current.onClose();
+    });
+    const unsubscribeMinimize = current.onMinimize(() =>
+      callbacks.current.onMinimize(),
+    );
+    const timer = setInterval(() => {
+      if (disposed || !ready.current) return;
+      const status = current.getMediaStatus();
+      const time = current.media.timeElapsed();
+      if (status === 'PLAYING' && previousStatus !== 'PLAYING') {
+        claimPlayback('winamp');
+        loadingSince = Date.now();
+      }
+      if (status === 'PLAYING' && time > previousTime + 0.01 && !started) {
+        const release = releases.find(item =>
+          [item.trackUrl, item.webAudioUrl]
+            .filter(Boolean)
+            .some(
+              url =>
+                new URL(url, window.location.origin).pathname ===
+                new URL(currentUrl, window.location.origin).pathname,
+            ),
+        );
+        if (release)
+          trackEvent('music_play_start', {
+            release: release.slug,
+            player: 'winamp',
+            view_mode: 'desktop',
+          });
+        announce(currentUrl, '');
+        started = true;
+      }
+      if (
+        status === 'PLAYING' &&
+        !started &&
+        loadingSince &&
+        Date.now() - loadingSince > 15000
+      ) {
+        announce(
+          currentUrl,
+          'Playback has not started. Try Play again or use the YouTube/music-service link.',
+        );
+        loadingSince = 0;
+      }
+      previousStatus = status;
+      previousTime = time;
+    }, 300);
+    current
+      .renderWhenReady(target.current)
+      .then(() => {
+        if (disposed) return;
+        const node = document.getElementById('webamp');
+        if (node && target.current && node.parentElement !== target.current) {
+          const outer = target.current.getBoundingClientRect();
+          const inner = node.getBoundingClientRect();
+          const panels = [...node.querySelectorAll('.window')]
+            .map(panel => panel.getBoundingClientRect())
+            .filter(box => box.width && box.height);
+          const left = Math.min(...panels.map(box => box.left));
+          const top = Math.min(...panels.map(box => box.top));
+          const width = Math.max(...panels.map(box => box.right)) - left;
+          const height = Math.max(...panels.map(box => box.bottom)) - top;
+          // The production desktop centers the complete player group on its
+          // mount point, not at (0, 0). Preserve that placement across Webamp's
+          // absolute default layouts, then reparent without moving the group.
+          const groupLeft = Math.max(
+            0,
+            Math.min(
+              window.innerWidth - width,
+              Math.round(outer.left + outer.width / 2 - width / 2),
+            ),
+          );
+          const groupTop = Math.max(
+            0,
+            Math.min(
+              window.innerHeight - 30 - height,
+              Math.round(outer.top + outer.height / 2 - height / 2),
+            ),
+          );
+          target.current.appendChild(node);
+          node.style.left = `${Math.round(
+            inner.left - outer.left + groupLeft - left,
+          )}px`;
+          node.style.top = `${Math.round(
+            inner.top - outer.top + groupTop - top,
+          )}px`;
+        }
+        ready.current = true;
+        playPending.current();
+      })
+      .catch(() => {
+        if (!disposed)
+          announce(
+            '',
+            'Winamp could not start. You can still use the music links.',
+          );
+      });
     return () => {
       disposed = true;
       ready.current = false;
-      detachToBody();
-      webampInstance.dispose();
-      if (webamp.current === webampInstance) {
-        webamp.current = null;
-      }
+      clearInterval(timer);
+      unregister();
+      unsubscribeTrack();
+      unsubscribeClose();
+      unsubscribeMinimize();
+      detach();
+      current.dispose();
+      if (instance.current === current) instance.current = null;
     };
-  }, []);
-
-  useEffect(() => {
-    if (!webamp.current) return;
-    webamp.current.onClose(() => {
-      try {
-        detachToBody();
-      } catch (e) {}
-      onClose();
-    });
-    webamp.current.onMinimize(() => {
-      onMinimize();
-    });
-  }, [onClose, onMinimize]);
+  }, [announce]);
 
   return (
     <div
+      ref={target}
       style={{ width: '100%', height: '100%', position: 'relative' }}
-      ref={ref}
     />
   );
 }
-
-export default Winamp;

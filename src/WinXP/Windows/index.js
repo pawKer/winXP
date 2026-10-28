@@ -17,12 +17,15 @@ function Windows({
   onFocusWinamp,
   onPlayTrack,
   playRequest,
+  active = true,
 }) {
   return (
     <div style={{ position: 'relative', zIndex: 0 }}>
       {apps.map(app => (
         <StyledWindow
           show={!app.minimized}
+          isVisible={active && !app.minimized}
+          desktopActive={active}
           key={app.id}
           id={app.id}
           onMouseDown={onMouseDown}
@@ -64,6 +67,8 @@ const Window = memo(function({
   onFocusWinamp,
   onPlayTrack,
   playRequest,
+  isVisible,
+  desktopActive,
 }) {
   function _onMouseDown() {
     onMouseDown(id);
@@ -114,6 +119,7 @@ const Window = memo(function({
       className={className}
       ref={ref}
       onMouseDown={_onMouseDown}
+      onFocusCapture={_onMouseDown}
       style={{
         transform: `translate(${x}px,${y}px)`,
         width: width ? `${width}px` : 'auto',
@@ -156,6 +162,8 @@ const Window = memo(function({
           onFocusWinamp,
           onPlayTrack,
           playRequest,
+          isVisible,
+          desktopActive,
           ...injectProps,
         })}
       </div>
@@ -215,7 +223,7 @@ const StyledWindow = styled(Window)`
     line-height: 25px;
     font-weight: 700;
     font-size: 12px;
-    font-family: 'Noto Sans';
+    font-family: 'Noto Sans', Tahoma, sans-serif;
     text-shadow: 1px 1px #000;
     color: white;
     position: absolute;

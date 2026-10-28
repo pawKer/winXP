@@ -15,8 +15,8 @@ const socialMediaConfig = {
         },
         {
           label: '▶ Youtube:',
-          url: 'https://youtube.com/reshra',
-          displayText: 'https://youtube.com/reshra',
+          url: 'https://www.youtube.com/@reshra',
+          displayText: 'https://www.youtube.com/@reshra',
           type: 'external',
         },
         {
@@ -33,7 +33,7 @@ const socialMediaConfig = {
         {
           label: '',
           action: 'playMusic',
-          displayText: '>>> Play my music <<<',
+          displayText: '>>> Open my music archive <<<',
           type: 'action',
         },
         {

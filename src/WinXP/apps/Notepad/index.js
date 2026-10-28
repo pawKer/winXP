@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useId } from 'react';
 import styled from 'styled-components';
 
 import { WindowDropDowns } from 'components';
@@ -12,6 +12,7 @@ export default function Notepad({
 }) {
   const [docText, setDocText] = useState('');
   const [wordWrap, setWordWrap] = useState(false);
+  const scratchpadId = useId();
 
   function onClickOptionItem(item) {
     switch (item) {
@@ -30,22 +31,15 @@ export default function Notepad({
       default:
     }
   }
-  function onTextAreaKeyDown(e) {
-    // handle tabs in text area
-    if (e.which === 9) {
-      e.preventDefault();
-      e.persist();
-      var start = e.target.selectionStart;
-      var end = e.target.selectionEnd;
-      setDocText(`${docText.substring(0, start)}\t${docText.substring(end)}`);
-
-      // asynchronously update textarea selection to include tab
-      // workaround due to https://github.com/facebook/react/issues/14174
-      requestAnimationFrame(() => {
-        e.target.selectionStart = start + 1;
-        e.target.selectionEnd = start + 1;
-      });
-    }
+  function downloadText() {
+    const url = URL.createObjectURL(
+      new Blob([docText], { type: 'text/plain;charset=utf-8' }),
+    );
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'scratchpad.txt';
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
 
   return (
@@ -62,11 +56,20 @@ export default function Notepad({
             })}
           </HeaderSection>
         )}
+        <div className="scratchpad-label">
+          <label htmlFor={scratchpadId}>
+            Scratchpad — temporary text, lost when this window closes.
+          </label>
+          <button type="button" onClick={downloadText}>
+            Save text…
+          </button>
+        </div>
         <StyledTextarea
+          id={scratchpadId}
+          aria-label="Temporary scratchpad"
           wordWrap={wordWrap}
           value={docText}
           onChange={e => setDocText(e.target.value)}
-          onKeyDown={onTextAreaKeyDown}
           spellCheck={false}
         />
       </TextContentContainer>
@@ -86,6 +89,27 @@ const Div = styled.div`
     flex-shrink: 0;
     border-bottom: 1px solid white;
   }
+  .notepad-document {
+    padding: 12px;
+  }
+  .notepad-document h1 {
+    font: bold 16px 'Lucida Console', monospace;
+  }
+  .notepad-document .document-heading .file-icon {
+    display: none;
+  }
+  .scratchpad-label {
+    padding: 8px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    background: #ece9d8;
+    font: 11px/1.5 Tahoma, sans-serif;
+  }
+  .scratchpad-label button {
+    padding: 4px 8px;
+  }
 `;
 
 const TextContentContainer = styled.div`
@@ -95,6 +119,7 @@ const TextContentContainer = styled.div`
   flex-direction: column;
   align-items: stretch;
   overflow-y: scroll;
+  min-height: 0;
 `;
 
 const HeaderSection = styled.div`
@@ -105,13 +130,16 @@ const HeaderSection = styled.div`
 
 const StyledTextarea = styled.textarea`
   flex: auto;
-  outline: none;
   font-family: 'Lucida Console', monospace;
   font-size: 16px;
-  line-height: 14px;
+  line-height: 1.5;
   resize: none;
   padding: 2px;
   border: none;
   min-height: 200px;
+  &:focus-visible {
+    outline: 2px solid #315aa5;
+    outline-offset: -2px;
+  }
   ${props => (props.wordWrap ? '' : 'white-space: nowrap; overflow-x: scroll;')}
 `;

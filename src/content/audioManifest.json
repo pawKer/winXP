@@ -1,0 +1,47 @@
+{
+  "bruises": {
+    "url": "/songs/web/bruises.mp3",
+    "sourceBytes": 104667578,
+    "webBytes": 6543405
+  },
+  "forever": {
+    "url": "/songs/web/forever.mp3",
+    "sourceBytes": 65664114,
+    "webBytes": 5473197
+  },
+  "oh-doamne": {
+    "url": "/songs/web/oh-doamne.mp3",
+    "sourceBytes": 76967546,
+    "webBytes": 4811949
+  },
+  "somn": {
+    "url": "/songs/web/somn.mp3",
+    "sourceBytes": 70963378,
+    "webBytes": 4436397
+  },
+  "minimal": {
+    "url": "/songs/web/minimal.mp3",
+    "sourceBytes": 58368758,
+    "webBytes": 3650017
+  },
+  "phantom": {
+    "url": "/songs/web/phantom.mp3",
+    "sourceBytes": 40835644,
+    "webBytes": 3386548
+  },
+  "muzica": {
+    "url": "/songs/web/muzica.mp3",
+    "sourceBytes": 38202838,
+    "webBytes": 3467015
+  },
+  "vise": {
+    "url": "/songs/web/vise.mp3",
+    "sourceBytes": 38308912,
+    "webBytes": 3457810
+  },
+  "down": {
+    "url": "/songs/web/down.mp3",
+    "sourceBytes": 44330822,
+    "webBytes": 4022483
+  }
+}

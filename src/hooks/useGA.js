@@ -1,19 +1,48 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import ReactGA from 'react-ga4';
+import { siteUrl } from 'content/site';
 
-function useGA(measurementId) {
-  useEffect(() => {
-    if (!measurementId) return;
+const initialized = new Set();
 
-    // GA4 sends the initial page_view during configuration and, when enabled,
-    // Enhanced Measurement tracks subsequent browser-history changes.
-    ReactGA.initialize(measurementId);
-  }, [measurementId]);
+export function shouldSendAnalytics(hostname, debug = false) {
+  const canonical = new URL(siteUrl).hostname;
+  return debug || hostname === canonical || hostname.endsWith(`.${canonical}`);
 }
 
-// Use the GA4 event API so all supplied event parameters are sent.
 export const trackEvent = (eventName, parameters = {}) => {
-  ReactGA.event(eventName, parameters);
+  window.dispatchEvent(
+    new CustomEvent('reshra:analytics', { detail: { eventName, parameters } }),
+  );
+  if (!initialized.size) return;
+  try {
+    ReactGA.event(eventName, parameters);
+  } catch (_) {
+    /* Best effort. */
+  }
 };
 
-export default useGA;
+export default function useGA(measurementId, pathname) {
+  const previous = useRef(null);
+  useEffect(() => {
+    const enabled = shouldSendAnalytics(
+      window.location.hostname,
+      process.env.REACT_APP_GA_DEBUG === 'true',
+    );
+    if (measurementId && enabled && !initialized.has(measurementId)) {
+      ReactGA.initialize(measurementId, {
+        gtagOptions: { send_page_view: false },
+      });
+      initialized.add(measurementId);
+    }
+    if (previous.current?.pathname === pathname) return;
+    const url = new URL(window.location.href);
+    url.searchParams.delete('view');
+    const parameters = {
+      page_location: url.href,
+      page_title: document.title,
+      page_referrer: previous.current?.url || document.referrer,
+    };
+    previous.current = { pathname, url: url.href };
+    trackEvent('page_view', parameters);
+  }, [measurementId, pathname]);
+}

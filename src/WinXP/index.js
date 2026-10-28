@@ -30,11 +30,15 @@ import Footer from './Footer';
 import Windows from './Windows';
 import Icons from './Icons';
 import { DashedBox } from 'components';
+import { useSiteNavigation } from 'navigation/SiteNavigation';
+import pageContent from 'content/pages';
+
+const { getPage } = pageContent;
 
 const initState = {
   apps: defaultAppState,
   nextAppID: defaultAppState.length,
-  nextZIndex: defaultAppState.length,
+  nextZIndex: Math.max(...defaultAppState.map(app => app.zIndex)) + 1,
   focusing: FOCUSING.WINDOW,
   icons: defaultIconState,
   selecting: false,
@@ -42,6 +46,14 @@ const initState = {
 };
 const reducer = (state, action = { type: '' }) => {
   switch (action.type) {
+    case 'OPEN_NOTE': {
+      const existing = state.apps.find(
+        app => app.noteId === action.payload.noteId,
+      );
+      return existing
+        ? reducer(state, { type: FOCUS_APP, payload: existing.id })
+        : reducer(state, { type: ADD_APP, payload: action.payload });
+    }
     case ADD_APP:
       const app = state.apps.find(
         _app => _app.component === action.payload.component,
@@ -180,50 +192,70 @@ const reducer = (state, action = { type: '' }) => {
       return state;
   }
 };
-function WinXP({ defaultPath = '/' }) {
-  const [state, dispatch] = useReducer(reducer, initState);
+function WinXP({
+  defaultPath = '/',
+  initialPath = '/',
+  active = true,
+  onReady,
+  onReadingView,
+}) {
+  const directEntry = useRef(
+    defaultPath === initialPath && initialPath !== '/',
+  );
+  const [state, dispatch] = useReducer(reducer, initState, initial => ({
+    ...initial,
+    apps: initial.apps.map(app =>
+      directEntry.current &&
+      !getNoteByPath(defaultPath) &&
+      app.component === appSettings['Internet Explorer'].component
+        ? { ...app, maximized: true }
+        : app,
+    ),
+  }));
   const [playRequest, setPlayRequest] = useState(null);
   const ref = useRef(null);
   const mouse = useMouse(ref);
   const focusedAppId = getFocusedAppId();
+  const { navigate } = useSiteNavigation();
+
+  useEffect(() => {
+    if (onReady) onReady();
+  }, [onReady]);
 
   function openNote(noteId) {
     const note = getNoteById(noteId);
     if (!note) return;
 
-    // Check if a note with this noteId is already open
-    const existingNoteApp = state.apps.find(app => app.noteId === noteId);
-    if (existingNoteApp) {
-      // If it exists, focus it instead of opening a new one
-      dispatch({ type: FOCUS_APP, payload: existingNoteApp.id });
-      return;
-    }
-
-    // Otherwise, open a new note window
-    dispatch({
-      type: ADD_APP,
-      payload: {
-        ...appSettings.Notepad,
-        header: {
-          ...appSettings.Notepad.header,
-          title: `${note.title} - Notepad`,
-        },
-        headerContent: note.headerComponent ? <note.headerComponent /> : null,
-        noteId: noteId,
-      },
-    });
+    if (defaultPath !== note.path) navigate(note.path, { mode: 'desktop' });
+    else dispatch({ type: 'OPEN_NOTE', payload: noteApp(note) });
   }
 
-  // Open appropriate notepad file based on path
+  function noteApp(note) {
+    return {
+      ...appSettings.Notepad,
+      header: {
+        ...appSettings.Notepad.header,
+        title: `${note.title} - Notepad`,
+      },
+      headerContent: note.headerComponent ? <note.headerComponent /> : null,
+      noteId: note.id,
+    };
+  }
+
   useEffect(() => {
+    if (!active) return;
     const noteFromPath = getNoteByPath(defaultPath);
-    if (noteFromPath) {
-      openNote(noteFromPath.id);
-    } else if (defaultPath === '/') {
-      // Default to Thank You.txt
-      // openNote('thankYou');
-    }
-  }, [defaultPath]);
+    if (noteFromPath)
+      dispatch({
+        type: 'OPEN_NOTE',
+        payload: {
+          ...noteApp(noteFromPath),
+          maximized: directEntry.current || appSettings.Notepad.maximized,
+        },
+      });
+    else dispatch({ type: ADD_APP, payload: appSettings['Internet Explorer'] });
+    directEntry.current = false;
+  }, [defaultPath, active]);
 
   const onFocusApp = useCallback(id => {
     dispatch({ type: FOCUS_APP, payload: id });
@@ -395,7 +427,22 @@ function WinXP({ defaultPath = '/' }) {
       />
       <DashedBox startPos={state.selecting} mouse={mouse} />
       <Windows
-        apps={state.apps}
+        apps={state.apps.map(app =>
+          app.component === appSettings['Internet Explorer'].component
+            ? {
+                ...app,
+                header: {
+                  ...app.header,
+                  title: `${
+                    getPage(defaultPath)?.kind === 'note'
+                      ? 'reshra’s desktop'
+                      : getPage(defaultPath)?.title || 'reshra'
+                  } - Internet Explorer`,
+                },
+              }
+            : app,
+        )}
+        active={active}
         onMouseDown={onFocusApp}
         onClose={onCloseApp}
         onMinimize={onMinimizeWindow}
@@ -413,6 +460,7 @@ function WinXP({ defaultPath = '/' }) {
         focusedAppId={focusedAppId}
         onMouseDown={onMouseDownFooter}
         onClickMenuItem={onClickMenuItem}
+        onReadingView={onReadingView}
       />
       {state.powerState !== POWER_STATE.START && (
         <Modal
@@ -443,8 +491,7 @@ const animation = {
 };
 
 const Container = styled.div`
-  @import url('https://fonts.googleapis.com/css?family=Noto+Sans');
-  font-family: Tahoma, 'Noto Sans', sans-serif;
+  font-family: Tahoma, sans-serif;
   height: 100%;
   overflow: hidden;
   position: relative;

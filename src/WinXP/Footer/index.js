@@ -7,6 +7,7 @@ import startButton from 'assets/windowsIcons/start.png';
 import sound from 'assets/windowsIcons/690(16x16).png';
 import usb from 'assets/windowsIcons/394(16x16).png';
 import risk from 'assets/windowsIcons/229(16x16).png';
+import readingIcon from 'assets/windowsIcons/327(16x16).png';
 
 const getTime = () => {
   const date = new Date();
@@ -32,6 +33,7 @@ function Footer({
   focusedAppId,
   onMouseDown,
   onClickMenuItem,
+  onReadingView,
 }) {
   const [time, setTime] = useState(getTime);
   const [menuOn, setMenuOn] = useState(false);
@@ -91,6 +93,18 @@ function Footer({
         )}
       </div>
 
+      <button
+        id="desktop-reading-toggle"
+        className="footer__reading"
+        type="button"
+        aria-label="Open reading view"
+        title="Open reading view"
+        onClick={onReadingView}
+      >
+        <img src={readingIcon} alt="" />
+        <span className="footer__reading-full">Reading view</span>
+        <span className="footer__reading-short">Read</span>
+      </button>
       <div className="footer__items right">
         <img className="footer__icon" src={sound} alt="" />
         <img className="footer__icon" src={usb} alt="" />
@@ -109,13 +123,14 @@ function FooterWindow({ id, icon, title, onMouseDown, isFocus }) {
     onMouseDown(id);
   }
   return (
-    <div
-      onMouseDown={_onMouseDown}
+    <button
+      type="button"
+      onClick={_onMouseDown}
       className={`footer__window ${isFocus ? 'focus' : 'cover'}`}
     >
       <img className="footer__icon" src={icon} alt={title} />
       <div className="footer__text">{title}</div>
-    </div>
+    </button>
   );
 }
 
@@ -145,6 +160,71 @@ const Container = styled.footer`
   right: 0;
   left: 0;
   display: flex;
+  .footer__reading {
+    flex: none;
+    align-self: center;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    height: 24px;
+    padding: 0 9px;
+    margin-left: 6px;
+    border: 1px solid #174cb1;
+    border-radius: 3px;
+    background: linear-gradient(#5b9af7, #347bdf 15%, #2462c9 45%, #2058b8);
+    box-shadow: inset 1px 1px 0 #80b4ff, inset -1px -1px 0 #2052a9;
+    color: #fff;
+    text-shadow: 1px 1px #2454a1;
+    font: 11px Tahoma, sans-serif;
+    cursor: pointer;
+    &:hover {
+      background: linear-gradient(#78b1ff, #4388e8 15%, #2b6ed3 45%, #2461c4);
+    }
+    &:active {
+      background: #1e52b7;
+      box-shadow: inset 1px 1px 2px #12377c;
+    }
+    img {
+      width: 16px;
+      height: 16px;
+    }
+  }
+  .footer__reading-short {
+    display: none;
+  }
+  @media (max-width: 600px) {
+    .footer__reading-full {
+      display: none;
+    }
+    .footer__reading-short {
+      display: inline;
+    }
+    .footer__reading {
+      padding-inline: 7px;
+      min-width: 42px;
+    }
+    .footer__items.right {
+      margin-left: 4px;
+      padding: 0 7px;
+    }
+    .footer__items.right .footer__icon {
+      display: none;
+    }
+    .footer__start {
+      width: 70px;
+      object-fit: cover;
+      object-position: left;
+      margin-right: 4px;
+    }
+    .footer__window {
+      min-width: 28px;
+      padding-inline: 4px;
+    }
+  }
+  button:focus-visible {
+    outline: 2px dotted white;
+    outline-offset: -3px;
+  }
   .footer__items.left {
     height: 100%;
     flex: 1;
@@ -196,6 +276,9 @@ const Container = styled.footer`
     bottom: 100%;
   }
   .footer__window {
+    border: 0;
+    min-width: 28px;
+    cursor: pointer;
     flex: 1;
     max-width: 150px;
     color: #fff;
@@ -218,6 +301,10 @@ const Container = styled.footer`
   .footer__text {
     position: absolute;
     left: 27px;
+    right: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     right: 8px;
     white-space: nowrap;
     overflow: hidden;

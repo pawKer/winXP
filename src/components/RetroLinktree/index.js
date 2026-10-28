@@ -226,6 +226,8 @@ function RetroLinktree({
                     trackEvent(item.analyticsEvent, {
                       release: item.releaseSlug,
                       destination: href,
+                      placement: 'profile',
+                      view_mode: 'desktop',
                     });
                   }
                 } catch (err) {

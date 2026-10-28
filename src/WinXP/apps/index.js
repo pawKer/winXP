@@ -31,8 +31,12 @@ const genIndex = gen();
 
 const minesweeperZIndex = genIndex();
 const winampZIndex = genIndex();
-const notepadZIndex = genIndex();
+genIndex(); // Preserve the original startup stacking gap.
 const internetExplorerZIndex = genIndex();
+const internetExplorerTop = Math.min(
+  200,
+  Math.max(40, window.innerHeight - 450),
+);
 // const notepad2ZIndex = genIndex();
 export const defaultAppState = [
   {
@@ -84,11 +88,14 @@ export const defaultAppState = [
     },
     defaultSize: {
       width: 550,
-      height: 800,
+      height: Math.min(
+        800,
+        Math.max(200, window.innerHeight - internetExplorerTop - 50),
+      ),
     },
     defaultOffset: {
       x: 180,
-      y: 300,
+      y: internetExplorerTop,
     },
     resizable: true,
     minimized: false,
@@ -194,7 +201,7 @@ export const appSettings = {
     resizable: true,
     minimized: false,
     maximized: window.innerWidth < 800,
-    multiInstance: true,
+    multiInstance: false,
   },
   Minesweeper: {
     header: {

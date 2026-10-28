@@ -1,112 +1,170 @@
-import React, { useEffect, useState } from 'react';
+import React, {
+  lazy,
+  Suspense,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { BrowserRouter as Router, useLocation } from 'react-router-dom';
+import PublicPage from 'components/PublicPage';
+import pageContent from 'content/pages';
+import useGA, { trackEvent } from 'hooks/useGA';
+import usePageHead from 'hooks/usePageHead';
+import {
+  SiteNavigationProvider,
+  useSiteNavigation,
+} from 'navigation/SiteNavigation';
+import { pauseAll } from 'media/playback';
+import windowsIcon from 'assets/windowsIcons/windows.png';
 
-import WinXP from 'WinXP';
-import { useGA, trackEvent } from 'hooks';
-import { getAllNotes } from 'WinXP/apps/notesConfig';
-import { releases } from 'content/site';
+const { getPage } = pageContent;
 
-const AppContent = () => {
-  const measurementId = process.env.REACT_APP_GA_MEASUREMENT_ID;
-  useGA(measurementId);
-  const { pathname } = useLocation();
-  useEffect(() => {
-    const staticContent = document.getElementById('static-content');
-    if (!staticContent || staticContent.dataset.pagePath === pathname) return;
-    let cancelled = false;
-    staticContent.innerHTML = '<div class="reading-inner">Loading page…</div>';
-    fetch(pathname)
-      .then(response => response.text())
-      .then(html => {
-        if (cancelled) return;
-        const next = new DOMParser().parseFromString(html, 'text/html');
-        const content = next.getElementById('static-content');
-        if (content) {
-          staticContent.innerHTML = content.innerHTML;
-          staticContent.dataset.pagePath = pathname;
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          staticContent.innerHTML =
-            '<div class="reading-inner"><p>Unable to load this page.</p></div>';
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [pathname]);
-  const knownPaths = [
-    '/',
-    '/music',
-    '/notes',
-    ...releases.map(release => release.path),
-    ...getAllNotes().map(note => note.path),
-  ];
-  if (!knownPaths.includes(pathname)) {
-    return (
-      <main>
-        <h1>Page not found</h1>
-        <a href="/">Go home</a>
-      </main>
-    );
+const Desktop = lazy(() => import('WinXP'));
+
+class DesktopBoundary extends React.Component {
+  state = { failed: false };
+
+  static getDerivedStateFromError() {
+    return { failed: true };
   }
-  return <WinXP defaultPath={pathname} />;
-};
 
-const App = () => {
-  const hasReadingContent = !!document.getElementById('static-content');
-  const [reading, setReading] = useState(
-    () =>
-      hasReadingContent &&
-      new URLSearchParams(window.location.search).get('view') === 'read',
+  componentDidCatch() {
+    this.props.onFailure();
+  }
+
+  render() {
+    return this.state.failed ? null : this.props.children;
+  }
+}
+
+function AppContent() {
+  const location = useLocation();
+  const initialPath = useRef(location.pathname);
+  const page = getPage(location.pathname);
+  const { mode, setMode, navigate } = useSiteNavigation();
+  const [desktopMounted, setDesktopMounted] = useState(
+    mode === 'desktop' && !!page,
   );
+  const [desktopReady, setDesktopReady] = useState(false);
+  const [desktopFailed, setDesktopFailed] = useState(false);
+  const reading = mode === 'read' || !page || desktopFailed;
+  const retryQuery = new URLSearchParams(location.search);
+  retryQuery.set('view', 'desktop');
+  const retryPath = `${location.pathname}?${retryQuery}${location.hash}`;
+  usePageHead(page);
+  useGA(process.env.REACT_APP_GA_MEASUREMENT_ID, location.pathname);
 
   useEffect(() => {
-    document.documentElement.classList.toggle('reading-view', reading);
-    document.documentElement.classList.add('desktop-ready');
-    return () => document.documentElement.classList.remove('desktop-ready');
+    pauseAll();
+    if (!reading) setDesktopMounted(true);
   }, [reading]);
 
-  useEffect(() => {
-    const staticContent = document.getElementById('static-content');
-    if (!staticContent) return;
-    const trackReadingLink = event => {
-      const link = event.target.closest('a');
-      const release = releases.find(item => item.listeningUrl === link?.href);
-      if (!release) return;
-      try {
-        trackEvent('music_listen_click', {
-          release: release.slug,
-          destination: release.listeningUrl,
-        });
-      } catch (error) {
-        // Analytics must not block a listening link.
-      }
-    };
-    staticContent.addEventListener('click', trackReadingLink);
-    return () => staticContent.removeEventListener('click', trackReadingLink);
-  }, []);
+  useLayoutEffect(() => {
+    document.documentElement.classList.toggle('desktop-mode', !reading);
+    if (reading || desktopReady) {
+      document.documentElement.classList.add('app-ready');
+      document.getElementById('static-content')?.remove();
+    }
+  }, [reading, desktopReady]);
 
-  function toggleReading() {
-    const next = !reading;
-    const url = new URL(window.location.href);
-    if (next) url.searchParams.set('view', 'read');
-    else url.searchParams.delete('view');
-    window.history.replaceState(window.history.state, '', url);
-    setReading(next);
+  function changeMode(next) {
+    pauseAll();
+    if (!page) {
+      navigate('/?view=desktop', { mode: 'desktop' });
+      return;
+    }
+    trackEvent('view_mode_change', { view_mode: next });
+    setMode(next);
+    requestAnimationFrame(() =>
+      document
+        .querySelector(
+          next === 'read'
+            ? '.standalone-surface #page-main'
+            : '#desktop-reading-toggle',
+        )
+        ?.focus(),
+    );
   }
 
   return (
-    <Router>
-      <AppContent />
-      {hasReadingContent && (
-        <button id="view-toggle" type="button" onClick={toggleReading}>
-          {reading ? 'Desktop view' : 'Reading view'}
-        </button>
+    <>
+      <a
+        className="skip-link"
+        href="#page-main"
+        onClick={() => {
+          if (!reading) changeMode('read');
+        }}
+      >
+        Skip to page content
+      </a>
+      {desktopMounted && !desktopFailed && (
+        <div id="desktop-layer" hidden={reading}>
+          <DesktopBoundary
+            onFailure={() => {
+              pauseAll();
+              setDesktopFailed(true);
+              setMode('read');
+            }}
+          >
+            <Suspense fallback={<p role="status">Starting the desktop…</p>}>
+              <Desktop
+                defaultPath={location.pathname}
+                initialPath={initialPath.current}
+                active={!reading}
+                onReady={() => setDesktopReady(true)}
+                onReadingView={() => changeMode('read')}
+              />
+            </Suspense>
+          </DesktopBoundary>
+        </div>
       )}
+      {reading && (
+        <div className="standalone-surface">
+          <div className="mode-controls">
+            <span className="mode-label">
+              reshra.xyz /{' '}
+              {page?.kind === 'blog' || page?.kind === 'post'
+                ? 'the blog'
+                : 'reading view'}
+            </span>
+            {desktopFailed ? (
+              <a className="xp-button" id="desktop-retry" href={retryPath}>
+                <img className="desktop-view-icon" src={windowsIcon} alt="" />
+                Try desktop again
+              </a>
+            ) : (
+              <button
+                className="xp-button"
+                id="view-toggle"
+                type="button"
+                onClick={() => changeMode('desktop')}
+              >
+                <img className="desktop-view-icon" src={windowsIcon} alt="" />
+                Open desktop view
+              </button>
+            )}
+            <a href="/feed.xml">RSS feed</a>
+          </div>
+          {desktopFailed && (
+            <p className="desktop-recovery" role="alert" data-desktop-recovery>
+              The desktop could not load. You can keep reading here, or try it
+              again.
+            </p>
+          )}
+          <PublicPage path={location.pathname} />
+        </div>
+      )}
+    </>
+  );
+}
+
+export default function App() {
+  return (
+    <Router>
+      <SiteNavigationProvider>
+        <AppContent />
+      </SiteNavigationProvider>
     </Router>
   );
-};
-
-export default App;
+}

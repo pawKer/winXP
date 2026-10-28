@@ -6,16 +6,17 @@ const {
 } = require('./noteSections');
 
 const siteUrl = 'https://reshra.xyz';
+const { releases } = require('./catalogue');
 
 const profile = {
   name: 'reshra',
   handle: 'reshra',
-  bio: 'Links, projects, and notes.',
+  bio: 'Music, guitar projects, and experiments by reshra.',
   avatarSrc: '/reshra_low_res.jpg',
   socialLinks: {
     instagram: 'https://instagram.com/reshnocash',
     tiktok: 'https://tiktok.com/@reshra',
-    youtube: 'https://youtube.com/reshra',
+    youtube: 'https://www.youtube.com/@reshra',
     spotify: 'https://open.spotify.com/artist/781EBVicrg3Ry3uWjwQLD8',
   },
 };
@@ -49,36 +50,6 @@ const notes = [
     description:
       'Neural Amp Modeler capture, tutorials, and recording resources.',
     sections: namAmpCaptureLinksConfig,
-  },
-];
-
-const releases = [
-  // Add artwork, releaseDate, credits, and longer descriptions here when ready.
-  {
-    slug: 'bruises',
-    title: 'bruises',
-    path: '/music/bruises',
-    listeningUrl:
-      'https://distrokid.com/hyperfollow/reshra/bruises?ref=release',
-    trackUrl: '/songs/reshra - bruises.wav',
-    description: 'Listen to bruises by reshra.',
-    artwork: null,
-    releaseDate: null,
-    credits: [],
-  },
-  {
-    slug: 'anii-2000',
-    title: 'anii 2000',
-    path: '/music/anii-2000',
-    listeningUrl:
-      'https://distrokid.com/hyperfollow/reshra/anii-2000?ref=release',
-    trackUrl: '/songs/reshra - anii 2000.wav',
-    guitarHeroUrl:
-      'https://drive.google.com/drive/folders/1g7SefzKNeO9_EjYc6GEQu-hWvagXgfV9?usp=drive_link',
-    description: 'Listen to anii 2000 by reshra and find Guitar Hero files.',
-    artwork: null,
-    releaseDate: null,
-    credits: [],
   },
 ];
 

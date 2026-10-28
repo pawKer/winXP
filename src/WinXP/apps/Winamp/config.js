@@ -1,108 +1,32 @@
-// from Webamp demo
+import { releases } from 'content/site';
 
+const order = [
+  'bruises',
+  'forever',
+  'anii-2000',
+  'somn',
+  'oh-doamne',
+  'phantom',
+  'minimal',
+  'muzica',
+  'vise',
+  'down',
+];
 export const initialTracks = [
-  {
-    url: '/songs/reshra - bruises.wav',
-    duration: 273,
-    metaData: {
-      title: 'bruises (new)',
-      artist: 'reshra',
-    },
-  },
-  {
-    url: '/songs/reshra - forever.wav',
-    duration: 228,
-    metaData: {
-      title: 'forever',
-      artist: 'reshra',
-    },
-  },
-  {
-    url: '/songs/reshra - anii 2000.wav',
-    duration: 195,
-    metaData: {
-      title: 'anii 2000',
-      artist: 'reshra',
-    },
-  },
-  {
-    url: '/songs/reshra - somn.wav',
-    duration: 184,
-    metaData: {
-      title: 'somn',
-      artist: 'reshra',
-    },
-  },
-  {
-    url: '/songs/reshra - oh, doamne.wav',
-    duration: 200,
-    metaData: {
-      title: 'oh, doamne',
-      artist: 'reshra',
-    },
-  },
-  {
-    url: '/songs/reshra - phantom.wav',
-    duration: 141,
-    metaData: {
-      title: 'phantom',
-      artist: 'reshra',
-    },
-  },
-  {
-    url: '/songs/reshra - minimal.wav',
-    duration: 152,
-    metaData: {
-      title: 'minimal',
-      artist: 'reshra',
-    },
-  },
-  {
-    url: '/songs/reshra - muzica.wav',
-    duration: 144,
-    metaData: {
-      title: 'muzica',
-      artist: 'reshra',
-    },
-  },
-  {
-    url: '/songs/reshra - vise.wav',
-    duration: 144,
-    metaData: {
-      title: 'vise',
-      artist: 'reshra',
-    },
-  },
-  {
-    url: '/songs/reshra - down.wav',
-    duration: 167,
-    metaData: {
-      title: 'down',
-      artist: 'reshra',
-    },
-  },
-  {
-    url: '/songs/(drafts) reshra - twilight.wav',
-    duration: 167,
-    metaData: {
-      title: 'twilight',
-      artist: '(drafts) reshra',
-    },
-  },
-  {
-    url: '/songs/(drafts) reshra - love4rent.wav',
-    duration: 89,
-    metaData: {
-      title: 'love4rent',
-      artist: '(drafts) reshra',
-    },
-  },
-  {
-    url: '/songs/(drafts) reshra - biñe.mp3',
-    duration: 13,
-    metaData: {
-      title: 'biñe',
-      artist: '(drafts) reshra',
-    },
-  },
+  ...order
+    .map(slug => releases.find(release => release.slug === slug))
+    .map(release => ({
+      url: release.webAudioUrl || release.trackUrl,
+      duration: release.duration,
+      metaData: { title: release.title, artist: 'reshra' },
+    })),
+  ...[
+    ['twilight', 'wav', 167],
+    ['love4rent', 'wav', 89],
+    ['biñe', 'mp3', 13],
+  ].map(([title, extension, duration]) => ({
+    url: `/songs/(drafts) reshra - ${title}.${extension}`,
+    duration,
+    metaData: { title, artist: '(drafts) reshra' },
+  })),
 ];

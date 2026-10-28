@@ -1,256 +1,55 @@
-import React from 'react';
-import styled from 'styled-components';
-import { trackEvent } from 'hooks';
+import React, { useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
+import { notes } from 'content/site';
+import pageContent from 'content/pages';
+import { useSiteNavigation } from 'navigation/SiteNavigation';
+import { trackEvent } from 'hooks/useGA';
 
-const HeaderText = styled.div`
-  font-family: 'Lucida Console', monospace;
-  font-size: 13px;
-  line-height: 14px;
-  color: #000;
-  white-space: pre;
-  outline: none;
-  resize: none;
-  a,
-  button {
-    color: #0000ff;
-    text-decoration: underline;
-    cursor: pointer;
+const { renderNote } = pageContent;
 
-    &:hover {
-      color: #800080;
-    }
-
-    &:visited {
-      color: #800080;
-    }
-  }
-  button {
-    border: 0;
-    background: none;
-    padding: 0;
-    font: inherit;
-  }
-`;
-
-// Helper function to create symmetric ASCII borders
-const createSymmetricBorder = (text, maxWidth = 50) => {
-  const textLength = text.length;
-  const padding = Math.max(0, maxWidth - textLength - 2); // -2 for the brackets
-  const leftPadding = Math.floor(padding / 2);
-  const rightPadding = padding - leftPadding;
-
-  const leftBorder = '╔' + '═'.repeat(leftPadding) + '[';
-  const rightBorder = ']' + '═'.repeat(rightPadding) + '╗';
-
-  return leftBorder + ' ' + text + ' ' + rightBorder;
-};
-
-const createBottomBorder = (maxWidth = 50) => {
-  return '╚' + '═'.repeat(maxWidth + 2) + '╝';
-};
-
-const createTitleBorder = (text, maxWidth = 50) => {
-  const textLength = text.length;
-  const padding = Math.max(0, maxWidth - textLength - 2); // -2 for the side borders
-  const leftPadding = Math.floor(padding / 2);
-  const rightPadding = padding - leftPadding;
-
-  const topBorder = '╔' + '═'.repeat(maxWidth - 2) + '╗';
-  const titleLine =
-    '║' + ' '.repeat(leftPadding) + text + ' '.repeat(rightPadding) + '║';
-  const bottomBorder = '╚' + '═'.repeat(maxWidth - 2) + '╝';
-
-  return { topBorder, titleLine, bottomBorder };
-};
-
-const Section = ({ title, items, onAction }) => {
-  // Calculate the maximum label width for consistent alignment
-  const getMaxLabelWidth = () => {
-    let maxWidth = 0;
-    items.forEach(item => {
-      const labelWidth = (item.label || '').length;
-      maxWidth = Math.max(maxWidth, labelWidth);
-    });
-    return maxWidth;
-  };
-
-  const maxLabelWidth = getMaxLabelWidth();
-
-  const renderItem = (item, index) => {
-    const { label, type, displayText } = item;
-
-    if (type === 'external') {
-      // Calculate padding to align all links
-      const labelPadding = ' '.repeat(maxLabelWidth - (label || '').length);
-
-      return (
-        <React.Fragment key={index}>
-          {'  '}
-          {label}
-          {labelPadding}{' '}
-          <a
-            href={item.url}
-            target="_blank"
-            rel={`noopener noreferrer${item.affiliate ? ' sponsored' : ''}`}
-            onClick={() => {
-              try {
-                trackEvent('notes_link_click', {
-                  label: displayText,
-                  destination: item.url,
-                  type: 'external',
-                });
-              } catch (err) {
-                // best-effort tracking
-              }
-            }}
-          >
-            {displayText}
-          </a>
-          {'\n\n'}
-        </React.Fragment>
-      );
-    }
-
-    if (type === 'action') {
-      return (
-        <React.Fragment key={index}>
-          {'  '}
-          <button
-            type="button"
-            onClick={() => {
-              try {
-                trackEvent('notes_link_click', {
-                  label: displayText,
-                  action: item.action || null,
-                  type: 'action',
-                });
-              } catch (err) {
-                // best-effort tracking
-              }
-              if (onAction && item.action) {
-                onAction(item.action);
-              }
-            }}
-          >
-            {displayText}
-          </button>
-          {'\n\n'}
-        </React.Fragment>
-      );
-    }
-
-    return null;
-  };
-
-  // Calculate the maximum width needed for this section
-  const getMaxWidth = () => {
-    let maxWidth = title.length + 4; // Base width for title + brackets
-
-    // Check all items to find the longest line (now with aligned links)
-    items.forEach(item => {
-      const itemLength =
-        maxLabelWidth + 1 + (item.displayText || '').length + 4; // maxLabelWidth + space + displayText + padding
-      maxWidth = Math.max(maxWidth, itemLength);
-    });
-
-    // Ensure minimum width and make it even for better symmetry
-    return Math.max(40, Math.ceil(maxWidth / 2) * 2);
-  };
-
-  const maxWidth = getMaxWidth();
-  const topBorder = createSymmetricBorder(title, 42);
-  const bottomBorder = createBottomBorder(42);
-
-  return (
-    <>
-      {topBorder}
-      {'\n\n'}
-      {items.map(renderItem)}
-      {bottomBorder}
-      {'\n\n'}
-    </>
-  );
-};
-
-const HeaderRenderer = ({ config, onAction }) => {
-  const { title, sections } = config;
-  const hasAffiliateLinks = sections.some(section =>
-    section.items.some(item => item.affiliate),
-  );
-
-  const handleAction = action => {
-    if (onAction) {
-      onAction(action);
-    }
-  };
-
-  // Calculate the maximum width needed for the title
-  const getTitleMaxWidth = () => {
-    if (!title) return 0;
-
-    let maxWidth = title.length + 4; // Base width for title + side borders
-
-    // Check all sections to find the widest content
-    sections.forEach(section => {
-      const sectionWidth = section.title.length + 4;
-      maxWidth = Math.max(maxWidth, sectionWidth);
-
-      // Calculate max label width for this section
-      let maxLabelWidth = 0;
-      section.items.forEach(item => {
-        const labelWidth = (item.label || '').length;
-        maxLabelWidth = Math.max(maxLabelWidth, labelWidth);
+export default function HeaderRenderer({ config }) {
+  const { navigate } = useSiteNavigation();
+  const location = useLocation();
+  const documentRef = useRef(null);
+  const note = notes.find(item => item.sections === config);
+  const isCurrent = note?.path === location.pathname;
+  useEffect(() => {
+    if (isCurrent) documentRef.current?.focus({ preventScroll: true });
+  }, [isCurrent]);
+  if (!note) return null;
+  function onClick(event) {
+    const link = event.target.closest('a');
+    if (!link) return;
+    if (link.hasAttribute('data-note-link')) {
+      trackEvent('notes_link_click', {
+        destination: link.href,
+        label: link.dataset.noteLabel,
+        type: link.dataset.noteType,
+        action: link.dataset.noteAction || undefined,
+        view_mode: 'desktop',
       });
-
-      section.items.forEach(item => {
-        const itemLength =
-          maxLabelWidth + 1 + (item.displayText || '').length + 4;
-        maxWidth = Math.max(maxWidth, itemLength);
-      });
-    });
-
-    // Ensure minimum width and make it even for better symmetry
-    return Math.max(50, Math.ceil(maxWidth / 2) * 2);
-  };
-
-  const titleMaxWidth = getTitleMaxWidth();
-
+    }
+    if (link.target === '_blank') return;
+    if (
+      event.button !== 0 ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.shiftKey ||
+      event.altKey
+    )
+      return;
+    event.preventDefault();
+    navigate(link.getAttribute('href'));
+  }
   return (
-    <HeaderText>
-      {hasAffiliateLinks && (
-        <>
-          {
-            'Some product links are affiliate links. I may earn a commission if you buy through them.\n\n'
-          }
-        </>
-      )}
-      {title &&
-        (() => {
-          const { topBorder, titleLine, bottomBorder } = createTitleBorder(
-            title,
-            46,
-          );
-          return (
-            <>
-              {topBorder}
-              {'\n'}
-              {titleLine}
-              {'\n'}
-              {bottomBorder}
-              {'\n\n'}
-            </>
-          );
-        })()}
-      {sections.map((section, index) => (
-        <Section
-          key={index}
-          title={section.title}
-          items={section.items}
-          onAction={handleAction}
-        />
-      ))}
-    </HeaderText>
+    <div
+      ref={documentRef}
+      role={isCurrent ? 'main' : undefined}
+      tabIndex={isCurrent ? -1 : undefined}
+      aria-label={note.title}
+      className="public-page notepad-document"
+      onClick={onClick}
+      dangerouslySetInnerHTML={{ __html: renderNote(note, { embedded: true }) }}
+    />
   );
-};
-
-export default HeaderRenderer;
+}
