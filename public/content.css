@@ -28,6 +28,9 @@ html.app-ready #static-content {
 #static-content {
   min-height: 100vh;
 }
+.desktop-starting #static-content {
+  display: none;
+}
 .desktop-mode,
 .desktop-mode body {
   height: 100%;

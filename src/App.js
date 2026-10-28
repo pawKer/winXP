@@ -63,6 +63,8 @@ function AppContent() {
   useLayoutEffect(() => {
     document.documentElement.classList.toggle('desktop-mode', !reading);
     if (reading || desktopReady) {
+      clearTimeout(window.__desktopStartupTimer);
+      document.documentElement.classList.remove('desktop-starting');
       document.documentElement.classList.add('app-ready');
       document.getElementById('static-content')?.remove();
     }

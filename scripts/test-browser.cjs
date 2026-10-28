@@ -320,6 +320,52 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
         'window.__analytics=[];window.addEventListener("reshra:analytics",e=>window.__analytics.push(e.detail));',
     });
 
+    if (process.env.QA_STARTUP === '1') {
+      await cdp('Network.setBlockedURLs', { urls: [`${origin}/static/js/*`] });
+      await cdp('Page.navigate', { url: origin + '/' });
+      await waitFor(
+        'document.querySelector("#static-content main") && document.documentElement.classList.contains("desktop-starting")',
+        'Homepage hides reading content during desktop startup',
+      );
+      assert(
+        await evaluate(
+          '!document.querySelector("#static-content").getClientRects().length',
+        ),
+        'Reading content never flashes before the desktop',
+      );
+      assert(
+        await evaluate(
+          '!document.querySelector("#desktop-startup, .xp-boot-screen")',
+        ),
+        'No loading screen is enabled',
+      );
+      await waitFor(
+        'document.querySelector("#static-content")?.getClientRects().length',
+        'Readable fallback returns when app scripts never load',
+      );
+      await cdp('Page.navigate', { url: origin + '/?view=read' });
+      await waitFor(
+        'document.querySelector("#static-content main")?.getClientRects().length',
+        'Explicit reading view is visible immediately',
+      );
+      assert(
+        await evaluate(
+          '!document.documentElement.classList.contains("desktop-starting")',
+        ),
+        'Explicit reading view has no desktop loading screen',
+      );
+      await cdp('Emulation.setScriptExecutionDisabled', { value: true });
+      await cdp('Page.navigate', { url: origin + '/' });
+      await waitFor(
+        'document.querySelector("#static-content main")?.getClientRects().length',
+        'Homepage stays readable without JavaScript',
+      );
+      console.log(
+        'PASS: no initial reading flash, timed script-failure fallback, explicit reading mode, and JavaScript-disabled homepage.',
+      );
+      return;
+    }
+
     if (process.env.QA_VISUALIZER) {
       // Exercise the visualizer with real software WebGL in headless Chrome.
       // Only the renderer label is simulated to enter the hardware-GPU path.
