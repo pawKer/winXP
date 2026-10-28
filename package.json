@@ -21,6 +21,10 @@
     "preview": "node scripts/preview.cjs",
     "test:browser": "node scripts/test-browser.cjs",
     "test:nginx": "node scripts/test-nginx.cjs",
+    "ga4:plan": "node scripts/ga4-admin.cjs",
+    "ga4:login": "node scripts/ga4-login.cjs",
+    "ga4:reports": "node scripts/ga4-reports.cjs",
+    "test:ga4": "node --test scripts/ga4-admin.test.cjs scripts/ga4-login.test.cjs scripts/ga4-reports.test.cjs",
     "build": "react-scripts build && node scripts/generate-pages.js && node scripts/verify-pages.js",
     "test:seo": "node scripts/verify-pages.js",
     "media:prepare": "node scripts/prepare-audio.js",
@@ -46,6 +50,7 @@
     "eslint-config-prettier": "^6.3.0",
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-prettier": "^3.1.0",
+    "google-auth-library": "^11.3.1",
     "prettier": "^1.18.2"
   },
   "engines": {

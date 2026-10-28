@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>reshra — Historical analytics</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      background: #e9edf3;
+      color: #243049;
+      font: 15px/1.6 Tahoma, Arial, sans-serif;
+    }
+    main {
+      max-width: 1200px;
+      margin: auto;
+      padding: 28px;
+    }
+    header {
+      background: #26344f;
+      color: white;
+      padding: 24px;
+      border-bottom: 5px solid #9cadd0;
+    }
+    h1 {
+      font: 700 30px/1.2 Georgia, serif;
+      margin: 0 0 10px;
+    }
+    h2 {
+      font-size: 19px;
+    }
+    p {
+      margin: 6px 0 14px;
+    }
+    .controls,
+    .cards {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+    .cards article {
+      background: white;
+      border: 1px solid #b7c0d1;
+      padding: 14px 20px;
+      min-width: 150px;
+      flex: 1;
+    }
+    .cards strong {
+      display: block;
+      font-size: 28px;
+      color: #203e72;
+    }
+    label {
+      min-width: 0;
+      max-width: 100%;
+      display: flex;
+      flex-direction: column;
+      font-size: 13px;
+    }
+    select,
+    input,
+    button {
+      font: inherit;
+      padding: 9px;
+      border: 1px solid #8c99af;
+      background: white;
+      border-radius: 3px;
+      max-width: 100%;
+    }
+    input {
+      min-width: 240px;
+    }
+    .panel {
+      padding: 20px;
+      background: #fff;
+      border: 1px solid #b7c0d1;
+      margin: 18px 0;
+    }
+    .note {
+      border-left: 4px solid #ba8e39;
+      padding: 10px 15px;
+      background: #fff8e5;
+      font-size: 13px;
+    }
+    .muted {
+      font-size: 12px;
+      color: #58657b;
+    }
+    header .muted {
+      color: #d8e3fb;
+    }
+    a {
+      color: #1a4c9b;
+    }
+    .table-wrap {
+      overflow: auto;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 13px;
+    }
+    th,
+    td {
+      text-align: left;
+      vertical-align: top;
+      padding: 9px;
+      border-bottom: 1px solid #dbe0e8;
+      max-width: 450px;
+      overflow-wrap: anywhere;
+    }
+    th {
+      background: #e8edf6;
+      white-space: nowrap;
+    }
+    tr:hover {
+      background: #f4f6fa;
+    }
+    svg {
+      display: block;
+      width: 100%;
+      height: 200px;
+    }
+    a:focus-visible,
+    select:focus-visible,
+    input:focus-visible {
+      outline: 3px solid #a34978;
+      outline-offset: 2px;
+    }
+    @media (max-width: 600px) {
+      main {
+        padding: 10px;
+      }
+      header,
+      .panel {
+        padding: 14px;
+      }
+      .cards {
+        gap: 8px;
+      }
+      .cards article {
+        min-width: 130px;
+      }
+      h1 {
+        font-size: 25px;
+      }
+    }
+    @media print {
+      .controls,
+      .downloads {
+        display: none;
+      }
+      body {
+        background: white;
+      }
+      main {
+        max-width: none;
+        padding: 0;
+      }
+      .panel {
+        break-inside: avoid;
+      }
+    }
+  </style>
+  <main>
+    <header>
+      <h1>reshra / historical analytics</h1>
+      <p id="scope"></p>
+      <p class="muted" id="generated"></p>
+    </header>
+    <div class="controls">
+      <label>Period<select id="period"></select></label
+      ><label>Report<select id="report"></select></label
+      ><label
+        >Filter table<input
+          id="query"
+          type="search"
+          placeholder="Event, destination, page or source"
+      /></label>
+    </div>
+    <section class="cards" id="cards" aria-label="Period totals"></section>
+    <p class="note">
+      These are tracked events, not verified music streams or unique listeners.
+      User counts overlap across table rows. Automatic outbound clicks can
+      overlap custom link events; keep those signals separate. Missing legacy
+      parameters remain “(not set)” or empty rather than being reconstructed.
+    </p>
+    <section class="panel">
+      <h2>Daily page views and legacy click events</h2>
+      <div id="trend"></div>
+      <p class="muted" id="trend-caption"></p>
+    </section>
+    <section class="panel">
+      <h2 id="report-title"></h2>
+      <p class="downloads">
+        <a id="csv">Download this table as CSV</a> ·
+        <a href="snapshot.json" download>Download full snapshot JSON</a>
+      </p>
+      <p class="muted" id="report-info"></p>
+      <div class="table-wrap">
+        <table>
+          <thead id="head"></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </section>
+    <footer class="muted">
+      The case-insensitive Profile/linktree and Notes totals group event counts
+      only. Raw event names are preserved in each report. This private, offline
+      snapshot contains no credentials and makes no external requests.
+    </footer>
+  </main>
+  <script id="report-data" type="application/json">
+    __REPORT_DATA__
+  </script>
+  <script>
+    const data = JSON.parse(document.querySelector('#report-data').textContent);
+    const $ = selector => document.querySelector(selector);
+    const format = value => Number(value || 0).toLocaleString('en-GB');
+    const titles = {
+      eventName: 'Raw event name',
+      hostName: 'Hostname',
+      'customEvent:destination': 'Destination',
+      'customEvent:label': 'Link label',
+      'customEvent:type': 'Link type',
+      'customEvent:action': 'Note action',
+      eventCount: 'Events',
+      totalUsers: 'Users (non-additive)',
+      sessions: 'Sessions',
+      screenPageViews: 'Page views',
+      engagedSessions: 'Engaged sessions',
+      date: 'Date',
+      pagePath: 'Page path',
+      pageTitle: 'Page title',
+      sessionSourceMedium: 'Session source / medium',
+      deviceCategory: 'Device',
+      linkUrl: 'Automatic link URL',
+      linkText: 'Automatic link text',
+    };
+    for (const period of data.periods) {
+      const option = document.createElement('option');
+      option.value = period.id;
+      option.textContent = `${period.label} / ${period.scopeLabel} (${period.startDate} – ${period.endDate})`;
+      $('#period').append(option);
+    }
+    $(
+      '#scope',
+    ).textContent = `${data.propertyName} · property ${data.propertyId} · timezone ${data.timeZone} · through ${data.cutoff}`;
+    $(
+      '#generated',
+    ).textContent = `Snapshot generated ${data.generatedAt}. Historical metrics remain subject to GA processing and reporting limitations.`;
+    function trend(period) {
+      const source = period.reports.find(report => report.id === 'daily').rows,
+        counts = new Map();
+      for (const row of source) {
+        if (!counts.has(row.date)) counts.set(row.date, [0, 0]);
+        if (row.eventName === 'page_view')
+          counts.get(row.date)[0] += Number(row.eventCount);
+        if (/^(retro_link_click|notes_link_click)$/i.test(row.eventName))
+          counts.get(row.date)[1] += Number(row.eventCount);
+      }
+      const days = [];
+      for (
+        let date = new Date(period.startDate + 'T00:00:00Z');
+        date <= new Date(period.endDate + 'T00:00:00Z');
+        date.setUTCDate(date.getUTCDate() + 1)
+      ) {
+        const key = date
+          .toISOString()
+          .slice(0, 10)
+          .replaceAll('-', '');
+        days.push(counts.get(key) || [0, 0]);
+      }
+      const max = Math.max(1, ...days.flat()),
+        ns = 'http://www.w3.org/2000/svg',
+        svg = document.createElementNS(ns, 'svg');
+      svg.setAttribute('viewBox', '0 0 1000 200');
+      svg.setAttribute('role', 'img');
+      svg.setAttribute(
+        'aria-label',
+        'Daily page views in blue and legacy tracked click events in purple; the daily table contains the exact values.',
+      );
+      for (const [series, color] of [
+        [0, '#315b9d'],
+        [1, '#994c83'],
+      ]) {
+        const line = document.createElementNS(ns, 'polyline');
+        line.setAttribute(
+          'points',
+          days
+            .map(
+              (values, index) =>
+                `${20 + (index * 960) / Math.max(1, days.length - 1)},${180 -
+                  (values[series] * 160) / max}`,
+            )
+            .join(' '),
+        );
+        line.setAttribute('fill', 'none');
+        line.setAttribute('stroke', color);
+        line.setAttribute('stroke-width', '2');
+        svg.append(line);
+      }
+      $('#trend').replaceChildren(svg);
+      $('#trend-caption').textContent = `${period.startDate} to ${
+        period.endDate
+      } · blue: page views · purple: legacy profile/note events · peak daily scale ${format(
+        max,
+      )}. Zero rows are filled for the trend only.`;
+    }
+    function render() {
+      $('#scope').textContent = `${data.propertyName} · property ${
+        data.propertyId
+      } · timezone ${data.timeZone} · ${
+        data.periods.find(item => item.id === $('#period').value).scopeLabel
+      }`;
+      const period = data.periods.find(item => item.id === $('#period').value),
+        old = $('#report').value;
+      $('#report').replaceChildren();
+      for (const report of period.reports) {
+        const option = document.createElement('option');
+        option.value = report.id;
+        option.textContent = report.title;
+        $('#report').append(option);
+      }
+      if (period.reports.some(item => item.id === old))
+        $('#report').value = old;
+      const overview =
+        period.reports.find(item => item.id === 'overview').rows[0] || {};
+      $('#cards').replaceChildren();
+      for (const [label, value] of [
+        ['Users', overview.totalUsers],
+        ['Sessions', overview.sessions],
+        ['Page views', overview.screenPageViews],
+        ['Profile/linktree events', period.families['Profile/linktree']],
+        ['Note events', period.families.Notes],
+      ]) {
+        const card = document.createElement('article'),
+          title = document.createElement('span'),
+          number = document.createElement('strong');
+        title.textContent = label;
+        number.textContent = format(value);
+        card.append(title, number);
+        $('#cards').append(card);
+      }
+      trend(period);
+      renderTable();
+    }
+    function renderTable() {
+      const period = data.periods.find(item => item.id === $('#period').value),
+        report = period.reports.find(item => item.id === $('#report').value),
+        query = $('#query').value.toLowerCase(),
+        columns = [...report.dimensions, ...report.metrics],
+        rows = report.rows.filter(row =>
+          Object.values(row)
+            .join(' ')
+            .toLowerCase()
+            .includes(query),
+        );
+      $('#report-title').textContent = report.title;
+      $('#csv').href = `${period.id}-${report.id}.csv`;
+      $('#csv').setAttribute('download', '');
+      const caveats = (report.responseMetadata || []).some(
+        meta =>
+          meta.subjectToThresholding ||
+          meta.dataLossFromOtherRow ||
+          meta.samplingMetadatas?.length,
+      );
+      $('#report-info').textContent = `${rows.length} of ${
+        report.rowCount
+      } returned rows. ${
+        report.unavailable?.length
+          ? 'Unavailable dimensions: ' + report.unavailable.join(', ') + '. '
+          : ''
+      }${
+        caveats
+          ? 'GA reports thresholding, sampling or other-row aggregation; inspect snapshot metadata.'
+          : ''
+      }`;
+      const heading = document.createElement('tr');
+      for (const name of columns) {
+        const th = document.createElement('th');
+        th.textContent = titles[name] || name;
+        heading.append(th);
+      }
+      $('#head').replaceChildren(heading);
+      $('#rows').replaceChildren();
+      for (const row of rows) {
+        const tr = document.createElement('tr');
+        for (const name of columns) {
+          const td = document.createElement('td');
+          td.textContent = report.metrics.includes(name)
+            ? format(row[name])
+            : row[name] === ''
+            ? '(empty)'
+            : row[name];
+          tr.append(td);
+        }
+        $('#rows').append(tr);
+      }
+    }
+    $('#period').addEventListener('change', render);
+    $('#report').addEventListener('change', renderTable);
+    $('#query').addEventListener('input', renderTable);
+    render();
+  </script>
+</html>
