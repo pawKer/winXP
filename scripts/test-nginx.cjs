@@ -124,6 +124,11 @@ const { audioManifest = {} } = {
     });
     assert.equal(trailing.status, 301);
     assert(trailing.headers.get('location').endsWith('/blog?utm_source=qa'));
+    assert.equal(
+      trailing.headers.get('location'),
+      '/blog?utm_source=qa',
+      'Clean URLs remain relative behind an HTTPS proxy',
+    );
     for (const query of [
       '?next=/',
       '?ref=sample.html',
