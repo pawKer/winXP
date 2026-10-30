@@ -322,6 +322,88 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
         'window.__analytics=[];window.addEventListener("reshra:analytics",e=>window.__analytics.push(e.detail));',
     });
 
+    if (process.env.QA_MOBILE_TASKBAR === '1') {
+      await viewport(440, 740);
+      await navigate('/');
+      await waitFor(
+        '!!document.querySelector(".ie__content")',
+        'Mobile desktop',
+      );
+      // Model iOS's large 100vh while browser controls leave less visible space.
+      await evaluate(() => {
+        const style = document.createElement('style');
+        style.textContent = '#root { min-height: 956px; }';
+        document.head.appendChild(style);
+      });
+      const checkTaskbar = async label => {
+        await delay(150);
+        const geometry = await evaluate(() => {
+          const bar = document
+            .querySelector('.footer__start')
+            .closest('footer')
+            .getBoundingClientRect();
+          const start = document
+            .querySelector('.footer__start')
+            .getBoundingClientRect();
+          const reading = document
+            .querySelector('#desktop-reading-toggle')
+            .getBoundingClientRect();
+          const ie = document
+            .querySelector('.ie__content')
+            .closest('[style*="translate"]')
+            .getBoundingClientRect();
+          const hit = document.elementFromPoint(
+            start.left + start.width / 2,
+            start.top + start.height / 2,
+          );
+          return {
+            barBottom: bar.bottom,
+            barTop: bar.top,
+            startBottom: start.bottom,
+            readingBottom: reading.bottom,
+            visibleHeight: innerHeight,
+            ieBottom: ie.bottom,
+            startReachable: hit?.classList.contains('footer__start'),
+          };
+        });
+        assert(
+          geometry.barBottom <= geometry.visibleHeight + 1,
+          label + ': taskbar inside the viewport ' + JSON.stringify(geometry),
+        );
+        assert(
+          geometry.startBottom <= geometry.visibleHeight + 1 &&
+            geometry.readingBottom <= geometry.visibleHeight + 1,
+          label + ': Start and Reading View controls visible',
+        );
+        assert(
+          geometry.startReachable,
+          label + ': Start is reachable above IE',
+        );
+        assert(
+          geometry.ieBottom <= geometry.barTop + 4,
+          label + ': maximized IE leaves room for the taskbar',
+        );
+      };
+      await checkTaskbar('Portrait with browser controls');
+      await viewport(440, 860);
+      await checkTaskbar('Browser controls collapsed');
+      await viewport(874, 380);
+      await checkTaskbar('Landscape');
+      await click('#desktop-reading-toggle');
+      assert(
+        await evaluate(
+          '!document.documentElement.classList.contains("desktop-mode")',
+        ),
+        'Reading mode keeps its own scrolling layout',
+      );
+      await click('#view-toggle');
+      await checkTaskbar('Return from Reading View');
+      console.log(
+        'PASS: mobile taskbar and Start remain visible with a large-vh minimum, browser resizing, landscape and presentation switches.',
+      );
+      return;
+    }
+
     if (process.env.QA_STARTUP === '1') {
       await cdp('Network.setBlockedURLs', { urls: [`${origin}/static/js/*`] });
       await cdp('Page.navigate', { url: origin + '/' });

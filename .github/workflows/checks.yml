@@ -40,6 +40,10 @@ jobs:
         run: yarn test:browser
         env:
           QA_STARTUP: '1'
+      - name: Mobile taskbar viewport regression
+        run: yarn test:browser
+        env:
+          QA_MOBILE_TASKBAR: '1'
       - name: Install the production server for routing checks
         run: sudo apt-get update && sudo apt-get install --yes nginx
       - run: yarn test:nginx

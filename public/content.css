@@ -40,6 +40,9 @@ html.app-ready #static-content {
 #desktop-layer {
   height: 100%;
 }
+.desktop-mode #root {
+  min-height: 0;
+}
 #desktop-layer[hidden] {
   display: none;
 }
