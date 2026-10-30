@@ -36,7 +36,14 @@ Notes:
 ## Repository map
 
 ```text
+content/                        Editable JSON records, Markdown posts, schemas, templates
+scripts/
+  content/                      Content compiler, validator, watcher, and tests
+  analytics/                    GA setup, login, report tools, and tests
+  media/                        Audio conversion and artwork preparation
 docs/                           Plans, implementation status, deployment and analytics
+  editorial/                    Drafts, research, and saved source/baseline evidence
+  assets/                       Documentation/demo artwork
 public/                         Static files served from site root
   songs/                        Local Winamp tracks; intentionally gitignored
   winamp_skin/modern.wsz        Winamp skin
@@ -65,8 +72,8 @@ Imports such as `WinXP`, `components`, `hooks`, and `assets/...` are absolute fr
 ### Routing and startup
 
 - `src/index.js` renders `App` in `React.StrictMode`; effects run twice in development.
-- `src/App.js` creates one React Router route for every note in `NOTES`, then falls back to `/`.
-- Every route renders the same `WinXP` desktop. A note route passes `defaultPath`, and `WinXP` opens the matching Notepad window in an effect.
+- `src/content/registry.js` derives public routes from compiled content; `App.js` selects the reading or lazy desktop view.
+- Recording articles are canonical at `/blog/<slug>`; legacy `/music/<slug>` paths redirect to their published article. Within the desktop, note paths open/focus the corresponding generic Notepad document.
 - `defaultAppState` in `src/WinXP/apps/index.js` controls windows open at startup. Currently Minesweeper, Winamp, and Internet Explorer start open.
 
 ### Desktop and windows
@@ -97,64 +104,33 @@ Adding a completely new app normally requires all of the following:
 
 Keep app labels consistent across Start menu data, `onClickMenuItem`, and `appSettings`; this code uses string matching rather than a shared app ID.
 
-## Notes system
+## Content data and notes
 
-Configured `.txt` documents use a central registry:
-
-- `src/WinXP/apps/notesConfig.js`: note ID, window title, URL path, desktop title, and header component.
-- `src/content/site.js`: canonical profile, releases, notes, and their URL paths.
-- `src/content/noteSections.js`: structured note sections, external links, and actions rendered above the textarea.
-- `src/WinXP/apps/Notepad/headerComponents.js`: small React wrappers connecting configs to `HeaderRenderer` and translating action names into callbacks.
-- `src/WinXP/apps/Notepad/components/HeaderRenderer.js`: shared ASCII-style rendering and link analytics.
-
-Adding a note to `NOTES` automatically creates:
-
-- a direct route through `App.js`;
-- a desktop `.txt` shortcut through `defaultIconState`;
-- lookup support for `openNote(noteId)`.
-
-It does **not** automatically create a RetroLinktree entry. Add that separately to the `links` array in `src/WinXP/apps/InternetExplorer/index.js`:
-
-```jsx
-{
-  title: 'Example.txt',
-  subtitle: 'Open in Notepad',
-  onClick: () => onOpenNote('exampleNoteId'),
-  iconNode: <FaBookOpen />,
-}
-```
-
-A typical external link item in `src/content/noteSections.js` is:
-
-```js
-{
-  label: 'Capture name -',
-  url: 'https://example.com/full-destination',
-  displayText: 'https://example.com/display-text',
-  type: 'external',
-}
-```
-
-Important behavior:
-
-- `src/content/noteSections.js` is the source of persistent, predefined note content.
-- The Notepad textarea starts empty and is local React state. User edits are lost when the window closes or the page reloads.
-- `HeaderRenderer` supports `external` and `action` item types. New action names need handling in the appropriate wrapper in `headerComponents.js`.
-- A header component receives callbacks because Notepad clones it with `onOpenNewNotepad` and `onFocusWinamp`.
-- Keep note IDs unique and paths stable. Changing a path breaks saved/shared links.
+- Author structured content in `content/*.json`, `content/notes/*.json`, and `content/releases/*.json`; posts stay in `content/posts/*.md`.
+- `content/schemas/content.schema.json` defines the machine-readable JSON contracts. `scripts/content/sources.cjs` validates references, paths, media, and publication boundaries; `scripts/content/build.cjs` compiles the whole public snapshot.
+- `src/content/generated/content.json` is ignored output. Never hand-edit it. `site.js`, `catalogue.js`, and `posts.js` are browser/Node adapters, not editable content registries.
+- Run `yarn content:validate` without writing output; `yarn content:build` compiles. `yarn start` watches source edits, additions, and removals, retaining the last valid complete snapshot on errors. Restart the dev server after changing schema/tooling code.
+- Notes use explicit stable IDs and paths, structured section items with typed targets, and optional `desktop`/`homepage` flags. Their order is the optional numeric `order`, followed by unranked filenames. Title edits never rename URLs.
+- Adding a published note automatically supplies its public route, notes browser entry, desktop shortcut, and homepage group entry unless its placement flags disable them. No React header/import registration is required.
+- `notesConfig.js` reads compiled notes; `Notepad/components/HeaderRenderer.js` receives a note explicitly and shares `templates/notes.js` with reading/static rendering. `content/site.json` sets `defaultNoteId` for the notes browser.
+- Targets support external URLs, shared link IDs, note IDs, release slugs, post IDs, known page paths, and allowlisted Winamp/newsletter actions. Icon keys/actions are mapped in code; JSON never contains JSX or callbacks.
+- Keep official social destinations in `content/links.json`; profile and note records reference those IDs. `content/home.json` owns XP homepage order and featured release IDs; `content/navigation.json` owns shared layout navigation.
+- Publication `status: draft|published` is distinct from release `releaseStatus: upcoming|released`. Editorial drafts never enter the snapshot. Public Winamp WIP tracks remain intentionally public and are not editorial drafts.
+- Notepad's textarea is a temporary scratchpad. Published note content is edited in files; visitor changes do not write to the repository.
+- Copy examples from `content/templates/note.json` and `content/templates/release.json`; follow [content authoring](docs/content-authoring.md).
 
 ## Blog content and templates
 
 - Author posts in `content/posts/*.md` with YAML frontmatter. Run `yarn post:new my-slug` for a draft and see `docs/content-authoring.md` for the field reference.
-- `yarn start` compiles and watches posts; `yarn build` compiles before CRA bundles the shared renderer. Only published posts enter the ignored `src/content/generated/posts.json`; do not edit or commit that file.
+- `yarn start` compiles and watches posts; `yarn build` compiles before CRA bundles the shared renderer. Only published posts enter the ignored `src/content/generated/content.json`; do not edit or commit that file.
 - `src/content/registry.js` supplies routes/order/categories, `schema.js` supplies structured data, and `templates/` supplies shared HTML functions. `pages.js` is the compatibility entry point for browser and Node consumers.
 - `scripts/templates/` owns full HTML and discovery documents; `scripts/generate-pages.js` only writes their output. Keep shared browser templates in CommonJS `.js` files and avoid object spread in them because CRA can otherwise mix ESM helpers with CommonJS exports.
-- Run `yarn test:content` for Markdown validation, draft exclusion, automatic route/category discovery, and reading-link checks. Notes and music catalogue records retain their existing formats.
+- Run `yarn test:content` for Markdown validation, draft exclusion, automatic route/category discovery, and reading-link checks. Notes and music catalogue records compile from JSON under `content/`.
 - When checking documentation links, ignore fenced and inline code examples; example post URLs and assets need not exist in the repository.
 
 ## Internet Explorer and RetroLinktree
 
-- `src/WinXP/apps/InternetExplorer/index.js` owns the actual profile and link list shown in Internet Explorer.
+- `content/site.json`, `content/links.json`, and `content/home.json` own profile and link data. `src/WinXP/apps/InternetExplorer/index.js` adapts compiled entries into navigation and app callbacks.
 - `src/components/RetroLinktree/index.js` is a reusable presentation component. Do not hard-code personal links there; pass them from Internet Explorer.
 - A link item may have either `url` or `onClick`, plus optional `subtitle`, `iconNode`, and `highlight`.
 - External links open in a new tab. Action-only entries render as buttons.
@@ -164,7 +140,7 @@ Important behavior:
 
 ## Winamp, media, and external content
 
-- Playlist metadata is in `src/WinXP/apps/Winamp/config.js`.
+- Playlist order and public WIP metadata live in `content/playlist.json`. Release metadata comes from `content/releases/*.json`; `Winamp/config.js` adapts compiled tracks. Media scripts read validated source data independently of generated browser output.
 - Audio URLs point to `/songs/...`; `public/songs` is gitignored and may be absent in a checkout.
 - Docker Compose mounts `./public/songs` read-only into nginx, so do not bake large/private audio into source without explicit direction.
 - The Winamp integration has deliberate React 18 StrictMode guards and DOM reparenting. Preserve these when changing lifecycle code.
@@ -190,13 +166,13 @@ Important behavior:
 - Do not commit `node_modules`, local environment overrides, or `public/songs`.
 - Preserve unrelated work in a dirty worktree. Check `git status --short` before and after editing.
 - Some source and documentation text currently contains visible mojibake (for example `â...` or `đ...`). Do not perform broad encoding cleanup as part of an unrelated task; it creates noisy diffs and may change intentionally displayed retro text. Fix only text explicitly in scope and verify the rendered result.
-- CRA's cached ESLint results can report old Prettier errors after formatting on Windows. If build output disagrees with the file on disk, remove only `node_modules/.cache/.eslintcache` before rebuilding.
+- CRA's cached ESLint results can report old Prettier errors after formatting on Windows. If build output disagrees with the file on disk, remove only `node_modules/.cache/.eslintcache` before rebuilding. Switching between development and production checks can recreate stale results, so clear it immediately before the necessary rebuild if old source text reappears.
 - A successful CRA build recreates `.eslintcache`; after further source edits, stale formatting errors can recur. Check direct lint/the file on disk and clear that same cache again before the next necessary build. Chrome regression checks can also connect to a debug port but time out at `Page.enable` in the sandbox; rerun the necessary browser command with scoped approval when this happens.
 - Concurrent CRA development compilers for this workspace can restore stale shared ESLint-cache results during production builds. If direct `yarn lint` passes but cache errors keep returning, leave unrelated dev servers running, verify lint separately, and use `DISABLE_ESLINT_PLUGIN=true` for that build invocation only. Do not persist the override in project configuration.
 - GA Realtime accepts a narrower set of dimension/metric combinations than the core reporting API. For ingestion checks, start with `eventName` and `eventCount`; combining `unifiedScreenName` with that event report returned `INVALID_ARGUMENT` here despite the fields being individually documented.
 - A running CRA development compiler can also retain stale lint errors in `node_modules/.cache/default-development`. If direct lint and the build pass but dev still reports old line contents, stop only the task-owned QA server, verify the cache paths are within this workspace, clear that development cache and `.eslintcache`, then restart it. Do not stop unrelated development servers.
 - CRA clears `build/` while rebuilding. Wait for the active build to finish before browser/nginx checks; running them concurrently creates misleading 404s.
-- Use literal PowerShell here-strings piped to Node for scripts containing quote-heavy regular expressions. Shell-escaped JavaScript strings are easy to misparse.
+- Use literal PowerShell here-strings piped to Node for scripts containing quote-heavy regular expressions. Shell-escaped JavaScript strings are easy to misparse. Keep piped script text ASCII and use Unicode escapes for non-ASCII literals: Windows PowerShell can replace literal glyphs with question marks while piping. Use UTF-8 files or apply_patch for authored Unicode content.
 - Several components contain legacy or commented code. Prefer the active centralized patterns over reviving old per-icon `headerContent` code.
 - Avoid adding `console.log`; there is currently a debug log in the direct-note opening effect, but it is not a convention to copy.
 - Keep Webamp's imperative mount in an empty, dedicated DOM node. Rendering conditional React feedback into that same node can remove the player controls while its audio continues; render feedback as a sibling and verify the actual controls after playback starts.

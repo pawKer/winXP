@@ -118,7 +118,7 @@ test('OAuth login refuses output inside the checkout and refuses to replace exis
           GA4_OAUTH_CLIENT_FILE: f.input,
           GA4_CREDENTIAL_OUTPUT: path.join(
             __dirname,
-            '../credentials-must-not-be-created.json',
+            '../../credentials-must-not-be-created.json',
           ),
         },
       }),

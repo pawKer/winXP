@@ -1,8 +1,8 @@
 const { GoogleAuth } = require('google-auth-library');
 const path = require('path');
-const { readJson } = require('./content/sources.cjs');
+const { readJson } = require('../content/sources.cjs');
 const { siteUrl } = readJson(
-  path.resolve(__dirname, '../content/site.json'),
+  path.resolve(__dirname, '../../content/site.json'),
   'site',
 );
 
@@ -101,7 +101,7 @@ async function configure({
   ]);
   if (args.some(arg => !allowed.has(arg)))
     throw new Error(
-      'Unknown option. Run node scripts/ga4-admin.cjs --help.',
+      'Unknown option. Run node scripts/analytics/ga4-admin.cjs --help.',
     );
   if (args.includes('--help')) {
     log(
@@ -353,7 +353,7 @@ if (require.main === module) {
     if (!process.argv.includes('--help')) {
       const fs = require('fs');
       const path = require('path');
-      const envFile = path.resolve(__dirname, '../.env');
+      const envFile = path.resolve(__dirname, '../../.env');
       if (fs.existsSync(envFile)) process.loadEnvFile(envFile);
     }
     await configure();

@@ -26,7 +26,7 @@ async function login({
       path.join(os.homedir(), '.config/reshra/ga4-authorized-user.json'),
   );
   const workspace = fs
-    .realpathSync(path.resolve(__dirname, '..'))
+    .realpathSync(path.resolve(__dirname, '../..'))
     .toLowerCase();
   const insideWorkspace = directory => {
     const resolved = path.resolve(directory).toLowerCase();

@@ -19,7 +19,7 @@ The user confirmed that production is `https://reshra.xyz` and that they will de
 
 The user subsequently supplied property **502513568** and a **Desktop OAuth client JSON** shown in their IDE. This file identifies an OAuth app and contains no service-account private key or user refresh token. This route signs in as the Google user who approves consent; that user needs access to the property. It does not use the service-account identity above.
 
-`scripts/ga4-login.cjs` uses Google's official OAuth client with PKCE and a random state, binds a callback only on `127.0.0.1`, and waits for the user to complete browser consent. It requests Analytics read/edit scopes for the requested inspection/setup. No authorization codes or tokens need to be pasted into chat. See [Google's Desktop OAuth flow](https://developers.google.com/identity/protocols/oauth2/native-app).
+`scripts/analytics/ga4-login.cjs` uses Google's official OAuth client with PKCE and a random state, binds a callback only on `127.0.0.1`, and waits for the user to complete browser consent. It requests Analytics read/edit scopes for the requested inspection/setup. No authorization codes or tokens need to be pasted into chat. See [Google's Desktop OAuth flow](https://developers.google.com/identity/protocols/oauth2/native-app).
 
 ```powershell
 $env:GA4_OAUTH_CLIENT_FILE='C:\path\to\downloaded-desktop-client.json'

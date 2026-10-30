@@ -4,7 +4,7 @@ const crypto = require('node:crypto');
 const { parse, serialize } = require('parse5');
 const { buildContent } = require('./build.cjs');
 buildContent();
-const baseline = require('../../content-sources/content-data-baseline.json');
+const baseline = require('../../docs/editorial/sources/content-data-baseline.json');
 const { pages, renderContent } = require('../../src/content/pages');
 const {
   profile,

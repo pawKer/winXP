@@ -309,7 +309,7 @@ async function generate({
     );
   }
   if (!persist) return { snapshot };
-  const directory = path.resolve(__dirname, '../.local/analytics', endDate);
+  const directory = path.resolve(__dirname, '../../.local/analytics', endDate);
   fs.mkdirSync(directory, { recursive: true });
   fs.writeFileSync(
     path.join(directory, 'snapshot.json'),
@@ -337,7 +337,7 @@ async function generate({
 }
 
 if (require.main === module) {
-  const envFile = path.resolve(__dirname, '../.env');
+  const envFile = path.resolve(__dirname, '../../.env');
   if (fs.existsSync(envFile)) process.loadEnvFile(envFile);
   if (process.argv.includes('--help'))
     console.log(

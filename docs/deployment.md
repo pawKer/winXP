@@ -83,7 +83,7 @@ Neither stage proves ingestion merely by succeeding. Record live-event evidence 
 
 ## Baseline obtained during implementation
 
-[content-sources/production-baseline.json](../content-sources/production-baseline.json) records raw responses checked on 27 October 2026 before deployment. At that time:
+[docs/editorial/sources/production-baseline.json](editorial/sources/production-baseline.json) records raw responses checked on 27 October 2026 before deployment. At that time:
 
 - Home, music, blog, and a note all returned the old shared `reshra's desktop` HTML.
 - Unknown paths returned 200 rather than 404.

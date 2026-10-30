@@ -169,7 +169,7 @@ for (const page of pages) {
     else assert(routes.has(target), `${page.path}: linked route ${target}`);
   }
   assert(
-    !html.includes('content-drafts'),
+    !html.includes('docs/editorial/drafts'),
     `${page.path}: editorial drafts stay private`,
   );
 }

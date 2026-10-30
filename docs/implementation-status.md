@@ -1,5 +1,28 @@
 # Blog and SEO implementation status
 
+## Content data foundation, 30 October 2026
+
+Structured content now lives in editable JSON under `content/`; posts remain
+Markdown. Notes, releases, official destinations, profile/editorial site copy,
+navigation, homepage placements, videos/artwork, and the Winamp playlist feed a
+validated public snapshot. No CMS UI or backend was added. Published notes use
+one generic renderer, so adding a note no longer requires React registration.
+The existing My Documents design and canonical recording articles are preserved.
+
+`yarn content:validate` checks without writing output. `yarn start` watches source
+additions/edits/removals and retains the last complete valid snapshot on errors;
+restart any development server that was already running before this migration.
+`content/templates/` contains note/release examples. See [content authoring](content-authoring.md)
+and the [implemented data plan](content-data-plan.md).
+
+Verification: 18 content tests, six playback/analytics tests, 17 GA tooling tests,
+lint, production build and 35 generated routes, and production/development
+StrictMode browser journeys passed. Five inherited lint warnings remain. The
+migration parity command confirms the original notes, recordings, playlist,
+routes, and normalized reading DOM. No generated output or audio files are
+included in source changes. nginx was unavailable locally; server checks remain
+in CI. The changes have not been deployed.
+
 ## My Documents design, 30 October 2026
 
 The approved My Documents design is now implemented locally in the shared
@@ -66,16 +89,16 @@ Updated 28 October 2026. This tracks the full objective in [blog plan](blog-plan
 - Restored the original IE toolbar/address-bar icons, removed the duplicate toolbar Blog link, and restored **Done** in the status bar. Unsupported historical toolbar tools remain decorative. The editable address now matches the full browser URL, including query and fragment; submitting a supported local URL preserves both.
 - Lowered IE's normal startup position from 90 px to 200 px on taller desktops so more of Minesweeper remains visible. Shorter screens use a smaller offset, and the initial height fits below it with room for the taskbar.
 - Direct non-home desktop entry maximizes the target Notepad or IE window once. Internal launches use normal desktop window sizes; already-open windows keep their current sizes. Mobile auto-maximization and standalone direct blog entry remain supported.
-- Restored master's native Webamp positioning and reparenting, removing the later DOM centering offset that restricted movement and confused viewport boundaries. Initialization waits until the lazy desktop mount is visible so Webamp measures its original placement correctly. The measured 1366×900 production reference still places the main player at **321, 243**; [content-sources/desktop-layout-baseline.json](../content-sources/desktop-layout-baseline.json) records it. Real dragging and shrinking to an 800 px viewport are verified with both basic and Milkdrop players. The floating Winamp status box remains removed; loading/errors stay within the song page. Milkdrop uses the default preset with automatic cycling/randomization off, and software WebGL/reduced-motion systems retain the basic player.
+- Restored master's native Webamp positioning and reparenting, removing the later DOM centering offset that restricted movement and confused viewport boundaries. Initialization waits until the lazy desktop mount is visible so Webamp measures its original placement correctly. The measured 1366×900 production reference still places the main player at **321, 243**; [docs/editorial/sources/desktop-layout-baseline.json](editorial/sources/desktop-layout-baseline.json) records it. Real dragging and shrinking to an 800 px viewport are verified with both basic and Milkdrop players. The floating Winamp status box remains removed; loading/errors stay within the song page. Milkdrop uses the default preset with automatic cycling/randomization off, and software WebGL/reduced-motion systems retain the basic player.
 - Restyled the reading-view taskbar control with a document icon, blue Luna bevel, white label, and hover/pressed/focus states. The standalone **Open desktop view** button and desktop retry now include the Windows flag. On 28 October the user clarified that pausing playback when switching between Reading and Desktop views is acceptable, so that behavior remains in place.
 - Corrected Webamp 2.2 track selection to use the selected playlist entry's ID. This preserves the requested recording and visible artist/title after reopening or reordering. Programmatic pauses now check playback state because Webamp otherwise toggles paused/stopped playback back on.
 - Kept the notes' resource lists and existing URLs. Their related-article links already connect them to the blog. Moving complete resource sections into reviewed articles, with shorter Notepad launchers, is a possible later editorial change; it has not been done implicitly.
 
 ## Video sources and article draft
 
-[content-sources/youtube.json](../content-sources/youtube.json) records retrieved official metadata and descriptions. [content-drafts/building-my-midi-pedal.md](../content-drafts/building-my-midi-pedal.md) is a longer AI-assisted **unpublished, unreviewed draft**, grounded in the creator's description, chapters and existing project note.
+[docs/editorial/sources/youtube.json](editorial/sources/youtube.json) records retrieved official metadata and descriptions. [docs/editorial/drafts/building-my-midi-pedal.md](editorial/drafts/building-my-midi-pedal.md) is a longer AI-assisted **unpublished, unreviewed draft**, grounded in the creator's description, chapters and existing project note.
 
-Public timedtext attempts returned empty bodies; the transcript-panel endpoint returned `FAILED_PRECONDITION`, including in an anonymous browser. No transcript text was obtained. A read-only local Premiere connection check on 28 October also timed out before any project/media could be inspected. The user then explicitly chose: **“Keep the current description-based draft for now.”** Further source/transcript retrieval is deferred. The draft stays unpublished and does not claim to summarize spoken instructions, explain unverified wiring, or have author approval. See [content-drafts/README.md](../content-drafts/README.md) for retrieval evidence and the claim-review boundary.
+Public timedtext attempts returned empty bodies; the transcript-panel endpoint returned `FAILED_PRECONDITION`, including in an anonymous browser. No transcript text was obtained. A read-only local Premiere connection check on 28 October also timed out before any project/media could be inspected. The user then explicitly chose: **“Keep the current description-based draft for now.”** Further source/transcript retrieval is deferred. The draft stays unpublished and does not claim to summarize spoken instructions, explain unverified wiring, or have author approval. See [docs/editorial/drafts/README.md](editorial/drafts/README.md) for retrieval evidence and the claim-review boundary.
 
 ## Verification evidence
 
@@ -100,7 +123,7 @@ Direct blog entry requested only CRA's main entry bundle, approximately **78.27 
 
 In the latest production-build playback run, native audio's play promise resolved in **428 ms** with a local preview throttled to 1 Mbps and 150 ms latency; playback then advanced. The whole native/Winamp lifecycle sequence received 6,553,600 MP3 bytes across its media requests, including restarts. Those bytes are not a single song's full size or a production transfer measurement. nginx independently returned HTTP 206 and 32 bytes for the requested MP3 range.
 
-The user confirmed the initial release is live on 28 October; no deployment was performed by the agent. [Release verification](release-verification.md) records actual public responses, WAV availability, real event collection and GA realtime counts. The older [production baseline](../content-sources/production-baseline.json) remains historical evidence. GA activation and key-event marking have now been applied and read back. Search indexing has not been established. The small follow-up fixes remain local until the user deploys them manually.
+The user confirmed the initial release is live on 28 October; no deployment was performed by the agent. [Release verification](release-verification.md) records actual public responses, WAV availability, real event collection and GA realtime counts. The older [production baseline](editorial/sources/production-baseline.json) remains historical evidence. GA activation and key-event marking have now been applied and read back. Search indexing has not been established. The small follow-up fixes remain local until the user deploys them manually.
 
 ## Next inputs and actions
 

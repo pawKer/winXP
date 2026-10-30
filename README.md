@@ -14,6 +14,20 @@ Features:
 Use the [documentation index](docs/README.md) for implementation status,
 deployment instructions, analytics, and the blog/SEO plans.
 
+The main folders are:
+
+```text
+content/          Editable site data, posts, schemas, and authoring templates
+src/              React desktop and shared content renderers
+public/           Public static assets and local songs
+scripts/          Content, analytics, media, build, and verification tools
+docs/             Guides, plans, design previews, and editorial working material
+```
+
+See the [authoring guide](docs/content-authoring.md) for everyday updates and
+the [tool index](scripts/README.md) for repository scripts. Deployment and
+package-manager configuration stays at the root.
+
 ## Site content and SEO
 
 The production build generates 35 HTML pages: the desktop reading view, ten
@@ -23,8 +37,8 @@ the Blog link in Internet Explorer uses the same content inside the desktop.
 Both modes have readable HTML before JavaScript. The reading switch lives in
 the taskbar, with a return control on standalone pages.
 
-Edit `src/content/site.js` for the profile and notes, `catalogue.js` for song
-records, `content/posts/*.md` for blog entries, and `noteSections.js` for reference links.
+Edit JSON under `content/` for the profile, links, notes, recordings, and playlist;
+use `content/posts/*.md` for blog entries.
 Run `yarn post:new my-post-title` to create a draft, then `yarn start` to preview
 edits. See the [authoring guide](docs/content-authoring.md) for metadata, videos
 and publishing. Shared layouts live in `src/content/templates/`; `pages.js`
@@ -37,8 +51,8 @@ use their own publication date. Music release dates remain independent. Draft
 tracks remain in Winamp and are not presented as released songs.
 
 The initial posts are factual video companions based on the artist's official
-descriptions, chapter lists, and credits. `content-sources/youtube.json` records
-that source evidence. `content-drafts/` contains a longer, unpublished MIDI-pedal
+descriptions, chapter lists, and credits. `docs/editorial/sources/youtube.json` records
+that source evidence. `docs/editorial/drafts/` contains a longer, unpublished MIDI-pedal
 article and transcript-retrieval results; captions could not be retrieved, so
 the draft does not claim transcript grounding or author review.
 
@@ -83,7 +97,7 @@ and search performance checks.
 
 Windows XP 👉 https://winxp.now.sh
 
-[![](demo/demo.gif)](https://winxp.now.sh)
+[![](docs/assets/demo.gif)](https://winxp.now.sh)
 
 ## Contributing
 

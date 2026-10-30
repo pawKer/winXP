@@ -10,7 +10,7 @@ root unless stated otherwise.
 - [Implementation status](implementation-status.md): completed work, verification evidence, remaining inputs and review follow-ups.
 - [Deployment checklist](deployment.md): manual release, music files, public-site checks and staged GA activation.
 - [Release verification](release-verification.md): live checks, GA activation and follow-up fixes awaiting deployment.
-- [Content authoring and templates](content-authoring.md): Markdown posts, video metadata, previews and the shared page layouts.
+- [Content authoring and templates](content-authoring.md): editable notes, links, recordings and playlists, Markdown posts, validation and previews.
 
 ## Analytics
 
@@ -20,6 +20,7 @@ root unless stated otherwise.
 
 ## Plans and SEO
 
+- [Content data foundation](content-data-plan.md): current content inventory and a phased plan for data-only authoring before adding a CMS.
 - [Blog plan](blog-plan.md): the standalone/embedded blog, article workflow and archive behavior.
 - [Original SEO plan](seo/plan.md): discovery goals and the initial page architecture.
 - [SEO review and follow-ups](seo/followups.md): the original implementation review and expanded scope.
@@ -28,8 +29,8 @@ root unless stated otherwise.
 ## Working material
 
 - [Content-page design mockups](design-preview/README.md): two local HTML directions for the blog, articles, music archive, and notes.
-- [Article drafts and source notes](../content-drafts/README.md) stay together in `content-drafts/`.
-- [Source evidence](../content-sources/) contains public video metadata and implementation baselines.
+- [Article drafts and source notes](editorial/drafts/README.md) stay together in `docs/editorial/drafts/`.
+- [Source evidence](editorial/sources/) contains public video metadata and implementation baselines.
 - [Font documentation and license](../src/assets/fonts/README.md) stay beside the font assets.
 - [Optional XP boot screen](../src/components/XPBootScreen/README.md) documents the saved loading-screen component, which is currently unused.
 - [Agent/contributor instructions](../AGENTS.md) remain at the repository root.

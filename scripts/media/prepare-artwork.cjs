@@ -1,9 +1,9 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
-const { readJson, asset } = require('./content/sources.cjs');
+const { readJson, asset } = require('../content/sources.cjs');
 
-const root = path.resolve(__dirname, '..');
+const root = path.resolve(__dirname, '../..');
 const artwork = readJson(path.join(root, 'content/artwork.json'), 'artwork');
 for (const entry of Object.values(artwork)) {
   if (/[\\/]/.test(entry.source) || entry.source === '..')
