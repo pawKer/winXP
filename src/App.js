@@ -44,7 +44,9 @@ class DesktopBoundary extends React.Component {
 
 function AppContent() {
   const location = useLocation();
-  const initialPath = useRef(location.pathname);
+  const initialPath = useRef(
+    getPage(location.pathname)?.path || location.pathname,
+  );
   const page = getPage(location.pathname);
   const { mode, setMode, navigate } = useSiteNavigation();
   const [desktopMounted, setDesktopMounted] = useState(

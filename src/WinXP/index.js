@@ -273,7 +273,12 @@ function WinXP({
     const release = getPage(location.pathname)?.release;
     if (!active || !release || release.slug !== slug) return;
     const requestKey = `${location.key}:${location.pathname}:${location.search}`;
-    if (handledPlayRequest.current === requestKey) return;
+    if (handledPlayRequest.current === requestKey) {
+      // StrictMode can replay route focus before this effect. Restore player
+      // focus without sending the playback request or analytics a second time.
+      dispatch({ type: ADD_APP, payload: appSettings.Winamp });
+      return;
+    }
     handledPlayRequest.current = requestKey;
     trackEvent('music_play_request', {
       release: slug,
