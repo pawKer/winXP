@@ -1,0 +1,74 @@
+{
+  "id": "namAmpCaptureLinks",
+  "title": "NAM Amp Capture Links.txt",
+  "path": "/notes/nam-amp-capture-links",
+  "description": "Neural Amp Modeler capture, tutorials, and recording resources.",
+  "sections": {
+    "title": "NAM Amp Capture Links",
+    "sections": [
+      {
+        "title": "Resources",
+        "items": [
+          {
+            "label": "Tone3000 Website -",
+            "displayText": "https://www.tone3000.com/",
+            "id": "link-1",
+            "target": {
+              "type": "external",
+              "url": "https://www.tone3000.com/"
+            }
+          },
+          {
+            "label": "NAM Website -",
+            "displayText": "https://www.neuralampmodeler.com/",
+            "id": "link-2",
+            "target": {
+              "type": "external",
+              "url": "https://www.neuralampmodeler.com/"
+            }
+          },
+          {
+            "label": "Tone3000 Capture Tutorial -",
+            "displayText": "https://www.youtube.com/watch?v=cwUi....",
+            "id": "link-3",
+            "target": {
+              "type": "external",
+              "url": "https://www.youtube.com/watch?v=cwUiLhsXkHA"
+            }
+          },
+          {
+            "label": "NAM Tutorial -",
+            "displayText": "https://www.youtube.com/watch?v=HTx6....",
+            "id": "link-4",
+            "target": {
+              "type": "external",
+              "url": "https://www.youtube.com/watch?v=HTx69r5483k"
+            }
+          },
+          {
+            "label": "My VOX AC15 AMP Capture -",
+            "displayText": "https://www.tone3000.com/tones/vox-ac15c1--76096",
+            "id": "link-5",
+            "target": {
+              "type": "external",
+              "url": "https://www.tone3000.com/tones/vox-ac15c1--76096"
+            }
+          },
+          {
+            "label": "Mic Placement for Recording Diagram -",
+            "displayText": "https://4.bp.blogspot.com/-RiY-s2Zz1R8/UM50....",
+            "id": "link-6",
+            "target": {
+              "type": "external",
+              "url": "https://4.bp.blogspot.com/-RiY-s2Zz1R8/UM50ARC9QhI/AAAAAAAAAcw/KL5h_nQsWJ0/s1600/Speaker+Diagram.png"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "status": "published",
+  "order": 3,
+  "desktop": true,
+  "homepage": true
+}

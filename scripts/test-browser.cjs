@@ -856,7 +856,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
         await evaluate(
           'window.__analytics.find(event=>event.eventName==="video_start").parameters.video_title',
         ),
-        require('../src/content/videos.json').find(
+        require('../content/videos.json').find(
           video => video.id === 'hsTri1x-pEE',
         ).title,
         'Manual video events include the verified title for GA reporting',

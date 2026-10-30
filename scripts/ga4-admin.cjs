@@ -1,5 +1,10 @@
 const { GoogleAuth } = require('google-auth-library');
-const { siteUrl } = require('../src/content/site');
+const path = require('path');
+const { readJson } = require('./content/sources.cjs');
+const { siteUrl } = readJson(
+  path.resolve(__dirname, '../content/site.json'),
+  'site',
+);
 
 const ADMIN_URL = 'https://analyticsadmin.googleapis.com';
 const ANALYTICS_MODE = 'manual-v1';
@@ -95,7 +100,9 @@ async function configure({
     '--mark-key-events',
   ]);
   if (args.some(arg => !allowed.has(arg)))
-    throw new Error('Unknown option. Run node scripts/ga4-admin.cjs --help.');
+    throw new Error(
+      'Unknown option. Run node scripts/ga4-admin.cjs --help.',
+    );
   if (args.includes('--help')) {
     log(
       'Default: read-only plan. --discover lists accessible properties/web streams. --apply prepares reporting dimensions. --apply --after-deploy activates manual tracking after verifying the deployed site. Add --mark-key-events only after deployed event counts are verified.',

@@ -1,0 +1,26 @@
+{
+  "status": "draft",
+  "id": "myNewNote",
+  "path": "/notes/my-new-note",
+  "title": "My New Note.txt",
+  "description": "A short description.",
+  "desktop": true,
+  "homepage": true,
+  "sections": {
+    "sections": [
+      {
+        "title": "Resources",
+        "items": [
+          {
+            "id": "resource",
+            "displayText": "Resource website",
+            "target": {
+              "type": "external",
+              "url": "https://example.com"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

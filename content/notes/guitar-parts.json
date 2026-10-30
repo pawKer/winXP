@@ -1,0 +1,177 @@
+{
+  "id": "guitarParts",
+  "title": "Guitar Parts.txt",
+  "path": "/notes/guitar-parts",
+  "description": "Guitar parts and wiring resources used in reshra’s projects.",
+  "sections": {
+    "sections": [
+      {
+        "title": "Guitar Parts (affiliate links)",
+        "items": [
+          {
+            "label": "Pickups -",
+            "displayText": "https://s.click.aliexpress.com/e/_EJ0db1o",
+            "affiliate": true,
+            "id": "link-1",
+            "target": {
+              "type": "external",
+              "url": "https://s.click.aliexpress.com/e/_EJ0db1o"
+            }
+          },
+          {
+            "label": "Roller bridge -",
+            "displayText": "https://s.click.aliexpress.com/e/_EIGnDN0",
+            "affiliate": true,
+            "id": "link-2",
+            "target": {
+              "type": "external",
+              "url": "https://s.click.aliexpress.com/e/_EIGnDN0"
+            }
+          },
+          {
+            "label": "Push-Push Pots -",
+            "displayText": "https://s.click.aliexpress.com/e/_Exo98qq",
+            "affiliate": true,
+            "id": "link-3",
+            "target": {
+              "type": "external",
+              "url": "https://s.click.aliexpress.com/e/_Exo98qq"
+            }
+          },
+          {
+            "label": "3-way Toggle -",
+            "displayText": "https://s.click.aliexpress.com/e/_EvvmiWq",
+            "affiliate": true,
+            "id": "link-4",
+            "target": {
+              "type": "external",
+              "url": "https://s.click.aliexpress.com/e/_EvvmiWq"
+            }
+          },
+          {
+            "label": "Guitar Jack -",
+            "displayText": "https://s.click.aliexpress.com/e/_Ez24I94",
+            "affiliate": true,
+            "id": "link-5",
+            "target": {
+              "type": "external",
+              "url": "https://s.click.aliexpress.com/e/_Ez24I94"
+            }
+          },
+          {
+            "label": "Volume/Tone Knobs -",
+            "displayText": "https://s.click.aliexpress.com/e/_EHBVnuO",
+            "affiliate": true,
+            "id": "link-6",
+            "target": {
+              "type": "external",
+              "url": "https://s.click.aliexpress.com/e/_EHBVnuO"
+            }
+          },
+          {
+            "label": "Capacitors -",
+            "displayText": "https://s.click.aliexpress.com/e/_EuXuhHY",
+            "affiliate": true,
+            "id": "link-7",
+            "target": {
+              "type": "external",
+              "url": "https://s.click.aliexpress.com/e/_EuXuhHY"
+            }
+          }
+        ]
+      },
+      {
+        "title": "Other Parts (affiliate links)",
+        "items": [
+          {
+            "label": "Spanner guitar tool -",
+            "displayText": "https://s.click.aliexpress.com/e/_Ex7wIwm",
+            "affiliate": true,
+            "id": "link-1",
+            "target": {
+              "type": "external",
+              "url": "https://s.click.aliexpress.com/e/_Ex7wIwm"
+            }
+          },
+          {
+            "label": "22AWG wire -",
+            "displayText": "https://s.click.aliexpress.com/e/_EzKZi6e",
+            "affiliate": true,
+            "id": "link-2",
+            "target": {
+              "type": "external",
+              "url": "https://s.click.aliexpress.com/e/_EzKZi6e"
+            }
+          },
+          {
+            "label": "Feeler gauge -",
+            "displayText": "https://s.click.aliexpress.com/e/_EwoJdlg",
+            "affiliate": true,
+            "id": "link-3",
+            "target": {
+              "type": "external",
+              "url": "https://s.click.aliexpress.com/e/_EwoJdlg"
+            }
+          },
+          {
+            "label": "Step Drill Bit -",
+            "displayText": "https://s.click.aliexpress.com/e/_EQk4Dn8",
+            "affiliate": true,
+            "id": "link-4",
+            "target": {
+              "type": "external",
+              "url": "https://s.click.aliexpress.com/e/_EQk4Dn8"
+            }
+          },
+          {
+            "label": "Carpet Mouse Pad -",
+            "displayText": "https://s.click.aliexpress.com/e/_EvaTjiK",
+            "affiliate": true,
+            "id": "link-5",
+            "target": {
+              "type": "external",
+              "url": "https://s.click.aliexpress.com/e/_EvaTjiK"
+            }
+          },
+          {
+            "label": "Guitar String Tool -",
+            "displayText": "https://s.click.aliexpress.com/e/_EIyWYrC",
+            "affiliate": true,
+            "id": "link-6",
+            "target": {
+              "type": "external",
+              "url": "https://s.click.aliexpress.com/e/_EIyWYrC"
+            }
+          }
+        ]
+      },
+      {
+        "title": "Resources",
+        "items": [
+          {
+            "label": "Wiring Diagrams -",
+            "displayText": "https://seymourduncan.com/resources/pickup/wiring-diagr...",
+            "id": "link-1",
+            "target": {
+              "type": "external",
+              "url": "https://www.seymourduncan.com/resources/pickup/wiring-diagrams"
+            }
+          },
+          {
+            "label": "Pickup Wire Colors -",
+            "displayText": "https://seymourduncan.com/blog/latest-updates/humbucker...",
+            "id": "link-2",
+            "target": {
+              "type": "external",
+              "url": "https://www.seymourduncan.com/blog/latest-updates/humbucker-wire-color-translation"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "status": "published",
+  "order": 1,
+  "desktop": true,
+  "homepage": true
+}

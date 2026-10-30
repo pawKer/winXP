@@ -128,14 +128,16 @@ export const defaultAppState = [
 
 const NOTE_ICON_START_ID = 6;
 
-const noteIcons = getAllNotes().map((note, index) => ({
-  id: NOTE_ICON_START_ID + index,
-  icon: txtFileLarge,
-  title: note.desktopIconTitle || note.title,
-  component: Notepad,
-  isFocus: false,
-  noteId: note.id,
-}));
+const noteIcons = getAllNotes()
+  .filter(note => note.desktop !== false)
+  .map((note, index) => ({
+    id: NOTE_ICON_START_ID + index,
+    icon: txtFileLarge,
+    title: note.desktopIconTitle || note.title,
+    component: Notepad,
+    isFocus: false,
+    noteId: note.id,
+  }));
 
 export const defaultIconState = [
   {

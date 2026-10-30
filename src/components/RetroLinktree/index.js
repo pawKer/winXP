@@ -159,35 +159,38 @@ function RetroLinktree({
               {mergedProfile.socialLinks &&
               Object.keys(mergedProfile.socialLinks).length > 0 ? (
                 <SocialLinksRow>
-                  {SOCIAL_CONFIG.map(({ key, Icon, baseUrl, normalize }) => {
-                    const value = mergedProfile.socialLinks[key];
-                    if (!value) return null;
-                    const href = /^https?:\/\//i.test(value)
-                      ? value
-                      : `${baseUrl}${normalize(value)}`;
-                    return (
-                      <SocialLink
-                        key={key}
-                        href={href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={key}
-                        onClick={() => {
-                          try {
-                            trackEvent('retro_link_click', {
-                              label: key,
-                              destination: href,
-                              type: 'social',
-                            });
-                          } catch (err) {
-                            // Best-effort tracking; don't break navigation
-                          }
-                        }}
-                      >
-                        <Icon />
-                      </SocialLink>
-                    );
-                  })}
+                  {Object.keys(mergedProfile.socialLinks)
+                    .map(key => SOCIAL_CONFIG.find(item => item.key === key))
+                    .filter(Boolean)
+                    .map(({ key, Icon, baseUrl, normalize }) => {
+                      const value = mergedProfile.socialLinks[key];
+                      if (!value) return null;
+                      const href = /^https?:\/\//i.test(value)
+                        ? value
+                        : `${baseUrl}${normalize(value)}`;
+                      return (
+                        <SocialLink
+                          key={key}
+                          href={href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={key}
+                          onClick={() => {
+                            try {
+                              trackEvent('retro_link_click', {
+                                label: key,
+                                destination: href,
+                                type: 'social',
+                              });
+                            } catch (err) {
+                              // Best-effort tracking; don't break navigation
+                            }
+                          }}
+                        >
+                          <Icon />
+                        </SocialLink>
+                      );
+                    })}
                 </SocialLinksRow>
               ) : null}
             </TitleBlock>

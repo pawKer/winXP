@@ -176,6 +176,22 @@ test('Compilation is stable and reading links preserve mode, query and fragment'
   assert.ok(reading.includes('href="/file.zip"'));
   assert.ok(reading.includes('href="/?view=desktop"'));
   assert.equal(renderMarkdown(post, {}), post.bodyHtml);
+  const { internal } = require('../../src/content/templates/helpers');
+  assert.ok(
+    internal('/notes/guitar-parts?source=note#parts', 'Parts', {
+      reading: true,
+    }).includes('href="/notes/guitar-parts?source=note&amp;view=read#parts"'),
+  );
+  assert.ok(
+    internal('/?view=desktop#start', 'Desktop', { reading: true }).includes(
+      'href="/?view=desktop#start"',
+    ),
+  );
+  assert.ok(
+    internal('/music/forever?source=note#listen', 'Song', {
+      reading: true,
+    }).includes('href="/blog/forever?source=note#listen"'),
+  );
 });
 
 test('Music is a view of canonical articles and every old song URL resolves to its article', () => {
@@ -190,13 +206,22 @@ test('Music is a view of canonical articles and every old song URL resolves to i
   const { renderSitemap } = require('../templates/discovery.cjs');
   const { internal } = require('../../src/content/templates/helpers');
   const music = renderContent(getPage('/music'), { reading: true });
+  const musicReleases = releases.filter(release =>
+    publishedPosts.some(post => post.releaseId === release.slug),
+  );
   assert.equal(
     (music.match(/class="record-cover"/g) || []).length,
-    releases.length - 1,
+    musicReleases.length -
+      (musicReleases.some(release => release.releaseStatus === 'upcoming')
+        ? 1
+        : 0),
   );
   for (const release of releases) {
     const post = publishedPosts.find(item => item.releaseId === release.slug);
-    assert.ok(post, release.slug);
+    if (!post) {
+      assert.ok(!pages.some(page => page.path === release.path));
+      continue;
+    }
     assert.equal(getPage(release.path), getPage(post.path));
     assert.equal(
       pages.find(page => page.path === release.path).redirectTo,
@@ -214,16 +239,19 @@ test('Music is a view of canonical articles and every old song URL resolves to i
     );
     const html = renderContent(getPage(post.path), { reading: true });
     assert.ok(html.includes(release.listeningUrl.replace(/&/g, '&amp;')));
-    assert.ok(html.includes(`data-native-audio="${release.slug}"`));
-    assert.ok(html.includes(`data-play-desktop="${release.slug}"`));
-    assert.ok(html.includes(`?view=desktop&amp;play=${release.slug}#listen`));
+    if (release.trackUrl) {
+      assert.ok(html.includes(`data-native-audio="${release.slug}"`));
+      assert.ok(html.includes(`data-play-desktop="${release.slug}"`));
+      assert.ok(html.includes(`?view=desktop&amp;play=${release.slug}#listen`));
+    }
     assert.ok(!html.includes('data-copy-link'));
     assert.ok(!html.includes('Original source'));
     assert.ok(!html.includes('data-play-winamp'));
     if (release.guitarHeroUrl)
       assert.ok(html.includes(release.guitarHeroUrl.replace(/&/g, '&amp;')));
     const embedded = renderContent(getPage(post.path), { embedded: true });
-    assert.ok(embedded.includes(`data-play-winamp="${release.slug}"`));
+    if (release.trackUrl)
+      assert.ok(embedded.includes(`data-play-winamp="${release.slug}"`));
     assert.ok(!embedded.includes('data-native-audio='));
     const graph = structuredData(getPage(post.path))['@graph'];
     assert.equal(new Set(graph.map(item => item['@id'])).size, graph.length);
@@ -237,6 +265,7 @@ test('Music is a view of canonical articles and every old song URL resolves to i
 
 test('My Documents renders shared navigation, readable note panes and inactive media safely', () => {
   const { getPage, renderContent } = require('../../src/content/pages');
+  const { notes, settings } = require('../../src/content/site');
   for (const path of [
     '/blog',
     '/music',
@@ -247,13 +276,20 @@ test('My Documents renders shared navigation, readable note panes and inactive m
     const html = renderContent(getPage(path), { reading: true });
     assert.ok(html.includes('class="xp-site blog-page"'), path);
     assert.ok(html.includes('src="/icons/windows.png"'), path);
-    assert.equal((html.match(/class="social-icon"/g) || []).length, 3, path);
+    assert.equal(
+      (html.match(/class="social-icon"/g) || []).length,
+      settings.sidebar.socialIds.length,
+      path,
+    );
     assert.equal((html.match(/<h1(?:\s|>)/g) || []).length, 1, path);
     assert.equal((html.match(/<main(?:\s|>)/g) || []).length, 1, path);
   }
   const note = renderContent(getPage('/notes/guitar-parts'), { reading: true });
   assert.ok(note.includes('aria-label="Choose a note"'));
-  assert.equal((note.match(/width="20" height="20"/g) || []).length, 4);
+  assert.equal(
+    (note.match(/width="20" height="20"/g) || []).length,
+    notes.length,
+  );
   assert.ok(!note.includes('sidebar-categories'));
   assert.ok(note.includes('affiliate links. I may earn'));
   const hidden = renderContent(getPage('/blog/forever'), {
@@ -270,24 +306,34 @@ test('My Documents renders shared navigation, readable note panes and inactive m
 });
 
 test('Article search covers older pages, respects categories and restores pagination entries', () => {
-  const { getPage } = require('../../src/content/registry');
+  const {
+    getPage,
+    pageSize,
+    publishedPosts,
+  } = require('../../src/content/registry');
   const {
     renderBlogEntries,
   } = require('../../src/content/templates/blog/feed');
   const page = getPage('/blog');
   const older = renderBlogEntries(page, {}, 'forever');
-  assert.equal(older.count, 1);
+  assert.ok(older.count >= 1);
   assert.ok(older.html.includes('href="/blog/forever"'));
-  assert.equal(
-    renderBlogEntries(getPage('/blog/category/projects'), {}, 'forever').count,
-    0,
+  assert.ok(
+    !renderBlogEntries(
+      getPage('/blog/category/projects'),
+      {},
+      'forever',
+    ).html.includes('href="/blog/forever"'),
   );
   assert.ok(
     renderBlogEntries(page, {}, 'no-such-article-zzzz').html.includes(
       'No entries found',
     ),
   );
-  assert.equal(renderBlogEntries(page, {}, '').count, 6);
+  assert.equal(
+    renderBlogEntries(page, {}, '').count,
+    Math.min(pageSize, publishedPosts.length),
+  );
 });
 
 test('Every published article omits the source/copy footer controls', () => {

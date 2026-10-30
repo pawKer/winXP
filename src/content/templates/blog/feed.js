@@ -1,3 +1,4 @@
+const { settings } = require('../../site');
 const { publishedPosts, pageSize, categories } = require('../../registry');
 const { categorySlug } = require('../../categories');
 const { escapeHtml, internal } = require('../helpers');
@@ -35,8 +36,12 @@ function renderBlogEntries(page, options, query = '') {
 function renderFeed(page, options) {
   const number = page.number || 1;
   return `<header class="page-heading feed-heading"><div><p class="eyebrow">The weblog</p><h1 tabindex="-1">${
-    page.category ? escapeHtml(page.category) : 'From my corner of the web.'
-  }</h1><p>Release stories, guitar builds, and experiments along the way.</p></div><img class="heading-icon" src="/icons/note.png" alt=""></header><div class="toolbar"><nav class="filters" aria-label="Article categories">${internal(
+    page.category
+      ? escapeHtml(page.category)
+      : escapeHtml(settings.copy.blogHeading)
+  }</h1><p>${escapeHtml(
+    settings.copy.blogDescription,
+  )}</p></div><img class="heading-icon" src="/icons/note.png" alt=""></header><div class="toolbar"><nav class="filters" aria-label="Article categories">${internal(
     '/blog',
     'All entries',
     options,

@@ -1,3 +1,4 @@
+import NoteDocument from './apps/Notepad/components/HeaderRenderer';
 import React, {
   useReducer,
   useRef,
@@ -242,7 +243,7 @@ function WinXP({
         ...appSettings.Notepad.header,
         title: `${note.title} - Notepad`,
       },
-      headerContent: note.headerComponent ? <note.headerComponent /> : null,
+      headerContent: <NoteDocument note={note} />,
       noteId: note.id,
     };
   }

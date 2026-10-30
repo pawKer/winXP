@@ -1,0 +1,14 @@
+{
+  "status": "draft",
+  "slug": "my-new-song",
+  "path": "/music/my-new-song",
+  "title": "My new song",
+  "description": "A short description.",
+  "releaseStatus": "upcoming",
+  "releaseDate": null,
+  "duration": 120,
+  "credits": [],
+  "listeningUrl": "https://example.com/song",
+  "listeningLabel": "Listen",
+  "downloads": []
+}

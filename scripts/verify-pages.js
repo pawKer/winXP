@@ -3,8 +3,8 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 const { pages, publishedPosts } = require('../src/content/pages');
-const { siteUrl, releases } = require('../src/content/site');
-const sourceVideos = require('../src/content/videos.json');
+const { siteUrl, releases, notes, profile } = require('../src/content/site');
+const sourceVideos = require('../content/videos.json');
 
 const buildDir = path.resolve(__dirname, '../build');
 const sitemap = fs.readFileSync(path.join(buildDir, 'sitemap.xml'), 'utf8');
@@ -106,7 +106,7 @@ for (const page of pages) {
   }
   assert(
     schema['@graph'].some(
-      entity => entity['@type'] === 'Person' && entity.name === 'reshra',
+      entity => entity['@type'] === 'Person' && entity.name === profile.name,
     ),
     `${page.path}: named artist`,
   );
@@ -120,7 +120,7 @@ for (const page of pages) {
       `${page.path}: article schema`,
     );
     const video = sourceVideos.find(item => item.id === page.post.videoId);
-    if (video) {
+    if (video && page.post.dateSource === 'video') {
       assert.equal(
         page.post.publishedAt,
         video.publishedAt,
@@ -140,11 +140,12 @@ for (const page of pages) {
         video.publishedAt,
         `${page.path}: archived date in metadata`,
       );
-      assert(
-        article.dateModified &&
-          new Date(article.dateModified) >= new Date(article.datePublished),
-        `${page.path}: later editorial update is independent`,
-      );
+      if (page.post.updatedAt)
+        assert(
+          article.dateModified &&
+            new Date(article.dateModified) >= new Date(article.datePublished),
+          `${page.path}: later editorial update is independent`,
+        );
     }
   }
   for (const entity of schema['@graph'].filter(
@@ -175,7 +176,10 @@ for (const page of pages) {
 
 for (const release of releases) {
   const post = publishedPosts.find(item => item.releaseId === release.slug);
-  assert(post, `${release.slug}: music article exists`);
+  if (!post) {
+    assert(!routes.has(release.path), `${release.slug}: no dangling alias`);
+    continue;
+  }
   const html = fs.readFileSync(
     path.join(buildDir, `${post.path.slice(1)}.html`),
     'utf8',
@@ -193,17 +197,17 @@ for (const release of releases) {
     !html.includes('autoplay=1'),
     `${release.slug}: no automatic video playback`,
   );
-  assert(
-    html.includes('data-native-audio="' + release.slug + '"'),
-    `${release.slug}: local audio retained`,
-  );
-  if (release.guitarHeroUrl)
+  if (release.trackUrl)
     assert(
-      html.includes(release.guitarHeroUrl.replace(/&/g, '&amp;')),
+      html.includes('data-native-audio="' + release.slug + '"'),
+      `${release.slug}: local audio retained`,
+    );
+  for (const download of release.downloads)
+    assert(
+      html.includes(download.url.replace(/&/g, '&amp;')),
       `${release.slug}: download retained`,
     );
 }
-assert.equal(releases.length, 10, 'Full song archive');
 assert.equal(
   (feed.match(/<item>/g) || []).length,
   publishedPosts.length,
@@ -236,15 +240,26 @@ publishedPosts.forEach((post, index) => {
       `${post.slug}: RSS preserves the video timestamp`,
     );
 });
-const parts = fs.readFileSync(
-  path.join(buildDir, 'notes/guitar-parts.html'),
-  'utf8',
-);
-assert(
-  parts.includes('rel="noopener noreferrer sponsored"'),
-  'Sponsored links',
-);
-assert(parts.includes('affiliate links. I may earn'), 'Disclosure');
+for (const note of notes) {
+  if (
+    !note.sections.sections.some(section =>
+      section.items.some(item => item.affiliate),
+    )
+  )
+    continue;
+  const html = fs.readFileSync(
+    path.join(buildDir, note.path.slice(1) + '.html'),
+    'utf8',
+  );
+  assert(
+    html.includes('rel="noopener noreferrer sponsored"'),
+    `${note.id}: sponsored links`,
+  );
+  assert(
+    html.includes('affiliate links. I may earn'),
+    `${note.id}: disclosure`,
+  );
+}
 const robots = fs.readFileSync(path.join(buildDir, 'robots.txt'), 'utf8');
 assert(robots.includes('User-agent: GPTBot\nDisallow: /'), 'GPTBot policy');
 assert(
@@ -262,5 +277,5 @@ assert(
   '404 is not indexable',
 );
 console.log(
-  `Verified ${pages.length} pages, ten recordings, ${publishedPosts.length} RSS entries, internal links, metadata, and crawler policy`,
+  `Verified ${pages.length} pages, ${releases.length} recordings, ${publishedPosts.length} RSS entries, internal links, metadata, and crawler policy`,
 );

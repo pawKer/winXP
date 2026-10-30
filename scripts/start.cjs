@@ -1,39 +1,18 @@
-const fs = require('fs');
-const path = require('path');
 const { spawn } = require('child_process');
-const { buildContent, sourceDir } = require('./content/build.cjs');
+const { buildContent } = require('./content/build.cjs');
+const { watchContent } = require('./content/watch.cjs');
 
 buildContent();
-let timer;
 const refresh = () => {
-  clearTimeout(timer);
-  timer = setTimeout(() => {
-    try {
-      if (buildContent()) console.log('Updated Markdown posts');
-    } catch (error) {
-      console.error(
-        `Content error: ${error.message}\nKeeping the last valid content until corrected.`,
-      );
-    }
-  }, 150);
+  try {
+    if (buildContent()) console.log('Updated public content');
+  } catch (error) {
+    console.error(
+      `Content error: ${error.message}\nKeeping the last valid content until corrected.`,
+    );
+  }
 };
-const watchers = [
-  fs.watch(sourceDir, refresh),
-  fs.watch(path.resolve(__dirname, '../src/content'), (_, filename) => {
-    if (
-      [
-        'site.js',
-        'catalogue.js',
-        'categories.js',
-        'noteSections.js',
-        'videos.json',
-        'audioManifest.json',
-        'artwork.json',
-      ].includes(String(filename))
-    )
-      refresh();
-  }),
-];
+const watcher = watchContent(refresh);
 const child = spawn(
   process.execPath,
   [require.resolve('react-scripts/bin/react-scripts'), 'start'],
@@ -44,8 +23,7 @@ const child = spawn(
   },
 );
 function closeWatchers() {
-  clearTimeout(timer);
-  watchers.forEach(watcher => watcher.close());
+  watcher.close();
 }
 for (const signal of ['SIGINT', 'SIGTERM'])
   process.on(signal, () => {

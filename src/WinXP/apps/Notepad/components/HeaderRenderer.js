@@ -1,17 +1,15 @@
 import React, { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { notes } from 'content/site';
 import pageContent from 'content/pages';
 import { useSiteNavigation } from 'navigation/SiteNavigation';
 import { trackEvent } from 'hooks/useGA';
 
 const { renderNote } = pageContent;
 
-export default function HeaderRenderer({ config }) {
+export default function HeaderRenderer({ note, onFocusWinamp }) {
   const { navigate } = useSiteNavigation();
   const location = useLocation();
   const documentRef = useRef(null);
-  const note = notes.find(item => item.sections === config);
   const isCurrent = note?.path === location.pathname;
   useEffect(() => {
     if (isCurrent) documentRef.current?.focus({ preventScroll: true });
@@ -39,6 +37,10 @@ export default function HeaderRenderer({ config }) {
     )
       return;
     event.preventDefault();
+    if (link.dataset.contentAction === 'winamp' && onFocusWinamp) {
+      onFocusWinamp();
+      return;
+    }
     navigate(link.getAttribute('href'));
   }
   return (

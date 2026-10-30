@@ -1,0 +1,72 @@
+{
+  "id": "thankYou",
+  "title": "Thank You.txt",
+  "path": "/notes/thank-you",
+  "description": "Official social links and a welcome note from reshra.",
+  "sections": {
+    "title": "Thank you for visiting!",
+    "sections": [
+      {
+        "title": "Links",
+        "items": [
+          {
+            "label": "▶ Instagram:",
+            "displayText": "@reshnocash",
+            "id": "link-1",
+            "target": {
+              "type": "link",
+              "id": "instagram"
+            }
+          },
+          {
+            "label": "▶ Youtube:",
+            "displayText": "https://www.youtube.com/@reshra",
+            "id": "link-2",
+            "target": {
+              "type": "link",
+              "id": "youtube"
+            }
+          },
+          {
+            "label": "▶ TikTok:",
+            "displayText": "https://tiktok.com/@reshra",
+            "id": "link-3",
+            "target": {
+              "type": "link",
+              "id": "tiktok"
+            }
+          }
+        ]
+      },
+      {
+        "title": "Actions",
+        "items": [
+          {
+            "label": "",
+            "displayText": ">>> Open my music archive <<<",
+            "id": "link-1",
+            "target": {
+              "type": "page",
+              "path": "/music"
+            },
+            "analyticsAction": "playMusic"
+          },
+          {
+            "label": "",
+            "displayText": ">>> Open Guitar Parts.txt <<<",
+            "id": "link-2",
+            "target": {
+              "type": "note",
+              "id": "guitarParts"
+            },
+            "analyticsAction": "openGuitarParts"
+          }
+        ]
+      }
+    ]
+  },
+  "status": "published",
+  "order": 0,
+  "desktop": true,
+  "homepage": false
+}

@@ -1,0 +1,934 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "target": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "external"
+            },
+            "url": {
+              "type": "string",
+              "format": "uri",
+              "pattern": "^https?://"
+            }
+          },
+          "required": [
+            "type",
+            "url"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "link"
+            },
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
+            }
+          },
+          "required": [
+            "type",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "enum": [
+                "note",
+                "release",
+                "post"
+              ]
+            },
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
+            }
+          },
+          "required": [
+            "type",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "page"
+            },
+            "path": {
+              "type": "string",
+              "pattern": "^/(?:[^/].*)?$"
+            }
+          },
+          "required": [
+            "type",
+            "path"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "action"
+            },
+            "action": {
+              "enum": [
+                "winamp",
+                "newsletter"
+              ]
+            }
+          },
+          "required": [
+            "type",
+            "action"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "noteItem": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
+        },
+        "label": {
+          "type": "string"
+        },
+        "displayText": {
+          "type": "string"
+        },
+        "target": {
+          "$ref": "#/definitions/target"
+        },
+        "affiliate": {
+          "type": "boolean"
+        },
+        "analyticsAction": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "target"
+      ],
+      "additionalProperties": false
+    },
+    "section": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/noteItem"
+          }
+        }
+      },
+      "required": [
+        "title",
+        "items"
+      ],
+      "additionalProperties": false
+    },
+    "note": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "draft",
+            "published"
+          ]
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^/notes/[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "desktop": {
+          "type": "boolean"
+        },
+        "homepage": {
+          "type": "boolean"
+        },
+        "desktopIconTitle": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sections": {
+          "type": "object",
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "sections": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/section"
+              }
+            }
+          },
+          "required": [
+            "sections"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "additionalProperties": false,
+      "if": {
+        "properties": {
+          "status": {
+            "const": "published"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "id",
+          "title",
+          "path",
+          "description",
+          "sections"
+        ]
+      }
+    },
+    "release": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "draft",
+            "published"
+          ]
+        },
+        "slug": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^/music/[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "releaseStatus": {
+          "enum": [
+            "upcoming",
+            "released"
+          ]
+        },
+        "releaseDate": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "duration": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "trackUrl": {
+          "type": "string",
+          "pattern": "^/[^/]"
+        },
+        "artworkId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "videoId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "alternateVideoIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "credits": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "listeningUrl": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https?://"
+        },
+        "listeningLabel": {
+          "type": "string",
+          "minLength": 1
+        },
+        "downloads": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https?://"
+              }
+            },
+            "required": [
+              "label",
+              "url"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "serviceLinks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "url": {
+                "type": "string",
+                "format": "uri",
+                "pattern": "^https?://"
+              }
+            },
+            "required": [
+              "label",
+              "url"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "status"
+      ],
+      "additionalProperties": false,
+      "if": {
+        "properties": {
+          "status": {
+            "const": "published"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "slug",
+          "title",
+          "path",
+          "description",
+          "releaseStatus",
+          "duration",
+          "credits",
+          "listeningUrl",
+          "listeningLabel"
+        ]
+      }
+    },
+    "site": {
+      "type": "object",
+      "properties": {
+        "siteUrl": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https?://"
+        },
+        "profile": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "handle": {
+              "type": "string",
+              "minLength": 1
+            },
+            "bio": {
+              "type": "string",
+              "minLength": 1
+            },
+            "avatarSrc": {
+              "type": "string",
+              "pattern": "^/[^/]"
+            },
+            "socialLinks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$",
+                    "enum": [
+                      "instagram",
+                      "tiktok",
+                      "youtube",
+                      "spotify"
+                    ]
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "linkId": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
+                  }
+                },
+                "required": [
+                  "id",
+                  "label",
+                  "linkId"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "name",
+            "handle",
+            "bio",
+            "avatarSrc",
+            "socialLinks"
+          ],
+          "additionalProperties": false
+        },
+        "sidebar": {
+          "type": "object",
+          "properties": {
+            "bio": {
+              "type": "string",
+              "minLength": 1
+            },
+            "socialIds": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "required": [
+            "bio",
+            "socialIds"
+          ],
+          "additionalProperties": false
+        },
+        "defaultNoteId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
+        },
+        "newsletterUrl": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https?://"
+        },
+        "copy": {
+          "type": "object",
+          "properties": {
+            "windowTitle": {
+              "type": "string",
+              "minLength": 1
+            },
+            "mastheadEyebrow": {
+              "type": "string",
+              "minLength": 1
+            },
+            "tagline": {
+              "type": "string",
+              "minLength": 1
+            },
+            "footer": {
+              "type": "string",
+              "minLength": 1
+            },
+            "footerThanks": {
+              "type": "string",
+              "minLength": 1
+            },
+            "noticeTitle": {
+              "type": "string",
+              "minLength": 1
+            },
+            "blogHeading": {
+              "type": "string",
+              "minLength": 1
+            },
+            "blogDescription": {
+              "type": "string",
+              "minLength": 1
+            },
+            "musicHeading": {
+              "type": "string",
+              "minLength": 1
+            },
+            "musicDescription": {
+              "type": "string",
+              "minLength": 1
+            },
+            "notesHeading": {
+              "type": "string",
+              "minLength": 1
+            },
+            "notesDescription": {
+              "type": "string",
+              "minLength": 1
+            },
+            "noticeLines": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "required": [
+            "windowTitle",
+            "mastheadEyebrow",
+            "tagline",
+            "footer",
+            "footerThanks",
+            "noticeTitle",
+            "blogHeading",
+            "blogDescription",
+            "musicHeading",
+            "musicDescription",
+            "notesHeading",
+            "notesDescription",
+            "noticeLines"
+          ],
+          "additionalProperties": false
+        },
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "home": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "title",
+                "description"
+              ],
+              "additionalProperties": false
+            },
+            "music": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "title",
+                "description"
+              ],
+              "additionalProperties": false
+            },
+            "notes": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "title",
+                "description"
+              ],
+              "additionalProperties": false
+            },
+            "blog": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "title",
+                "description"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "home",
+            "music",
+            "notes",
+            "blog"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "siteUrl",
+        "profile",
+        "sidebar",
+        "defaultNoteId",
+        "newsletterUrl",
+        "copy",
+        "metadata"
+      ],
+      "additionalProperties": false
+    },
+    "links": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https?://"
+          }
+        },
+        "required": [
+          "url"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "navigation": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "pattern": "^/(?:[^/].*)?$"
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "glyph": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "path",
+          "label",
+          "glyph"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "home": {
+      "type": "object",
+      "properties": {
+        "featuredReleaseIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "footer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
+                  },
+                  "type": {
+                    "const": "featuredReleases"
+                  }
+                },
+                "required": [
+                  "id",
+                  "type"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
+                  },
+                  "type": {
+                    "const": "notes"
+                  },
+                  "subtitle": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "icon": {
+                    "enum": [
+                      "book",
+                      "music",
+                      "folder",
+                      "mail"
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "type",
+                  "subtitle",
+                  "icon"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
+                  },
+                  "title": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "subtitle": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "icon": {
+                    "enum": [
+                      "book",
+                      "music",
+                      "folder",
+                      "mail"
+                    ]
+                  },
+                  "highlight": {
+                    "type": "boolean"
+                  },
+                  "target": {
+                    "$ref": "#/definitions/target"
+                  }
+                },
+                "required": [
+                  "id",
+                  "title",
+                  "target"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          }
+        }
+      },
+      "required": [
+        "featuredReleaseIds",
+        "footer",
+        "items"
+      ],
+      "additionalProperties": false
+    },
+    "playlist": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "releaseId": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
+              }
+            },
+            "required": [
+              "releaseId"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1
+              },
+              "artist": {
+                "type": "string",
+                "minLength": 1
+              },
+              "trackUrl": {
+                "type": "string",
+                "pattern": "^/[^/]"
+              },
+              "duration": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "artworkId": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
+              }
+            },
+            "required": [
+              "id",
+              "title",
+              "artist",
+              "trackUrl",
+              "duration",
+              "artworkId"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "minItems": 1
+    },
+    "videos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "publishedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "duration": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "thumbnailUrl": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https?://"
+          },
+          "sourceUrl": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https?://"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "publishedAt",
+          "duration",
+          "thumbnailUrl",
+          "sourceUrl"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "artwork": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "minLength": 1
+          },
+          "url": {
+            "type": "string",
+            "pattern": "^/[^/]"
+          }
+        },
+        "required": [
+          "source",
+          "url"
+        ],
+        "additionalProperties": false
+      }
+    }
+  }
+}

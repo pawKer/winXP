@@ -4,7 +4,7 @@ import { WindowDropDowns, RetroLinktree } from 'components';
 import PublicPage from 'components/PublicPage';
 import { useSiteNavigation } from 'navigation/SiteNavigation';
 import pageContent from 'content/pages';
-import { profile, releases, notes } from 'content/site';
+import { profile, home as homeContent } from 'content/site';
 import { FaBookOpen, FaMusic, FaEnvelope, FaFolderOpen } from 'react-icons/fa';
 import dropDownData from './dropDownData';
 import NewsletterView from './NewsletterView';
@@ -30,6 +30,12 @@ import links from 'assets/windowsIcons/links.png';
 import dropdown from 'assets/windowsIcons/dropdown.png';
 
 const { getPage } = pageContent;
+const homeIcons = {
+  book: FaBookOpen,
+  music: FaMusic,
+  mail: FaEnvelope,
+  folder: FaFolderOpen,
+};
 
 export default function InternetExplorer({
   onClose,
@@ -233,66 +239,29 @@ export default function InternetExplorer({
             <div role={page?.kind === 'home' ? 'main' : undefined}>
               <RetroLinktree
                 profile={profile}
-                links={[
-                  ...releases.slice(0, 2).map((release, index) => ({
-                    title: `reshra - ${release.title}`,
-                    subtitle: release.listeningLabel,
-                    url: release.listeningUrl,
-                    analyticsEvent: 'music_listen_click',
-                    releaseSlug: release.slug,
-                    highlight: index === 0,
-                  })),
-                  {
-                    title: 'My blog',
-                    subtitle: 'Songs, guitar builds & experiments',
-                    url: '/blog',
-                    onClick: () => navigate('/blog'),
-                    iconNode: <FaBookOpen />,
-                  },
-                  {
-                    title: 'Music archive',
-                    subtitle: 'All recordings, videos & credits',
-                    url: '/music',
-                    onClick: () => navigate('/music'),
-                    iconNode: <FaMusic />,
-                  },
-                  {
-                    title: 'Winamp',
-                    subtitle: 'Play my music',
-                    onClick: onFocusWinamp,
-                    iconNode: <FaMusic />,
-                  },
-                  {
-                    title: 'anii 2000 (Guitar Hero Files)',
-                    subtitle: 'Google Drive folder',
-                    url: releases.find(item => item.slug === 'anii-2000')
-                      .guitarHeroUrl,
-                    iconNode: <FaFolderOpen />,
-                  },
-                  {
-                    title: 'Subscribe to my newsletter',
-                    subtitle: 'Get updates in your inbox',
-                    onClick: () => setNewsletter(true),
-                    iconNode: <FaEnvelope />,
-                  },
-                  {
-                    title: 'Notes & resources',
-                    subtitle: 'Parts lists, files & tutorials',
-                    url: '/notes',
-                    onClick: () => navigate('/notes'),
-                    iconNode: <FaFolderOpen />,
-                  },
-                  ...notes
-                    .filter(note => note.id !== 'thankYou')
-                    .map(note => ({
-                      title: note.title,
-                      subtitle: 'Open in Notepad',
-                      url: note.path,
-                      onClick: () => onOpenNote(note.id),
-                      iconNode: <FaBookOpen />,
-                    })),
-                ]}
-                footer="Made with Notepad"
+                links={homeContent.items.map(item => {
+                  const Icon = homeIcons[item.icon];
+                  let onClick;
+                  if (item.target?.type === 'action') {
+                    onClick =
+                      item.target.action === 'winamp'
+                        ? onFocusWinamp
+                        : () => setNewsletter(true);
+                  } else if (item.target?.type === 'note') {
+                    onClick = () => onOpenNote(item.target.id);
+                  } else if (!item.external) {
+                    onClick = () => navigate(item.url);
+                  }
+                  return {
+                    ...item,
+                    // icon is a registry key, not an image URL.
+                    icon: undefined,
+                    url: item.target?.type === 'action' ? undefined : item.url,
+                    iconNode: Icon ? <Icon /> : undefined,
+                    onClick,
+                  };
+                })}
+                footer={homeContent.footer}
               />
             </div>
           )}

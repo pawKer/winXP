@@ -1,5 +1,5 @@
 const { publishedPosts } = require('../registry');
-const { releases } = require('../site');
+const { releases, settings, artwork } = require('../site');
 const { internal, escapeHtml } = require('./helpers');
 const duration = seconds =>
   `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
@@ -16,11 +16,17 @@ function renderMusicIndex(options) {
   const archive = music.filter(item => item !== upcoming);
   const cover = release =>
     `<img src="${escapeHtml(
-      release.artwork || '/artwork/drafts.jpg',
+      release.artwork ||
+        (artwork.drafts && artwork.drafts.url) ||
+        '/icons/music.png',
     )}" alt="${escapeHtml(
       release.title,
     )} cover artwork" width="240" height="240" loading="lazy">`;
-  return `<header class="page-heading"><div><p class="eyebrow">The recordings</p><h1>The music folder.</h1><p>The music articles, collected by cover. Open one for the story, videos, and listening links.</p></div><img class="heading-icon" src="/icons/music.png" alt=""></header>${
+  return `<header class="page-heading"><div><p class="eyebrow">The recordings</p><h1>${escapeHtml(
+    settings.copy.musicHeading,
+  )}</h1><p>${escapeHtml(
+    settings.copy.musicDescription,
+  )}</p></div><img class="heading-icon" src="/icons/music.png" alt=""></header>${
     upcoming
       ? `<section class="music-feature music-release"><a href="${escapeHtml(
           upcoming.post.path,
@@ -50,9 +56,9 @@ function renderMusicIndex(options) {
           post.path,
           release.title,
           options,
-        )}</h2><span>${duration(
-          release.duration,
-        )}</span></div><p>reshra &middot; story, video &amp; links</p></article>`,
+        )}</h2><span>${duration(release.duration)}</span></div><p>${escapeHtml(
+          settings.profile.name,
+        )} &middot; story, video &amp; links</p></article>`,
     )
     .join('')}</div>`;
 }

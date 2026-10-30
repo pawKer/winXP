@@ -1,0 +1,56 @@
+[
+  {
+    "releaseId": "bruises"
+  },
+  {
+    "releaseId": "forever"
+  },
+  {
+    "releaseId": "anii-2000"
+  },
+  {
+    "releaseId": "somn"
+  },
+  {
+    "releaseId": "oh-doamne"
+  },
+  {
+    "releaseId": "phantom"
+  },
+  {
+    "releaseId": "minimal"
+  },
+  {
+    "releaseId": "muzica"
+  },
+  {
+    "releaseId": "vise"
+  },
+  {
+    "releaseId": "down"
+  },
+  {
+    "id": "twilight",
+    "title": "twilight",
+    "artist": "(drafts) reshra",
+    "trackUrl": "/songs/(drafts) reshra - twilight.wav",
+    "duration": 167,
+    "artworkId": "drafts"
+  },
+  {
+    "id": "love4rent",
+    "title": "love4rent",
+    "artist": "(drafts) reshra",
+    "trackUrl": "/songs/(drafts) reshra - love4rent.wav",
+    "duration": 89,
+    "artworkId": "drafts"
+  },
+  {
+    "id": "bine",
+    "title": "biñe",
+    "artist": "(drafts) reshra",
+    "trackUrl": "/songs/(drafts) reshra - biñe.mp3",
+    "duration": 13,
+    "artworkId": "drafts"
+  }
+]

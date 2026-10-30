@@ -3,7 +3,7 @@ const { renderMusicIndex } = require('./music-index');
 const { renderFeed } = require('./blog/feed');
 const { renderPost } = require('./blog/post');
 const { renderNote } = require('./notes');
-const { notes } = require('../site');
+const { notes, settings } = require('../site');
 const { escapeHtml } = require('./helpers');
 const { renderLayout, notesBrowser } = require('./layout');
 function renderContent(page, options = {}) {
@@ -19,8 +19,12 @@ function renderContent(page, options = {}) {
       page.note || notes.find(item => item.id === 'midiPedal') || notes[0];
     const paneOptions = Object.assign({}, options, { notePane: true });
     content = `<header class="page-heading"><div><p class="eyebrow">The useful bits</p><h1>${
-      page.note ? escapeHtml(note.title) : 'Notes, links & little files.'
-    }</h1><p>Parts lists, project resources, and things to come back to.</p></div><img class="heading-icon" src="/icons/note.png" alt=""></header>${notesBrowser(
+      page.note
+        ? escapeHtml(note.title)
+        : escapeHtml(settings.copy.notesHeading)
+    }</h1><p>${escapeHtml(
+      settings.copy.notesDescription,
+    )}</p></div><img class="heading-icon" src="/icons/note.png" alt=""></header>${notesBrowser(
       note,
       renderNote(note, paneOptions),
       options,

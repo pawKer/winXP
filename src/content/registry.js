@@ -1,5 +1,5 @@
 const { posts } = require('./posts');
-const { profile, releases, notes } = require('./site');
+const { profile, releases, notes, settings } = require('./site');
 const { categorySlug } = require('./categories');
 
 const publishedPosts = posts
@@ -14,22 +14,20 @@ function buildPages() {
     {
       path: '/',
       kind: 'home',
-      title: 'reshra — Music, Projects & Notes',
-      description: profile.bio,
+      title: settings.metadata.home.title,
+      description: settings.metadata.home.description,
     },
     {
       path: '/music',
       kind: 'music',
-      title: 'Music by reshra — The Archive',
-      description:
-        'Explore reshra’s recordings, official music videos, credits, and listening links, from new music to the archive.',
+      title: settings.metadata.music.title,
+      description: settings.metadata.music.description,
     },
     {
       path: '/notes',
       kind: 'notes',
-      title: 'Notes & Project Resources — reshra',
-      description:
-        'Guitar parts, MIDI controller resources, NAM amp captures, and project notes from reshra.',
+      title: settings.metadata.notes.title,
+      description: settings.metadata.notes.description,
     },
     ...releases
       .filter(release =>
@@ -41,7 +39,7 @@ function buildPages() {
         redirectTo: publishedPosts.find(post => post.releaseId === release.slug)
           .path,
         release,
-        title: `${release.title} — reshra | ${
+        title: `${release.title} — ${profile.name} | ${
           release.releaseStatus === 'upcoming'
             ? 'Upcoming Release'
             : 'Music & Official Video'
@@ -56,7 +54,7 @@ function buildPages() {
       path: note.path,
       kind: 'note',
       note,
-      title: `${note.title} — reshra`,
+      title: `${note.title} — ${profile.name}`,
       description: note.description,
     })),
     ...publishedPosts.map(post => ({
@@ -64,7 +62,7 @@ function buildPages() {
       kind: 'post',
       post,
       release: releases.find(release => release.slug === post.releaseId),
-      title: `${post.title} — reshra’s Blog`,
+      title: `${post.title} — ${profile.name}’s Blog`,
       description: post.excerpt,
       image:
         (releases.find(release => release.slug === post.releaseId) || {})
@@ -80,10 +78,10 @@ function buildPages() {
       path: number === 1 ? '/blog' : `/blog/page/${number}`,
       kind: 'blog',
       number,
-      title: `reshra’s Blog — Music, Builds & Video Notes${
+      title: `${settings.metadata.blog.title}${
         number > 1 ? ` | Page ${number}` : ''
       }`,
-      description: `Release stories, guitar projects, MIDI experiments, and video companions from reshra.${
+      description: `${settings.metadata.blog.description}${
         number > 1 ? ` Archive page ${number}.` : ''
       }`,
     });
@@ -93,7 +91,7 @@ function buildPages() {
       path: `/blog/category/${categorySlug(category)}`,
       kind: 'blog',
       category,
-      title: `${category} — reshra’s Blog`,
+      title: `${category} — ${profile.name}’s Blog`,
       description: `${
         category === 'Music'
           ? 'Song releases and music archive entries'

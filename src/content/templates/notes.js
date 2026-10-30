@@ -5,10 +5,6 @@ function renderNote(note, options) {
   const hasAffiliate = note.sections.sections.some(section =>
     section.items.some(item => item.affiliate),
   );
-  const actionDestinations = {
-    playMusic: '/music',
-    openGuitarParts: '/notes/guitar-parts',
-  };
   const related = publishedPosts.filter(post =>
     (post.noteIds || []).includes(note.id),
   );
@@ -47,6 +43,10 @@ function renderNote(note, options) {
               item.action
                 ? ` data-note-action="${escapeHtml(item.action)}"`
                 : ''
+            }${
+              item.target.type === 'action'
+                ? ` data-content-action="${escapeHtml(item.target.action)}"`
+                : ''
             }`;
             if (item.type === 'external')
               return `<li><a href="${escapeHtml(
@@ -55,7 +55,7 @@ function renderNote(note, options) {
                 item.affiliate ? ' sponsored' : ''
               }" ${analyticsAttributes}>${escapeHtml(label)}</a></li>`;
             return `<li>${internal(
-              actionDestinations[item.action] || '/music',
+              item.url,
               label,
               options,
               analyticsAttributes,

@@ -1,0 +1,79 @@
+{
+  "featuredReleaseIds": [
+    "bruises",
+    "anii-2000"
+  ],
+  "footer": "Made with Notepad",
+  "items": [
+    {
+      "id": "featured",
+      "type": "featuredReleases"
+    },
+    {
+      "id": "blog",
+      "title": "My blog",
+      "subtitle": "Songs, guitar builds & experiments",
+      "icon": "book",
+      "target": {
+        "type": "page",
+        "path": "/blog"
+      }
+    },
+    {
+      "id": "music",
+      "title": "Music archive",
+      "subtitle": "All recordings, videos & credits",
+      "icon": "music",
+      "target": {
+        "type": "page",
+        "path": "/music"
+      }
+    },
+    {
+      "id": "winamp",
+      "title": "Winamp",
+      "subtitle": "Play my music",
+      "icon": "music",
+      "target": {
+        "type": "action",
+        "action": "winamp"
+      }
+    },
+    {
+      "id": "guitar-hero",
+      "title": "anii 2000 (Guitar Hero Files)",
+      "subtitle": "Google Drive folder",
+      "icon": "folder",
+      "target": {
+        "type": "external",
+        "url": "https://drive.google.com/drive/folders/1g7SefzKNeO9_EjYc6GEQu-hWvagXgfV9?usp=drive_link"
+      }
+    },
+    {
+      "id": "newsletter",
+      "title": "Subscribe to my newsletter",
+      "subtitle": "Get updates in your inbox",
+      "icon": "mail",
+      "target": {
+        "type": "action",
+        "action": "newsletter"
+      }
+    },
+    {
+      "id": "notes",
+      "title": "Notes & resources",
+      "subtitle": "Parts lists, files & tutorials",
+      "icon": "folder",
+      "target": {
+        "type": "page",
+        "path": "/notes"
+      }
+    },
+    {
+      "id": "note-files",
+      "type": "notes",
+      "subtitle": "Open in Notepad",
+      "icon": "book"
+    }
+  ]
+}

@@ -1,9 +1,15 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
-const artwork = require('../src/content/artwork.json');
+const { readJson, asset } = require('./content/sources.cjs');
 
 const root = path.resolve(__dirname, '..');
+const artwork = readJson(path.join(root, 'content/artwork.json'), 'artwork');
+for (const entry of Object.values(artwork)) {
+  if (/[\\/]/.test(entry.source) || entry.source === '..')
+    throw new Error(`Invalid artwork source filename: ${entry.source}`);
+  asset(entry.url, 'content/artwork.json', path.join(root, 'public'), false);
+}
 const ffmpeg = process.env.FFMPEG_PATH || 'ffmpeg';
 let total = 0;
 for (const { source: filename, url } of Object.values(artwork)) {

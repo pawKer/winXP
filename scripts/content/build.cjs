@@ -2,10 +2,11 @@ const fs = require('fs');
 const path = require('path');
 const YAML = require('yaml');
 const MarkdownIt = require('markdown-it');
+const { readSources, completeContent } = require('./sources.cjs');
 
 const root = path.resolve(__dirname, '../..');
 const sourceDir = path.join(root, 'content/posts');
-const outputFile = path.join(root, 'src/content/generated/posts.json');
+const outputFile = path.join(root, 'src/content/generated/content.json');
 const { categorySlug } = require('../../src/content/categories');
 const markdown = new MarkdownIt({ html: false, linkify: false });
 markdown.renderer.rules.link_open = (tokens, index, options, env, renderer) => {
@@ -26,20 +27,7 @@ markdown.renderer.rules.link_open = (tokens, index, options, env, renderer) => {
 };
 
 function references() {
-  // Reload reference data for the development watcher without loading the page registry.
-  for (const name of [
-    'site',
-    'catalogue',
-    'noteSections',
-    'videos.json',
-    'audioManifest.json',
-    'artwork.json',
-  ]) {
-    delete require.cache[require.resolve(`../../src/content/${name}`)];
-  }
-  const { releases, notes } = require('../../src/content/site');
-  const { videoById } = require('../../src/content/catalogue');
-  return { releases, notes, videoById };
+  return readSources();
 }
 
 function parsePost(text, filename, refs) {
@@ -182,7 +170,7 @@ function parsePost(text, filename, refs) {
     status,
     publishedAt,
     dateSource,
-    author: meta.author || 'reshra',
+    author: meta.author || (refs.profile && refs.profile.name) || 'reshra',
     language: meta.language || 'en',
     sourceUrl: meta.sourceUrl || (video && video.sourceUrl) || null,
     bodyHtml: markdown.renderer.render(tokens, markdown.options, {}),
@@ -218,23 +206,39 @@ function compilePosts(directory = sourceDir, refs = references()) {
   return posts;
 }
 
-function buildContent() {
-  const posts = compilePosts();
-  const json = JSON.stringify(posts, null, 2) + '\n';
+function compileContent(directory = path.join(root, 'content'), publicDir) {
+  const data = readSources(directory, publicDir);
+  return completeContent(
+    data,
+    compilePosts(path.join(directory, 'posts'), data),
+  );
+}
+
+function buildContent(
+  directory = path.join(root, 'content'),
+  destination = outputFile,
+) {
+  const json = JSON.stringify(compileContent(directory), null, 2) + '\n';
   if (
-    !fs.existsSync(outputFile) ||
-    fs.readFileSync(outputFile, 'utf8') !== json
+    !fs.existsSync(destination) ||
+    fs.readFileSync(destination, 'utf8') !== json
   ) {
-    fs.mkdirSync(path.dirname(outputFile), { recursive: true });
-    fs.writeFileSync(outputFile, json);
+    fs.mkdirSync(path.dirname(destination), { recursive: true });
+    const temporary = destination + '.tmp';
+    fs.writeFileSync(temporary, json);
+    fs.renameSync(temporary, destination);
     return true;
   }
   return false;
 }
 
 if (require.main === module) {
-  buildContent();
-  console.log('Compiled published Markdown posts');
+  if (process.argv.includes('--check')) compileContent();
+  else buildContent();
+  console.log(
+    'Validated public content' +
+      (process.argv.includes('--check') ? '' : ' and compiled snapshot'),
+  );
 }
 module.exports = {
   buildContent,
@@ -242,4 +246,5 @@ module.exports = {
   parsePost,
   sourceDir,
   categorySlug,
+  compileContent,
 };

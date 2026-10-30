@@ -34,9 +34,11 @@
     "lint": "node scripts/lint.js",
     "content:build": "node scripts/content/build.cjs",
     "post:new": "node scripts/content/new-post.cjs",
-    "test:content": "node --test scripts/content/build.test.cjs",
+    "test:content": "node --test scripts/content/build.test.cjs scripts/content/sources.test.cjs",
     "pretest": "node scripts/content/build.cjs",
-    "media:artwork": "node scripts/prepare-artwork.cjs"
+    "media:artwork": "node scripts/prepare-artwork.cjs",
+    "content:validate": "node scripts/content/build.cjs --check",
+    "content:parity": "node scripts/content/parity.cjs"
   },
   "eslintConfig": {
     "extends": [
@@ -51,12 +53,14 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "ajv": "6.12.6",
     "eslint": "^6.4.0",
     "eslint-config-prettier": "^6.3.0",
     "eslint-config-react-app": "^7.0.1",
     "eslint-plugin-prettier": "^3.1.0",
     "google-auth-library": "^11.3.1",
     "markdown-it": "14.1.0",
+    "parse5": "6.0.1",
     "prettier": "^1.18.2",
     "yaml": "2.8.0"
   },

@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
+import { settings } from 'content/site';
 
-const BEEHIIV_EMBED_URL =
-  'https://subscribe-forms.beehiiv.com/ef0608ce-ef61-415b-a6b3-3a01217d0549';
+const BEEHIIV_EMBED_URL = settings.newsletterUrl;
 const BEEHIIV_EMBED_SCRIPT = 'https://subscribe-forms.beehiiv.com/embed.js';
 
 function NewsletterView({ onBack }) {

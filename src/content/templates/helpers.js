@@ -30,12 +30,14 @@ const external = (url, label, attributes = '') =>
 const internal = (path, label, options = {}, attributes = '') => {
   const url = new URL(path, siteUrl);
   const page = require('../registry').getPage(url.pathname);
-  if (page && page.path !== url.pathname)
-    path = page.path + url.search + url.hash;
-  const href =
-    options.reading && !path.startsWith('/blog')
-      ? `${path}${path.includes('?') ? '&' : '?'}view=read`
-      : path;
+  if (page && page.path !== url.pathname) url.pathname = page.path;
+  if (
+    options.reading &&
+    !url.pathname.startsWith('/blog') &&
+    !url.searchParams.has('view')
+  )
+    url.searchParams.set('view', 'read');
+  const href = url.pathname + url.search + url.hash;
   return `<a href="${escapeHtml(href)}" ${attributes}>${escapeHtml(label)}</a>`;
 };
 const listenLink = (release, placement, className = 'xp-button primary') =>

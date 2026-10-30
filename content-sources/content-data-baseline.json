@@ -1,0 +1,1007 @@
+{
+  "siteUrl": "https://reshra.xyz",
+  "profile": {
+    "name": "reshra",
+    "handle": "reshra",
+    "bio": "Music, guitar projects, and experiments by reshra.",
+    "avatarSrc": "/reshra_low_res.jpg",
+    "socialLinks": {
+      "instagram": "https://instagram.com/reshnocash",
+      "tiktok": "https://tiktok.com/@reshra",
+      "youtube": "https://www.youtube.com/@reshra",
+      "spotify": "https://open.spotify.com/artist/781EBVicrg3Ry3uWjwQLD8"
+    }
+  },
+  "notes": [
+    {
+      "id": "thankYou",
+      "title": "Thank You.txt",
+      "path": "/notes/thank-you",
+      "description": "Official social links and a welcome note from reshra.",
+      "sections": {
+        "title": "Thank you for visiting!",
+        "sections": [
+          {
+            "title": "Links",
+            "items": [
+              {
+                "label": "▶ Instagram:",
+                "url": "https://instagram.com/reshnocash",
+                "displayText": "@reshnocash",
+                "type": "external"
+              },
+              {
+                "label": "▶ Youtube:",
+                "url": "https://www.youtube.com/@reshra",
+                "displayText": "https://www.youtube.com/@reshra",
+                "type": "external"
+              },
+              {
+                "label": "▶ TikTok:",
+                "url": "https://tiktok.com/@reshra",
+                "displayText": "https://tiktok.com/@reshra",
+                "type": "external"
+              }
+            ]
+          },
+          {
+            "title": "Actions",
+            "items": [
+              {
+                "label": "",
+                "action": "playMusic",
+                "displayText": ">>> Open my music archive <<<",
+                "type": "action"
+              },
+              {
+                "label": "",
+                "action": "openGuitarParts",
+                "displayText": ">>> Open Guitar Parts.txt <<<",
+                "type": "action"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "guitarParts",
+      "title": "Guitar Parts.txt",
+      "path": "/notes/guitar-parts",
+      "description": "Guitar parts and wiring resources used in reshra’s projects.",
+      "sections": {
+        "sections": [
+          {
+            "title": "Guitar Parts (affiliate links)",
+            "items": [
+              {
+                "label": "Pickups -",
+                "url": "https://s.click.aliexpress.com/e/_EJ0db1o",
+                "displayText": "https://s.click.aliexpress.com/e/_EJ0db1o",
+                "type": "external",
+                "affiliate": true
+              },
+              {
+                "label": "Roller bridge -",
+                "url": "https://s.click.aliexpress.com/e/_EIGnDN0",
+                "displayText": "https://s.click.aliexpress.com/e/_EIGnDN0",
+                "type": "external",
+                "affiliate": true
+              },
+              {
+                "label": "Push-Push Pots -",
+                "url": "https://s.click.aliexpress.com/e/_Exo98qq",
+                "displayText": "https://s.click.aliexpress.com/e/_Exo98qq",
+                "type": "external",
+                "affiliate": true
+              },
+              {
+                "label": "3-way Toggle -",
+                "url": "https://s.click.aliexpress.com/e/_EvvmiWq",
+                "displayText": "https://s.click.aliexpress.com/e/_EvvmiWq",
+                "type": "external",
+                "affiliate": true
+              },
+              {
+                "label": "Guitar Jack -",
+                "url": "https://s.click.aliexpress.com/e/_Ez24I94",
+                "displayText": "https://s.click.aliexpress.com/e/_Ez24I94",
+                "type": "external",
+                "affiliate": true
+              },
+              {
+                "label": "Volume/Tone Knobs -",
+                "url": "https://s.click.aliexpress.com/e/_EHBVnuO",
+                "displayText": "https://s.click.aliexpress.com/e/_EHBVnuO",
+                "type": "external",
+                "affiliate": true
+              },
+              {
+                "label": "Capacitors -",
+                "url": "https://s.click.aliexpress.com/e/_EuXuhHY",
+                "displayText": "https://s.click.aliexpress.com/e/_EuXuhHY",
+                "type": "external",
+                "affiliate": true
+              }
+            ]
+          },
+          {
+            "title": "Other Parts (affiliate links)",
+            "items": [
+              {
+                "label": "Spanner guitar tool -",
+                "url": "https://s.click.aliexpress.com/e/_Ex7wIwm",
+                "displayText": "https://s.click.aliexpress.com/e/_Ex7wIwm",
+                "type": "external",
+                "affiliate": true
+              },
+              {
+                "label": "22AWG wire -",
+                "url": "https://s.click.aliexpress.com/e/_EzKZi6e",
+                "displayText": "https://s.click.aliexpress.com/e/_EzKZi6e",
+                "type": "external",
+                "affiliate": true
+              },
+              {
+                "label": "Feeler gauge -",
+                "url": "https://s.click.aliexpress.com/e/_EwoJdlg",
+                "displayText": "https://s.click.aliexpress.com/e/_EwoJdlg",
+                "type": "external",
+                "affiliate": true
+              },
+              {
+                "label": "Step Drill Bit -",
+                "url": "https://s.click.aliexpress.com/e/_EQk4Dn8",
+                "displayText": "https://s.click.aliexpress.com/e/_EQk4Dn8",
+                "type": "external",
+                "affiliate": true
+              },
+              {
+                "label": "Carpet Mouse Pad -",
+                "url": "https://s.click.aliexpress.com/e/_EvaTjiK",
+                "displayText": "https://s.click.aliexpress.com/e/_EvaTjiK",
+                "type": "external",
+                "affiliate": true
+              },
+              {
+                "label": "Guitar String Tool -",
+                "url": "https://s.click.aliexpress.com/e/_EIyWYrC",
+                "displayText": "https://s.click.aliexpress.com/e/_EIyWYrC",
+                "type": "external",
+                "affiliate": true
+              }
+            ]
+          },
+          {
+            "title": "Resources",
+            "items": [
+              {
+                "label": "Wiring Diagrams -",
+                "url": "https://www.seymourduncan.com/resources/pickup/wiring-diagrams",
+                "displayText": "https://seymourduncan.com/resources/pickup/wiring-diagr...",
+                "type": "external"
+              },
+              {
+                "label": "Pickup Wire Colors -",
+                "url": "https://www.seymourduncan.com/blog/latest-updates/humbucker-wire-color-translation",
+                "displayText": "https://seymourduncan.com/blog/latest-updates/humbucker...",
+                "type": "external"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "midiPedal",
+      "title": "Midi Pedal.txt",
+      "path": "/notes/midi-pedal",
+      "description": "Parts, tutorials, and mapping resources for a MIDI pedal.",
+      "sections": {
+        "sections": [
+          {
+            "title": "Resources",
+            "items": [
+              {
+                "label": "PedalinoMini -",
+                "url": "https://github.com/alf45tar/PedalinoMini",
+                "displayText": "https://github.com/alf45tar/PedalinoMini",
+                "type": "external"
+              },
+              {
+                "label": "PedalinoMini 6 -",
+                "url": "https://github.com/alf45tar/PedalinoMini-6",
+                "displayText": "https://github.com/alf45tar/PedalinoMini-6",
+                "type": "external"
+              },
+              {
+                "label": "My Pedalino GPIO Mapping -",
+                "url": "https://docs.google.com/spreadsheets/d/1-WhQdlNNmLfMPVwCnidQKRq9GjmZo3riJOmJoAho18o/edit?gid=0#gid=0",
+                "displayText": "https://docs.google.com/spreadsheets/d/1-WhQdlNNmLfMPVwCnidQKRq9G...",
+                "type": "external"
+              },
+              {
+                "label": "HX Midi Help -",
+                "url": "https://helixhelp.com/tips-and-guides/universal/midi",
+                "displayText": "https://helixhelp.com/tips-and-guides/universal/midi",
+                "type": "external"
+              },
+              {
+                "label": "HX Stomp Midi Tutorial Playlist -",
+                "url": "https://www.youtube.com/watch?v=u1Be2wWeTEQ&list=PLU_121LLWRVk",
+                "displayText": "https://www.youtube.com/watch?v=u1Be2wWeTEQ&list=PLU_121LLWRVk",
+                "type": "external"
+              }
+            ]
+          },
+          {
+            "title": "Required Parts (affiliate links)",
+            "items": [
+              {
+                "label": "LILYGO T-Display S3 -",
+                "url": "https://www.lilygo.cc/products/t-display-s3?variant=42351558590645",
+                "displayText": "https://www.lilygo.cc/products/t-displ....",
+                "type": "external",
+                "affiliate": true
+              },
+              {
+                "label": "LILYGO T-Display TF Shield -",
+                "url": "https://www.lilygo.cc/products/t-display-tf-shied?variant=42729797025973",
+                "displayText": "https://www.lilygo.cc/products/t-displ....",
+                "type": "external",
+                "affiliate": true
+              },
+              {
+                "label": "Momentary SPST Foot Switches -",
+                "url": "https://s.click.aliexpress.com/e/_c4tcOgwB",
+                "displayText": "https://s.click.aliexpress.com/e/_c4tcOgwB",
+                "type": "external",
+                "affiliate": true
+              },
+              {
+                "label": "TRS 1/4 inch Female Jack -",
+                "url": "https://s.click.aliexpress.com/e/_c3qoTJib",
+                "displayText": "https://s.click.aliexpress.com/e/_c3qoTJib",
+                "type": "external",
+                "affiliate": true
+              },
+              {
+                "label": "Schottky Rectifier Diode -",
+                "url": "https://s.click.aliexpress.com/e/_c32kpU7h",
+                "displayText": "https://s.click.aliexpress.com/e/_c32kpU7h",
+                "type": "external",
+                "affiliate": true
+              },
+              {
+                "label": "TRS 3.5mm Female Jack (style 1) -",
+                "url": "https://s.click.aliexpress.com/e/_c3QmQcxt",
+                "displayText": "https://s.click.aliexpress.com/e/_c3QmQcxt",
+                "type": "external",
+                "affiliate": true
+              },
+              {
+                "label": "TRS 3.5mm Female Jack (style 2) -",
+                "url": "https://s.click.aliexpress.com/e/_c3FZY3Zv",
+                "displayText": "https://s.click.aliexpress.com/e/_c3FZY3Zv",
+                "type": "external",
+                "affiliate": true
+              },
+              {
+                "label": "WS2812B Addressable LED Strip -",
+                "url": "https://s.click.aliexpress.com/e/_c3dAmgfh",
+                "displayText": "https://s.click.aliexpress.com/e/_c3dAmgfh",
+                "type": "external",
+                "affiliate": true
+              },
+              {
+                "label": "24 AWG Wire Box Kit -",
+                "url": "https://www.aliexpress.com/item/1005005888991575.html?spm=a2g0o.order_list.order_list_main.76.599618022DTviZ",
+                "displayText": "https://www.aliexpress.com/item/100500....",
+                "type": "external",
+                "affiliate": true
+              },
+              {
+                "label": "M3 10mm Hex Screws -",
+                "url": "https://www.aliexpress.com/item/32969042589.html?spm=a2g0o.order_list.order_list_main.51.599618022DTviZ",
+                "displayText": "https://www.aliexpress.com/item/329690....",
+                "type": "external",
+                "affiliate": true
+              }
+            ]
+          },
+          {
+            "title": "Other Parts (affiliate links)",
+            "items": [
+              {
+                "label": "USB C Soldering Iron -",
+                "url": "https://s.click.aliexpress.com/e/_c36APv0r",
+                "displayText": "https://s.click.aliexpress.com/e/_c36APv0r",
+                "type": "external",
+                "affiliate": true
+              },
+              {
+                "label": "Wire Stripper Tool -",
+                "url": "https://s.click.aliexpress.com/e/_c4OWWP8n",
+                "displayText": "https://s.click.aliexpress.com/e/_c4OWWP8n",
+                "type": "external",
+                "affiliate": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "namAmpCaptureLinks",
+      "title": "NAM Amp Capture Links.txt",
+      "path": "/notes/nam-amp-capture-links",
+      "description": "Neural Amp Modeler capture, tutorials, and recording resources.",
+      "sections": {
+        "title": "NAM Amp Capture Links",
+        "sections": [
+          {
+            "title": "Resources",
+            "items": [
+              {
+                "label": "Tone3000 Website -",
+                "url": "https://www.tone3000.com/",
+                "displayText": "https://www.tone3000.com/",
+                "type": "external"
+              },
+              {
+                "label": "NAM Website -",
+                "url": "https://www.neuralampmodeler.com/",
+                "displayText": "https://www.neuralampmodeler.com/",
+                "type": "external"
+              },
+              {
+                "label": "Tone3000 Capture Tutorial -",
+                "url": "https://www.youtube.com/watch?v=cwUiLhsXkHA",
+                "displayText": "https://www.youtube.com/watch?v=cwUi....",
+                "type": "external"
+              },
+              {
+                "label": "NAM Tutorial -",
+                "url": "https://www.youtube.com/watch?v=HTx69r5483k",
+                "displayText": "https://www.youtube.com/watch?v=HTx6....",
+                "type": "external"
+              },
+              {
+                "label": "My VOX AC15 AMP Capture -",
+                "url": "https://www.tone3000.com/tones/vox-ac15c1--76096",
+                "displayText": "https://www.tone3000.com/tones/vox-ac15c1--76096",
+                "type": "external"
+              },
+              {
+                "label": "Mic Placement for Recording Diagram -",
+                "url": "https://4.bp.blogspot.com/-RiY-s2Zz1R8/UM50ARC9QhI/AAAAAAAAAcw/KL5h_nQsWJ0/s1600/Speaker+Diagram.png",
+                "displayText": "https://4.bp.blogspot.com/-RiY-s2Zz1R8/UM50....",
+                "type": "external"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "releases": [
+    {
+      "slug": "bruises",
+      "title": "bruises",
+      "path": "/music/bruises",
+      "listeningUrl": "https://distrokid.com/hyperfollow/reshra/bruises?ref=release",
+      "listeningLabel": "Pre-save bruises",
+      "releaseStatus": "upcoming",
+      "releaseDate": "2026-11-01",
+      "duration": 273,
+      "trackUrl": "/songs/reshra - bruises.wav",
+      "description": "bruises by reshra. Pre-save for 1 November 2026, or listen to the recording on this desktop.",
+      "artwork": "/artwork/bruises.jpg",
+      "video": null,
+      "credits": []
+    },
+    {
+      "slug": "anii-2000",
+      "title": "anii 2000",
+      "path": "/music/anii-2000",
+      "listeningUrl": "https://distrokid.com/hyperfollow/reshra/anii-2000?ref=release",
+      "listeningLabel": "Listen on music services",
+      "releaseStatus": "released",
+      "trackUrl": "/songs/reshra - anii 2000.wav",
+      "duration": 195,
+      "guitarHeroUrl": "https://drive.google.com/drive/folders/1g7SefzKNeO9_EjYc6GEQu-hWvagXgfV9?usp=drive_link",
+      "description": "anii 2000 by reshra: official visualizer, lyric video, Guitar Hero files, and listening links.",
+      "artwork": "/artwork/anii-2000.jpg",
+      "releaseDate": null,
+      "video": {
+        "id": "V0aUEGCaFjk",
+        "title": "reshra - anii 2000 (Official Visualizer)",
+        "publishedAt": "2026-09-01T01:00:29-07:00",
+        "duration": 196,
+        "thumbnailUrl": "https://i.ytimg.com/vi/V0aUEGCaFjk/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGGUgWChNMA8=&rs=AOn4CLAvkS3ATvt2GTV7OuHiV2_u8VR_JQ",
+        "sourceUrl": "https://www.youtube.com/watch?v=V0aUEGCaFjk"
+      },
+      "alternateVideos": [
+        {
+          "id": "Wbu7dbqYGY0",
+          "title": "reshra - anii 2000 (Official Lyric Video)",
+          "publishedAt": "2026-09-03T07:00:23-07:00",
+          "duration": 201,
+          "thumbnailUrl": "https://i.ytimg.com/vi/Wbu7dbqYGY0/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AG-B4AC0AWKAgwIABABGHIgTShCMA8=&rs=AOn4CLDCHkdDAvBrgRsdaTh1ONTlKD2MXg",
+          "sourceUrl": "https://www.youtube.com/watch?v=Wbu7dbqYGY0"
+        },
+        {
+          "id": "9mNxrLwROfs",
+          "title": "reshra - anii 2000 (Guitar Hero Playthrough Visualizer)",
+          "publishedAt": "2026-09-04T07:00:26-07:00",
+          "duration": 209,
+          "thumbnailUrl": "https://i.ytimg.com/vi/9mNxrLwROfs/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGHIgVygfMA8=&rs=AOn4CLCg1_juz64zfYTLdi4i4L-CA5byAA",
+          "sourceUrl": "https://www.youtube.com/watch?v=9mNxrLwROfs"
+        }
+      ],
+      "credits": [
+        "Written, produced, mixed and mastered by reshra",
+        "Bass: Dragotoiu Alex",
+        "Video by reshra"
+      ]
+    },
+    {
+      "slug": "forever",
+      "title": "forever",
+      "path": "/music/forever",
+      "duration": 228,
+      "credits": [
+        "Written and produced by reshra",
+        "Video by reshra",
+        "Mix and master: Kol and Vlad Moaga at KAOL Music"
+      ],
+      "trackUrl": "/songs/reshra - forever.wav",
+      "listeningUrl": "https://distrokid.com/hyperfollow/reshra/forever",
+      "listeningLabel": "Listen on music services",
+      "releaseStatus": "released",
+      "description": "forever by reshra. Watch the official visualizer, find the credits, and listen again.",
+      "artwork": "/artwork/forever.jpg",
+      "releaseDate": null,
+      "video": {
+        "id": "hsTri1x-pEE",
+        "title": "reshra - forever (Official Visualizer)",
+        "publishedAt": "2026-03-03T08:00:56-08:00",
+        "duration": 228,
+        "thumbnailUrl": "https://i.ytimg.com/vi/hsTri1x-pEE/maxresdefault.jpg",
+        "sourceUrl": "https://www.youtube.com/watch?v=hsTri1x-pEE"
+      }
+    },
+    {
+      "slug": "oh-doamne",
+      "title": "oh, doamne",
+      "path": "/music/oh-doamne",
+      "duration": 200,
+      "credits": [
+        "Written and produced by reshra",
+        "Video by reshra",
+        "Special thanks to Vlad Moaga at KAOL Music"
+      ],
+      "trackUrl": "/songs/reshra - oh, doamne.wav",
+      "listeningUrl": "https://distrokid.com/hyperfollow/reshra/oh-doamne",
+      "listeningLabel": "Listen on music services",
+      "releaseStatus": "released",
+      "description": "oh, doamne by reshra. Watch the official visualizer, find the credits, and listen again.",
+      "artwork": "/artwork/oh-doamne.jpg",
+      "releaseDate": null,
+      "video": {
+        "id": "DVcsbZbeAFg",
+        "title": "reshra - oh, doamne (Official Visualizer)",
+        "publishedAt": "2023-04-21T00:00:09-07:00",
+        "duration": 201,
+        "thumbnailUrl": "https://i.ytimg.com/vi/DVcsbZbeAFg/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGFMgPihyMA8=&rs=AOn4CLBYe33yiQ0dzC20u98h7jWJnhOHRg",
+        "sourceUrl": "https://www.youtube.com/watch?v=DVcsbZbeAFg"
+      }
+    },
+    {
+      "slug": "somn",
+      "title": "somn",
+      "path": "/music/somn",
+      "duration": 184,
+      "credits": [
+        "Written and produced by reshra",
+        "Video by reshra",
+        "Special thanks to Vlad Moaga at KAOL Music"
+      ],
+      "trackUrl": "/songs/reshra - somn.wav",
+      "listeningUrl": "https://distrokid.com/hyperfollow/reshra/somn",
+      "listeningLabel": "Listen on music services",
+      "releaseStatus": "released",
+      "description": "somn by reshra. Watch the official visualizer, find the credits, and listen again.",
+      "artwork": "/artwork/somn.jpg",
+      "releaseDate": null,
+      "video": {
+        "id": "LmNphSW-lpo",
+        "title": "reshra - somn (Official Visualizer)",
+        "publishedAt": "2022-03-17T13:00:11-07:00",
+        "duration": 186,
+        "thumbnailUrl": "https://i.ytimg.com/vi/LmNphSW-lpo/maxresdefault.jpg?v=623300a2",
+        "sourceUrl": "https://www.youtube.com/watch?v=LmNphSW-lpo"
+      }
+    },
+    {
+      "slug": "minimal",
+      "title": "minimal",
+      "path": "/music/minimal",
+      "duration": 152,
+      "credits": [
+        "Written and produced by reshra",
+        "Video by reshra",
+        "Sample from @chrispetramelodies on TikTok"
+      ],
+      "trackUrl": "/songs/reshra - minimal.wav",
+      "listeningUrl": "https://distrokid.com/hyperfollow/reshra/minimal",
+      "listeningLabel": "Listen on music services",
+      "releaseStatus": "released",
+      "description": "minimal by reshra. Watch the official visualizer, find the credits, and listen again.",
+      "artwork": "/artwork/minimal.jpg",
+      "releaseDate": null,
+      "video": {
+        "id": "W60LQyHnwvM",
+        "title": "reshra - minimal (Official Visualizer)",
+        "publishedAt": "2021-12-03T09:00:13-08:00",
+        "duration": 152,
+        "thumbnailUrl": "https://i.ytimg.com/vi/W60LQyHnwvM/maxresdefault.jpg?v=61a9ddc4",
+        "sourceUrl": "https://www.youtube.com/watch?v=W60LQyHnwvM"
+      }
+    },
+    {
+      "slug": "phantom",
+      "title": "phantom",
+      "path": "/music/phantom",
+      "duration": 141,
+      "credits": [
+        "Written and produced by reshra",
+        "Video by reshra",
+        "Mixed and mastered by Vlad Moaga"
+      ],
+      "trackUrl": "/songs/reshra - phantom.wav",
+      "listeningUrl": "https://distrokid.com/hyperfollow/reshra/phantom",
+      "listeningLabel": "Listen on music services",
+      "releaseStatus": "released",
+      "description": "phantom by reshra. Watch the official visualizer, find the credits, and listen again.",
+      "artwork": "/artwork/phantom.jpg",
+      "releaseDate": null,
+      "video": {
+        "id": "n0h8LX_wvA8",
+        "title": "reshra - phantom (Official Visualizer)",
+        "publishedAt": "2020-11-10T10:00:10-08:00",
+        "duration": 141,
+        "thumbnailUrl": "https://i.ytimg.com/vi/n0h8LX_wvA8/maxresdefault.jpg",
+        "sourceUrl": "https://www.youtube.com/watch?v=n0h8LX_wvA8"
+      }
+    },
+    {
+      "slug": "muzica",
+      "title": "muzica",
+      "path": "/music/muzica",
+      "duration": 144,
+      "credits": [
+        "Written and produced by reshra",
+        "Video by reshra"
+      ],
+      "trackUrl": "/songs/reshra - muzica.wav",
+      "listeningUrl": "https://distrokid.com/hyperfollow/reshra/muzica",
+      "listeningLabel": "Listen on music services",
+      "releaseStatus": "released",
+      "description": "muzica by reshra. Watch the official video, find the credits, and listen again.",
+      "artwork": "/artwork/muzica.jpg",
+      "releaseDate": null,
+      "video": {
+        "id": "1ZsxDTzM4jk",
+        "title": "reshra - muzica (Official Video)",
+        "publishedAt": "2020-09-08T02:39:30-07:00",
+        "duration": 150,
+        "thumbnailUrl": "https://i.ytimg.com/vi/1ZsxDTzM4jk/hqdefault.jpg?sqp=-oaymwEjCNACELwBSFryq4qpAxUIARUAAAAAGAElAADIQj0AgKJDeAE=&rs=AOn4CLBTenq2eX4aChg_sYQIP9m-moMp_g",
+        "sourceUrl": "https://www.youtube.com/watch?v=1ZsxDTzM4jk"
+      }
+    },
+    {
+      "slug": "vise",
+      "title": "vise",
+      "path": "/music/vise",
+      "duration": 144,
+      "credits": [
+        "Written and produced by reshra",
+        "Video by reshra",
+        "Mix and master: Vlad Moaga"
+      ],
+      "trackUrl": "/songs/reshra - vise.wav",
+      "listeningUrl": "https://distrokid.com/hyperfollow/reshra/vise",
+      "listeningLabel": "Listen on music services",
+      "releaseStatus": "released",
+      "description": "vise by reshra. Watch the official video, find the credits, and listen again.",
+      "artwork": "/artwork/vise.jpg",
+      "releaseDate": null,
+      "video": {
+        "id": "CudDHVhmgLw",
+        "title": "reshra - vise (Official Video)",
+        "publishedAt": "2020-05-18T10:12:05-07:00",
+        "duration": 146,
+        "thumbnailUrl": "https://i.ytimg.com/vi/CudDHVhmgLw/maxresdefault.jpg",
+        "sourceUrl": "https://www.youtube.com/watch?v=CudDHVhmgLw"
+      }
+    },
+    {
+      "slug": "down",
+      "title": "down",
+      "path": "/music/down",
+      "duration": 167,
+      "credits": [
+        "Written and produced by reshra",
+        "Video by reshra",
+        "Special thanks to Vlad Moaga"
+      ],
+      "trackUrl": "/songs/reshra - down.wav",
+      "listeningUrl": "https://distrokid.com/hyperfollow/reshra/down-3",
+      "listeningLabel": "Listen on music services",
+      "releaseStatus": "released",
+      "description": "down by reshra. Watch the official video, find the credits, and listen again.",
+      "artwork": "/artwork/down.jpg",
+      "releaseDate": null,
+      "video": {
+        "id": "H1dNPvf6fP4",
+        "title": "reshra - down (Official Video)",
+        "publishedAt": "2020-04-09T04:33:26-07:00",
+        "duration": 171,
+        "thumbnailUrl": "https://i.ytimg.com/vi/H1dNPvf6fP4/maxresdefault.jpg",
+        "sourceUrl": "https://www.youtube.com/watch?v=H1dNPvf6fP4"
+      }
+    }
+  ],
+  "playlist": [
+    {
+      "url": "/songs/reshra - bruises.wav",
+      "duration": 273,
+      "metaData": {
+        "title": "bruises",
+        "artist": "reshra",
+        "albumArtUrl": "/artwork/bruises.jpg"
+      }
+    },
+    {
+      "url": "/songs/reshra - forever.wav",
+      "duration": 228,
+      "metaData": {
+        "title": "forever",
+        "artist": "reshra",
+        "albumArtUrl": "/artwork/forever.jpg"
+      }
+    },
+    {
+      "url": "/songs/reshra - anii 2000.wav",
+      "duration": 195,
+      "metaData": {
+        "title": "anii 2000",
+        "artist": "reshra",
+        "albumArtUrl": "/artwork/anii-2000.jpg"
+      }
+    },
+    {
+      "url": "/songs/reshra - somn.wav",
+      "duration": 184,
+      "metaData": {
+        "title": "somn",
+        "artist": "reshra",
+        "albumArtUrl": "/artwork/somn.jpg"
+      }
+    },
+    {
+      "url": "/songs/reshra - oh, doamne.wav",
+      "duration": 200,
+      "metaData": {
+        "title": "oh, doamne",
+        "artist": "reshra",
+        "albumArtUrl": "/artwork/oh-doamne.jpg"
+      }
+    },
+    {
+      "url": "/songs/reshra - phantom.wav",
+      "duration": 141,
+      "metaData": {
+        "title": "phantom",
+        "artist": "reshra",
+        "albumArtUrl": "/artwork/phantom.jpg"
+      }
+    },
+    {
+      "url": "/songs/reshra - minimal.wav",
+      "duration": 152,
+      "metaData": {
+        "title": "minimal",
+        "artist": "reshra",
+        "albumArtUrl": "/artwork/minimal.jpg"
+      }
+    },
+    {
+      "url": "/songs/reshra - muzica.wav",
+      "duration": 144,
+      "metaData": {
+        "title": "muzica",
+        "artist": "reshra",
+        "albumArtUrl": "/artwork/muzica.jpg"
+      }
+    },
+    {
+      "url": "/songs/reshra - vise.wav",
+      "duration": 144,
+      "metaData": {
+        "title": "vise",
+        "artist": "reshra",
+        "albumArtUrl": "/artwork/vise.jpg"
+      }
+    },
+    {
+      "url": "/songs/reshra - down.wav",
+      "duration": 167,
+      "metaData": {
+        "title": "down",
+        "artist": "reshra",
+        "albumArtUrl": "/artwork/down.jpg"
+      }
+    },
+    {
+      "url": "/songs/(drafts) reshra - twilight.wav",
+      "duration": 167,
+      "metaData": {
+        "title": "twilight",
+        "artist": "(drafts) reshra",
+        "albumArtUrl": "/artwork/drafts.jpg"
+      }
+    },
+    {
+      "url": "/songs/(drafts) reshra - love4rent.wav",
+      "duration": 89,
+      "metaData": {
+        "title": "love4rent",
+        "artist": "(drafts) reshra",
+        "albumArtUrl": "/artwork/drafts.jpg"
+      }
+    },
+    {
+      "url": "/songs/(drafts) reshra - biñe.mp3",
+      "duration": 13,
+      "metaData": {
+        "title": "biñe",
+        "artist": "(drafts) reshra",
+        "albumArtUrl": "/artwork/drafts.jpg"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "path": "/",
+      "kind": "home",
+      "redirectTo": null
+    },
+    {
+      "path": "/music",
+      "kind": "music",
+      "redirectTo": null
+    },
+    {
+      "path": "/notes",
+      "kind": "notes",
+      "redirectTo": null
+    },
+    {
+      "path": "/music/bruises",
+      "kind": "redirect",
+      "redirectTo": "/blog/bruises"
+    },
+    {
+      "path": "/music/anii-2000",
+      "kind": "redirect",
+      "redirectTo": "/blog/anii-2000"
+    },
+    {
+      "path": "/music/forever",
+      "kind": "redirect",
+      "redirectTo": "/blog/forever"
+    },
+    {
+      "path": "/music/oh-doamne",
+      "kind": "redirect",
+      "redirectTo": "/blog/oh-doamne"
+    },
+    {
+      "path": "/music/somn",
+      "kind": "redirect",
+      "redirectTo": "/blog/somn"
+    },
+    {
+      "path": "/music/minimal",
+      "kind": "redirect",
+      "redirectTo": "/blog/minimal"
+    },
+    {
+      "path": "/music/phantom",
+      "kind": "redirect",
+      "redirectTo": "/blog/phantom"
+    },
+    {
+      "path": "/music/muzica",
+      "kind": "redirect",
+      "redirectTo": "/blog/muzica"
+    },
+    {
+      "path": "/music/vise",
+      "kind": "redirect",
+      "redirectTo": "/blog/vise"
+    },
+    {
+      "path": "/music/down",
+      "kind": "redirect",
+      "redirectTo": "/blog/down"
+    },
+    {
+      "path": "/notes/thank-you",
+      "kind": "note",
+      "redirectTo": null
+    },
+    {
+      "path": "/notes/guitar-parts",
+      "kind": "note",
+      "redirectTo": null
+    },
+    {
+      "path": "/notes/midi-pedal",
+      "kind": "note",
+      "redirectTo": null
+    },
+    {
+      "path": "/notes/nam-amp-capture-links",
+      "kind": "note",
+      "redirectTo": null
+    },
+    {
+      "path": "/blog/bruises",
+      "kind": "post",
+      "redirectTo": null
+    },
+    {
+      "path": "/blog/anii-2000",
+      "kind": "post",
+      "redirectTo": null
+    },
+    {
+      "path": "/blog/building-my-midi-pedal",
+      "kind": "post",
+      "redirectTo": null
+    },
+    {
+      "path": "/blog/capturing-my-vox-ac15",
+      "kind": "post",
+      "redirectTo": null
+    },
+    {
+      "path": "/blog/forever",
+      "kind": "post",
+      "redirectTo": null
+    },
+    {
+      "path": "/blog/modding-my-harley-benton",
+      "kind": "post",
+      "redirectTo": null
+    },
+    {
+      "path": "/blog/oh-doamne",
+      "kind": "post",
+      "redirectTo": null
+    },
+    {
+      "path": "/blog/somn",
+      "kind": "post",
+      "redirectTo": null
+    },
+    {
+      "path": "/blog/minimal",
+      "kind": "post",
+      "redirectTo": null
+    },
+    {
+      "path": "/blog/phantom",
+      "kind": "post",
+      "redirectTo": null
+    },
+    {
+      "path": "/blog/muzica",
+      "kind": "post",
+      "redirectTo": null
+    },
+    {
+      "path": "/blog/vise",
+      "kind": "post",
+      "redirectTo": null
+    },
+    {
+      "path": "/blog/down",
+      "kind": "post",
+      "redirectTo": null
+    },
+    {
+      "path": "/blog",
+      "kind": "blog",
+      "redirectTo": null
+    },
+    {
+      "path": "/blog/page/2",
+      "kind": "blog",
+      "redirectTo": null
+    },
+    {
+      "path": "/blog/page/3",
+      "kind": "blog",
+      "redirectTo": null
+    },
+    {
+      "path": "/blog/category/music",
+      "kind": "blog",
+      "redirectTo": null
+    },
+    {
+      "path": "/blog/category/projects",
+      "kind": "blog",
+      "redirectTo": null
+    }
+  ],
+  "htmlHashes": {
+    "/": "f5ca508489c1914771eec146a15947941879f37ebc2324eeee75657c83e96ce6",
+    "/music": "dd3c2aba9cdb2ddb2ffba46c95d219ee4cf7e6994b01ded0a9e105119af4789e",
+    "/notes": "e3bf404c2e40155d21ee7a6e20fa622f12cb19b0ab745e5210cba738768c251c",
+    "/notes/thank-you": "921d985368f89295d0d56332e5b5ea09a5a8a6e7684a27b0a00bda71697f33be",
+    "/notes/guitar-parts": "0b3653318f8a066d4355aa1f9559a99e13d68b4d9c5ec384d3523ef9dee1b118",
+    "/notes/midi-pedal": "41fced7b82e57dcf9604a5a730ef40d0575a835bfd55726d05081580f23a8bdb",
+    "/notes/nam-amp-capture-links": "eae6f88ac6cfe9368965b0b879a965ee33da6c3be333de01dfa75807e7b988c0",
+    "/blog/bruises": "0ec47a6107292cabf6bd77a92a42c2ba69e1cc3a25852d4a7d8bbd121415ed08",
+    "/blog/anii-2000": "09efb47683b52f55c32dbefe26a3793310fdeaba285b55a9213cef07c4a9828d",
+    "/blog/building-my-midi-pedal": "6185f84b6ad63c7aa03e3aa2cb3ca1adac0809464aa22b01c5554321916e434e",
+    "/blog/capturing-my-vox-ac15": "1a8364bdd53b8859851baa535cb536cd5d2de83e5f5793488766936c504585d3",
+    "/blog/forever": "5865a2f06054f76f70abf015fd6df529f1fc72e74f967fa194cb5f681fbf8a9c",
+    "/blog/modding-my-harley-benton": "e4563afcbb2d7bea546b1fd0a3130f906145503dd18c03e9e7463e9a0c8a1183",
+    "/blog/oh-doamne": "c44776a790aaea420ddd59243bbd02c125d718dfc37770f478fa0119f5104b56",
+    "/blog/somn": "3014292ffba1bc9bea0d3b938ee56bab73d386eea9b39f90cdf57759ca2f0623",
+    "/blog/minimal": "48c4997bbc096739716fbb6120613ecd23fe952246e067b90bd661e89e6d84c3",
+    "/blog/phantom": "c30defe9bd42ba54f0a5dde4ecc6a056179ccaff0d4fa93b7f674bf1f5cff4a5",
+    "/blog/muzica": "2081f76f118cba84eee0d0bb81a8c015fa1ffc42982a6967b3a3bd2a8993d2b3",
+    "/blog/vise": "61ce3d1216cf62fcf33676364424d261f1433dc764bd660603a28f9630efc620",
+    "/blog/down": "d0ec11e91cefff72c0d9ffdff004fff13abf0c9efd8054a385e6d1693478c778",
+    "/blog": "ea27cda4282b9d8d32378385b7c71702158069a156c4cfaf82f688b3c44de6b2",
+    "/blog/page/2": "8a50b6c0de5ea0b6def84a4a1b022cc4e0f714a3917e6af5f27602e30a0434f6",
+    "/blog/page/3": "7aa4fd53fa8da8fc9970db651bdfa4fcf5e0b08552d8ee4543204ef838535719",
+    "/blog/category/music": "655324fbc752d062f47dcf8776e09affdfa2c39fc83ffd6e5820dc532127f1a3",
+    "/blog/category/projects": "539ca6f9f5d76a42e09f1eff7420985e73879980c98cdaac4a53019051dd9855"
+  },
+  "commit": "39a2f9f778a725adaf909f4fb9671feb48fb7b40",
+  "domHashes": {
+    "/": "ced8c83226814f8c5d0f1ce265be379f663d5ed5404bfc46f167c29735de932d",
+    "/music": "2a4d319726d0ffaa5606f4ec53aa54d62763d2d26ac7eacdce701eb89669464c",
+    "/notes": "3d3080a34e80e110374e156b34dd426502e35fdbabd75598ca33027c9bcdcabd",
+    "/notes/thank-you": "a5612125ee4f94645cf67bf16f03e6a34c1f2f7f6d1b45334ad45b5a8efef07a",
+    "/notes/guitar-parts": "9bdee31c88a92dd661a45890d117699a304af188726ad72f6cf1eb565035b61c",
+    "/notes/midi-pedal": "3b0ed2f36eafe1a68295ff06aaa6275b6c9205ca5883b4e077132b663cf8131d",
+    "/notes/nam-amp-capture-links": "5943f00692357948c8567fe764267d778f26db61cae61000ba3eb582c80e7ee5",
+    "/blog/bruises": "7592c911d956bf004f5ed7626efaf5f883b4db0550ec54dfd0d52468fe1aee02",
+    "/blog/anii-2000": "a24a01a5a50c8de901275d3ad1e5474c72fcaadf88fac4ebc0b4753b64616834",
+    "/blog/building-my-midi-pedal": "384698e9fc9df0ace2725c5e045405f2e5bec7c8179cbf33241438d2adb2ad1a",
+    "/blog/capturing-my-vox-ac15": "1a943f4e49c2aa866746468c4c100a89b91e62f8668aeb56c110fa260f39901c",
+    "/blog/forever": "2e1a2616f6c3a9fbe9db5dfc8dd539911bf06437c4cc32c9c53c4ba33fbdb9f8",
+    "/blog/modding-my-harley-benton": "4dc66a69cdae6c16fc5f8e8fd9f75e92f5a4c9dbc4c363da32c428bc6cf45ea9",
+    "/blog/oh-doamne": "6f6e15b959bef15115036cfd1e85e30c31f73be885479a87e5551abea01ef9b9",
+    "/blog/somn": "5bde510863a0471d549ee905ca470681fe8dee738057af3267ab0e5c08d03143",
+    "/blog/minimal": "9a068a10b520b821932212d9be3dd463705a7e5f5e6561116b8fa1181103cc78",
+    "/blog/phantom": "ed56169259e1939f852de44fd97e55e27447a821750570e7d20cbd5acb794811",
+    "/blog/muzica": "06c624a43bed51a4154820edd5797a645f035a04bd28298d07b6fe7341c44240",
+    "/blog/vise": "ca7d4ebc56e2a035e344caacb04046873774d37b91051de0a263f19acab97c36",
+    "/blog/down": "be087e81df4e4dbf80f48f04448b87c963da2ebe49cde99496dfa3bf0b4c5efe",
+    "/blog": "1921383db6578f2e812c5cf7c72506f57a831c7ef0abafdcdcaf5a6906612e49",
+    "/blog/page/2": "c360e5cb0cdc69fb78aceab55f6e3ae13b0e49247d60c02c72ee13dc88940e55",
+    "/blog/page/3": "e22c309a9536897e8cd497d8e44fea11a3192b96c6104c3325c1e78ad25f880b",
+    "/blog/category/music": "85a0dc43572c8176ee64871219f1312c49c5e1a87d4e428e301b73adb3646947",
+    "/blog/category/projects": "59705937645ee1ba7e8c706ba00c91826b796f7b4791fcb34b169c09476f8b2c"
+  }
+}

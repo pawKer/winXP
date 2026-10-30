@@ -1,0 +1,77 @@
+{
+  "siteUrl": "https://reshra.xyz",
+  "profile": {
+    "name": "reshra",
+    "handle": "reshra",
+    "bio": "Music, guitar projects, and experiments by reshra.",
+    "avatarSrc": "/reshra_low_res.jpg",
+    "socialLinks": [
+      {
+        "id": "instagram",
+        "label": "Instagram",
+        "linkId": "instagram"
+      },
+      {
+        "id": "tiktok",
+        "label": "TikTok",
+        "linkId": "tiktok"
+      },
+      {
+        "id": "youtube",
+        "label": "YouTube",
+        "linkId": "youtube"
+      },
+      {
+        "id": "spotify",
+        "label": "Spotify",
+        "linkId": "spotify"
+      }
+    ]
+  },
+  "sidebar": {
+    "bio": "Music, guitar projects, and experiments.",
+    "socialIds": [
+      "youtube",
+      "instagram",
+      "spotify"
+    ]
+  },
+  "defaultNoteId": "midiPedal",
+  "newsletterUrl": "https://subscribe-forms.beehiiv.com/ef0608ce-ef61-415b-a6b3-3a01217d0549",
+  "copy": {
+    "windowTitle": "reshra's corner of the web",
+    "mastheadEyebrow": "A SMALL PLACE ON THE INTERNET",
+    "tagline": "songs, solder & things worth keeping.",
+    "footer": "© reshra · a personal homepage",
+    "footerThanks": "thanks for dropping by ✧",
+    "noticeTitle": "On the noticeboard",
+    "noticeLines": [
+      "A new recording.",
+      "A place to listen again."
+    ],
+    "blogHeading": "From my corner of the web.",
+    "blogDescription": "Release stories, guitar builds, and experiments along the way.",
+    "musicHeading": "The music folder.",
+    "musicDescription": "The music articles, collected by cover. Open one for the story, videos, and listening links.",
+    "notesHeading": "Notes, links & little files.",
+    "notesDescription": "Parts lists, project resources, and things to come back to."
+  },
+  "metadata": {
+    "home": {
+      "title": "reshra — Music, Projects & Notes",
+      "description": "Music, guitar projects, and experiments by reshra."
+    },
+    "music": {
+      "title": "Music by reshra — The Archive",
+      "description": "Explore reshra’s recordings, official music videos, credits, and listening links, from new music to the archive."
+    },
+    "notes": {
+      "title": "Notes & Project Resources — reshra",
+      "description": "Guitar parts, MIDI controller resources, NAM amp captures, and project notes from reshra."
+    },
+    "blog": {
+      "title": "reshra’s Blog — Music, Builds & Video Notes",
+      "description": "Release stories, guitar projects, MIDI experiments, and video companions from reshra."
+    }
+  }
+}

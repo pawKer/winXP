@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
-const { releases } = require('../src/content/catalogue');
+const { readSources } = require('./content/sources.cjs');
+const { releases } = readSources();
 
 const root = path.resolve(__dirname, '..');
 const ffmpeg = process.env.FFMPEG_PATH || 'ffmpeg';

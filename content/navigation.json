@@ -1,0 +1,17 @@
+[
+  {
+    "path": "/blog",
+    "label": "Blog",
+    "glyph": "▤"
+  },
+  {
+    "path": "/music",
+    "label": "Music archive",
+    "glyph": "♫"
+  },
+  {
+    "path": "/notes",
+    "label": "Notes & files",
+    "glyph": "▱"
+  }
+]

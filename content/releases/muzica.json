@@ -1,0 +1,22 @@
+{
+  "slug": "muzica",
+  "title": "muzica",
+  "path": "/music/muzica",
+  "duration": 144,
+  "credits": [
+    "Written and produced by reshra",
+    "Video by reshra"
+  ],
+  "trackUrl": "/songs/reshra - muzica.wav",
+  "listeningUrl": "https://distrokid.com/hyperfollow/reshra/muzica",
+  "listeningLabel": "Listen on music services",
+  "releaseStatus": "released",
+  "description": "muzica by reshra. Watch the official video, find the credits, and listen again.",
+  "releaseDate": null,
+  "status": "published",
+  "order": 7,
+  "artworkId": "muzica",
+  "videoId": "1ZsxDTzM4jk",
+  "alternateVideoIds": [],
+  "downloads": []
+}

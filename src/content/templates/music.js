@@ -23,14 +23,20 @@ function renderRecording(release, options) {
     'blog',
     'small-button',
   )}${
-    options.embedded
+    !nativeUrl
+      ? ''
+      : options.embedded
       ? `<button class="small-button" type="button" data-play-winamp="${release.slug}">Play in Winamp</button>`
       : `<a class="small-button" href="${escapeHtml(
           article.path,
         )}?view=desktop&amp;play=${release.slug}#listen" data-play-desktop="${
           release.slug
         }">Listen in Winamp</a>`
-  }</div><p class="media-status" data-play-status role="status"></p>${
+  }${(release.serviceLinks || [])
+    .map(link => external(link.url, link.label))
+    .join(
+      '',
+    )}</div><p class="media-status" data-play-status role="status"></p>${
     release.alternateVideos
       ? `<section class="alternate-videos"><h3>More ways to watch</h3>${release.alternateVideos
           .map(video => external(video.sourceUrl, video.title))
@@ -53,11 +59,10 @@ function renderRecording(release, options) {
           .join('')}</ul>`
       : ''
   }${
-    release.guitarHeroUrl
-      ? `<h3>Play along</h3><p>${external(
-          release.guitarHeroUrl,
-          'Download Guitar Hero files',
-        )}</p>`
+    release.downloads.length
+      ? `<h3>Play along</h3><p>${release.downloads
+          .map(download => external(download.url, download.label))
+          .join('</p><p>')}</p>`
       : ''
   }</section>`;
 }
