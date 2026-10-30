@@ -28,6 +28,12 @@ const { audioManifest = {} } = {
     .readFileSync(path.resolve(__dirname, '../nginx.conf'), 'utf8')
     .replace('listen 80;', `listen 127.0.0.1:${port};`)
     .replace(
+      'include /usr/share/nginx/html/music-redirects.conf;',
+      `include "${slash(
+        path.resolve(__dirname, '../build/music-redirects.conf'),
+      )}";`,
+    )
+    .replace(
       'root /usr/share/nginx/html;',
       `root "${slash(path.resolve(__dirname, '../build'))}";`,
     );
@@ -69,6 +75,18 @@ const { audioManifest = {} } = {
     }
     assert(ready, errorLog || 'nginx did not become ready');
     for (const page of pages) {
+      if (page.redirectTo) {
+        const redirect = await fetch(
+          origin + page.path + '?view=read&utm_source=qa',
+          { redirect: 'manual' },
+        );
+        assert.equal(redirect.status, 301, page.path);
+        assert.equal(
+          redirect.headers.get('location'),
+          page.redirectTo + '?view=read&utm_source=qa',
+        );
+        continue;
+      }
       const response = await fetch(origin + page.path);
       assert.equal(response.status, 200, page.path);
       assert(

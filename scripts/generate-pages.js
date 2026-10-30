@@ -19,6 +19,14 @@ for (const page of pages) {
   fs.writeFileSync(output, renderPage(template, page));
 }
 for (const [filename, render] of Object.entries({
+  'music-redirects.conf': () =>
+    pages
+      .filter(page => page.redirectTo)
+      .map(
+        page =>
+          `location = ${page.path} { return 301 ${page.redirectTo}$is_args$args; }`,
+      )
+      .join('\n') + '\n',
   '404.html': () => renderNotFound(template),
   'sitemap.xml': renderSitemap,
   'feed.xml': renderFeed,

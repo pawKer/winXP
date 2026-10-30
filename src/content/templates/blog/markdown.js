@@ -4,15 +4,20 @@ const { escapeHtml } = require('../helpers');
 
 // Keep resource links in reading mode, including when JavaScript is disabled.
 function renderMarkdown(post, options) {
-  if (!options.reading) return post.bodyHtml;
   return post.bodyHtml.replace(/href="(\/(?!\/)[^"]*)"/g, (attribute, href) => {
     const url = new URL(href.replace(/&amp;/g, '&'), siteUrl);
+    const page = getPage(url.pathname);
+    const redirected = page && page.path !== url.pathname;
+    if (redirected) url.pathname = page.path;
     if (
-      !getPage(url.pathname) ||
+      !options.reading ||
+      !page ||
       url.pathname.startsWith('/blog') ||
       url.searchParams.has('view')
     )
-      return attribute;
+      return redirected
+        ? `href="${escapeHtml(url.pathname + url.search + url.hash)}"`
+        : attribute;
     url.searchParams.set('view', 'read');
     return `href="${escapeHtml(url.pathname + url.search + url.hash)}"`;
   });

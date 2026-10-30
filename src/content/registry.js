@@ -31,21 +31,27 @@ function buildPages() {
       description:
         'Guitar parts, MIDI controller resources, NAM amp captures, and project notes from reshra.',
     },
-    ...releases.map(release => ({
-      path: release.path,
-      kind: 'release',
-      release,
-      title: `${release.title} — reshra | ${
-        release.releaseStatus === 'upcoming'
-          ? 'Upcoming Release'
-          : 'Music & Official Video'
-      }`,
-      description: release.description,
-      image:
-        release.artwork ||
-        (release.video &&
-          `https://i.ytimg.com/vi/${release.video.id}/hqdefault.jpg`),
-    })),
+    ...releases
+      .filter(release =>
+        publishedPosts.some(post => post.releaseId === release.slug),
+      )
+      .map(release => ({
+        path: release.path,
+        kind: 'redirect',
+        redirectTo: publishedPosts.find(post => post.releaseId === release.slug)
+          .path,
+        release,
+        title: `${release.title} — reshra | ${
+          release.releaseStatus === 'upcoming'
+            ? 'Upcoming Release'
+            : 'Music & Official Video'
+        }`,
+        description: release.description,
+        image:
+          release.artwork ||
+          (release.video &&
+            `https://i.ytimg.com/vi/${release.video.id}/hqdefault.jpg`),
+      })),
     ...notes.map(note => ({
       path: note.path,
       kind: 'note',
@@ -57,6 +63,7 @@ function buildPages() {
       path: post.path,
       kind: 'post',
       post,
+      release: releases.find(release => release.slug === post.releaseId),
       title: `${post.title} — reshra’s Blog`,
       description: post.excerpt,
       image:
@@ -99,6 +106,11 @@ function buildPages() {
   return pages;
 }
 const pages = buildPages();
-const getPage = path => pages.find(page => page.path === path);
+const getPage = path => {
+  const page = pages.find(item => item.path === path);
+  return page && page.redirectTo
+    ? pages.find(item => item.path === page.redirectTo)
+    : page;
+};
 
 module.exports = { publishedPosts, pageSize, pages, getPage, categories };

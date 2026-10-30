@@ -28,17 +28,21 @@ const external = (url, label, attributes = '') =>
     label,
   )}<span class="external-mark" aria-label=" (opens in new tab)"> ↗</span></a>`;
 const internal = (path, label, options = {}, attributes = '') => {
+  const url = new URL(path, siteUrl);
+  const page = require('../registry').getPage(url.pathname);
+  if (page && page.path !== url.pathname)
+    path = page.path + url.search + url.hash;
   const href =
     options.reading && !path.startsWith('/blog')
       ? `${path}${path.includes('?') ? '&' : '?'}view=read`
       : path;
   return `<a href="${escapeHtml(href)}" ${attributes}>${escapeHtml(label)}</a>`;
 };
-const listenLink = (release, placement) =>
+const listenLink = (release, placement, className = 'xp-button primary') =>
   external(
     release.listeningUrl,
     release.listeningLabel,
-    `class="xp-button primary" data-listen="${release.slug}" data-placement="${placement}"`,
+    `class="${className}" data-listen="${release.slug}" data-placement="${placement}"`,
   );
 const icon = type =>
   `<img class="file-icon" src="/icons/${type}.png" alt="" width="32" height="32">`;

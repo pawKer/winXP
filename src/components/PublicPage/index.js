@@ -211,19 +211,6 @@ export default function PublicPage({
           'Opening the recording in Winamp…';
       }
     }
-    if (button?.hasAttribute('data-copy-link')) {
-      const copy = navigator.clipboard
-        ? navigator.clipboard.writeText(`${window.location.origin}${path}`)
-        : Promise.reject(new Error('Clipboard unavailable'));
-      copy
-        .then(() => {
-          button.nextElementSibling.textContent = 'Link copied.';
-        })
-        .catch(() => {
-          button.nextElementSibling.textContent =
-            'Copy the page address from your browser.';
-        });
-    }
     const link = event.target.closest('a');
     if (!link) return;
     if (link.hasAttribute('data-note-link'))
@@ -248,6 +235,18 @@ export default function PublicPage({
     )
       return;
     event.preventDefault();
+    if (link.hasAttribute('data-play-desktop')) {
+      const destination = new URL(window.location.href);
+      destination.searchParams.set('view', 'desktop');
+      destination.searchParams.set('play', link.dataset.playDesktop);
+      if (mode !== 'desktop')
+        trackEvent('view_mode_change', { view_mode: 'desktop' });
+      navigate(
+        `${destination.pathname}${destination.search}${destination.hash}`,
+        { mode: 'desktop' },
+      );
+      return;
+    }
     navigate(`${url.pathname}${url.search}${url.hash}`);
   }
 

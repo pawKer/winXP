@@ -6,7 +6,11 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { BrowserRouter as Router, useLocation } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Redirect,
+  useLocation,
+} from 'react-router-dom';
 import PublicPage from 'components/PublicPage';
 import pageContent from 'content/pages';
 import useGA, { trackEvent } from 'hooks/useGA';
@@ -53,7 +57,10 @@ function AppContent() {
   retryQuery.set('view', 'desktop');
   const retryPath = `${location.pathname}?${retryQuery}${location.hash}`;
   usePageHead(page);
-  useGA(process.env.REACT_APP_GA_MEASUREMENT_ID, location.pathname);
+  useGA(
+    process.env.REACT_APP_GA_MEASUREMENT_ID,
+    page?.path || location.pathname,
+  );
 
   useEffect(() => {
     pauseAll();
@@ -88,6 +95,18 @@ function AppContent() {
         ?.focus(),
     );
   }
+
+  if (page && page.path !== location.pathname)
+    return (
+      <Redirect
+        to={{
+          pathname: page.path,
+          search: location.search,
+          hash: location.hash,
+          state: location.state,
+        }}
+      />
+    );
 
   return (
     <>

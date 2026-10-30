@@ -177,3 +177,70 @@ test('Compilation is stable and reading links preserve mode, query and fragment'
   assert.ok(reading.includes('href="/?view=desktop"'));
   assert.equal(renderMarkdown(post, {}), post.bodyHtml);
 });
+
+test('Music is a view of canonical articles and every old song URL resolves to its article', () => {
+  buildContent();
+  const {
+    pages,
+    getPage,
+    publishedPosts,
+  } = require('../../src/content/registry');
+  const { renderContent, structuredData } = require('../../src/content/pages');
+  const { releases } = require('../../src/content/site');
+  const { renderSitemap } = require('../templates/discovery.cjs');
+  const { internal } = require('../../src/content/templates/helpers');
+  const music = renderContent(getPage('/music'), { reading: true });
+  for (const release of releases) {
+    const post = publishedPosts.find(item => item.releaseId === release.slug);
+    assert.ok(post, release.slug);
+    assert.equal(getPage(release.path), getPage(post.path));
+    assert.equal(
+      pages.find(page => page.path === release.path).redirectTo,
+      post.path,
+    );
+    assert.ok(music.includes(`href="${post.path}"`));
+    assert.ok(!music.includes(`href="${release.path}"`));
+    assert.ok(
+      !renderSitemap().includes(`<loc>https://reshra.xyz${release.path}</loc>`),
+    );
+    assert.ok(
+      internal(release.path + '?source=shared#listen', 'Song').includes(
+        post.path + '?source=shared#listen',
+      ),
+    );
+    const html = renderContent(getPage(post.path), { reading: true });
+    assert.ok(html.includes(release.listeningUrl.replace(/&/g, '&amp;')));
+    assert.ok(html.includes(`data-native-audio="${release.slug}"`));
+    assert.ok(html.includes(`data-play-desktop="${release.slug}"`));
+    assert.ok(html.includes(`?view=desktop&amp;play=${release.slug}#listen`));
+    assert.ok(!html.includes('data-copy-link'));
+    assert.ok(!html.includes('Original source'));
+    assert.ok(!html.includes('data-play-winamp'));
+    if (release.guitarHeroUrl)
+      assert.ok(html.includes(release.guitarHeroUrl.replace(/&/g, '&amp;')));
+    const embedded = renderContent(getPage(post.path), { embedded: true });
+    assert.ok(embedded.includes(`data-play-winamp="${release.slug}"`));
+    assert.ok(!embedded.includes('data-native-audio='));
+    const graph = structuredData(getPage(post.path))['@graph'];
+    assert.equal(new Set(graph.map(item => item['@id'])).size, graph.length);
+    assert.equal(
+      graph.find(item => item['@type'] === 'MusicRecording').url,
+      `https://reshra.xyz${post.path}`,
+    );
+    if (release.video) assert.equal((html.match(/<iframe /g) || []).length, 1);
+  }
+});
+
+test('Every published article omits the source/copy footer controls', () => {
+  const {
+    getPage,
+    publishedPosts,
+    renderContent,
+  } = require('../../src/content/pages');
+  for (const post of publishedPosts) {
+    const html = renderContent(getPage(post.path), { reading: true });
+    assert.ok(!html.includes('Original source'), post.slug);
+    assert.ok(!html.includes('data-copy-link'), post.slug);
+    assert.ok(!html.includes('class="article-footer"'), post.slug);
+  }
+});

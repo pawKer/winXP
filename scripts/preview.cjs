@@ -1,6 +1,7 @@
 const fs = require('fs');
 const http = require('http');
 const path = require('path');
+const { pages } = require('../src/content/pages');
 
 const mime = {
   '.html': 'text/html; charset=utf-8',
@@ -45,6 +46,17 @@ function createPreview({ missingMedia = false } = {}) {
         Location:
           (pathname === '/index.html' ? '/' : pathname.slice(0, -5)) +
           new URL(request.url, 'http://localhost').search,
+      });
+      response.end();
+      return;
+    }
+    const redirect = pages.find(
+      page => page.path === pathname && page.redirectTo,
+    );
+    if (redirect) {
+      response.writeHead(301, {
+        Location:
+          redirect.redirectTo + new URL(request.url, 'http://localhost').search,
       });
       response.end();
       return;

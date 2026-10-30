@@ -19,6 +19,23 @@ for (const page of pages) {
     page.path === '/' ? 'index.html' : `${page.path.slice(1)}.html`,
   );
   const html = fs.readFileSync(file, 'utf8');
+  if (page.redirectTo) {
+    assert(
+      html.includes(
+        `<link rel="canonical" href="${siteUrl}${page.redirectTo}">`,
+      ),
+      `${page.path}: redirect canonical`,
+    );
+    assert(
+      html.includes('http-equiv="refresh"'),
+      `${page.path}: static redirect fallback`,
+    );
+    assert(
+      !sitemap.includes(`<loc>${siteUrl}${page.path}</loc>`),
+      `${page.path}: alias excluded from sitemap`,
+    );
+    continue;
+  }
   const canonical = `${siteUrl}${page.path}`;
   assert(
     html.includes('<meta name="reshra:analytics-mode" content="manual-v1">'),
@@ -157,8 +174,10 @@ for (const page of pages) {
 }
 
 for (const release of releases) {
+  const post = publishedPosts.find(item => item.releaseId === release.slug);
+  assert(post, `${release.slug}: music article exists`);
   const html = fs.readFileSync(
-    path.join(buildDir, `${release.path.slice(1)}.html`),
+    path.join(buildDir, `${post.path.slice(1)}.html`),
     'utf8',
   );
   assert(
@@ -174,6 +193,15 @@ for (const release of releases) {
     !html.includes('autoplay=1'),
     `${release.slug}: no automatic video playback`,
   );
+  assert(
+    html.includes('data-native-audio="' + release.slug + '"'),
+    `${release.slug}: local audio retained`,
+  );
+  if (release.guitarHeroUrl)
+    assert(
+      html.includes(release.guitarHeroUrl.replace(/&/g, '&amp;')),
+      `${release.slug}: download retained`,
+    );
 }
 assert.equal(releases.length, 10, 'Full song archive');
 assert.equal(

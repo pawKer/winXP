@@ -6,6 +6,14 @@ const {
   absolute,
 } = require('../../src/content/pages');
 function renderPage(template, page) {
+  if (page.redirectTo) {
+    const target = escapeHtml(page.redirectTo);
+    return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Continue to the article</title><meta name="robots" content="noindex"><link rel="canonical" href="${absolute(
+      page.redirectTo,
+    )}"><meta http-equiv="refresh" content="0;url=${target}"></head><body><p>This recording is now part of its article. <a href="${target}">Continue reading</a>.</p><script>window.location.replace(${JSON.stringify(
+      page.redirectTo,
+    )} + window.location.search + window.location.hash);</script></body></html>`;
+  }
   const canonical = absolute(page.path);
   const metadata = `<meta name="reshra:analytics-mode" content="manual-v1"><meta name="description" content="${escapeHtml(
     page.description,

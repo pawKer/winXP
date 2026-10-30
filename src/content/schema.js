@@ -29,10 +29,10 @@ function structuredData(page) {
     const release = page.release;
     const recording = {
       '@type': 'MusicRecording',
-      '@id': `${absolute(release.path)}#recording`,
+      '@id': `${absolute(page.path)}#recording`,
       name: release.title,
       byArtist: { '@id': artist['@id'] },
-      url: absolute(release.path),
+      url: absolute(page.path),
       sameAs: release.listeningUrl,
     };
     if (release.releaseDate && release.releaseStatus === 'released')
@@ -56,11 +56,20 @@ function structuredData(page) {
       inLanguage: post.language,
     };
     if (post.updatedAt) article.dateModified = post.updatedAt;
+    if (page.release)
+      article.about = { '@id': `${absolute(page.path)}#recording` };
     if (page.image) article.image = absolute(page.image);
     if (post.videoId)
       article.video = { '@id': `${videoById(post.videoId).sourceUrl}#video` };
     graph.push(article);
-    if (post.videoId) graph.push(videoData(videoById(post.videoId)));
+    if (
+      post.videoId &&
+      !graph.some(
+        entity =>
+          entity['@id'] === `${videoById(post.videoId).sourceUrl}#video`,
+      )
+    )
+      graph.push(videoData(videoById(post.videoId)));
   }
   return { '@context': 'https://schema.org', '@graph': graph };
 }

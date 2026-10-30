@@ -1,58 +1,44 @@
-const { publishedPosts } = require('../registry');
-const {
-  internal,
-  escapeHtml,
-  icon,
-  listenLink,
-  dateLabel,
-  external,
-} = require('./helpers');
-const { renderVideo } = require('./partials');
-const { releases } = require('../site');
-
-function renderRelease(release, options) {
-  const post = publishedPosts.find(item => item.releaseId === release.slug);
+const { escapeHtml, listenLink, dateLabel, external } = require('./helpers');
+function renderRecording(release, options) {
   const nativeUrl = release.webAudioUrl || release.trackUrl;
-  return `<div class="breadcrumbs">${internal(
-    '/music',
-    'Music archive',
-    options,
-  )} / ${escapeHtml(release.title)}</div><header class="document-heading">${
+  const article = require('../registry').publishedPosts.find(
+    post => post.releaseId === release.slug,
+  );
+  return `<section class="recording-details" id="listen"><div class="recording-summary">${
     release.artwork
-      ? `<img class="release-cover" src="${escapeHtml(
-          release.artwork,
-        )}" width="160" height="160" alt="${escapeHtml(
+      ? `<img src="${escapeHtml(release.artwork)}" alt="${escapeHtml(
           release.title,
-        )} cover artwork">`
-      : icon('music')
-  }<div><p class="eyebrow">${
-    release.releaseStatus === 'upcoming'
-      ? 'Upcoming recording'
-      : 'From the music archive'
-  }</p><h1>${escapeHtml(release.title)}</h1><p>${escapeHtml(
-    release.description,
-  )}</p></div></header><div class="music-actions">${listenLink(
-    release,
-    'release',
-  )}${
-    options.embedded
-      ? `<button class="xp-button" type="button" data-play-winamp="${release.slug}">Play in Winamp</button>`
+        )} cover artwork" width="88" height="88">`
       : ''
-  }</div><p class="media-status" data-play-status role="status"></p>${
+  }<div><span class="tiny-label">THE RECORDING</span><h2>${escapeHtml(
+    release.title,
+  )}</h2>${
     release.releaseDate
       ? `<p>${
           release.releaseStatus === 'upcoming' ? 'Available' : 'Released'
         } ${dateLabel(release.releaseDate)}</p>`
       : ''
-  }${renderVideo(release.video, options, release.slug)}${
+  }</div></div><div class="release-actions music-actions">${listenLink(
+    release,
+    'blog',
+    'small-button',
+  )}${
+    options.embedded
+      ? `<button class="small-button" type="button" data-play-winamp="${release.slug}">Play in Winamp</button>`
+      : `<a class="small-button" href="${escapeHtml(
+          article.path,
+        )}?view=desktop&amp;play=${release.slug}#listen" data-play-desktop="${
+          release.slug
+        }">Listen in Winamp</a>`
+  }</div><p class="media-status" data-play-status role="status"></p>${
     release.alternateVideos
-      ? `<section><h2>Other versions</h2><ul>${release.alternateVideos
-          .map(video => `<li>${external(video.sourceUrl, video.title)}</li>`)
-          .join('')}</ul></section>`
+      ? `<section class="alternate-videos"><h3>More ways to watch</h3>${release.alternateVideos
+          .map(video => external(video.sourceUrl, video.title))
+          .join('')}</section>`
       : ''
   }${
     !options.embedded && nativeUrl
-      ? `<details class="local-player"><summary>Listen to the local recording</summary><audio controls preload="none" src="${escapeHtml(
+      ? `<details class="local-player"><summary>Listen in browser instead</summary><audio controls preload="none" src="${escapeHtml(
           nativeUrl,
         )}" data-native-audio="${
           release.slug
@@ -62,37 +48,17 @@ function renderRelease(release, options) {
       : ''
   }${
     release.credits.length
-      ? `<section class="xp-group"><h2>Credits</h2><ul>${release.credits
+      ? `<h3>Recording credits</h3><ul class="credits">${release.credits
           .map(credit => `<li>${escapeHtml(credit)}</li>`)
-          .join('')}</ul>${
-          release.video
-            ? `<p class="source-note">From the ${external(
-                release.video.sourceUrl,
-                'official video description',
-              )}.</p>`
-            : ''
-        }</section>`
+          .join('')}</ul>`
       : ''
   }${
     release.guitarHeroUrl
-      ? `<section class="xp-group"><h2>Play along</h2><p>${external(
+      ? `<h3>Play along</h3><p>${external(
           release.guitarHeroUrl,
-          'Guitar Hero files for anii 2000',
-        )}</p></section>`
+          'Download Guitar Hero files',
+        )}</p>`
       : ''
-  }${
-    post
-      ? `<aside class="related-note">From the blog: ${internal(
-          post.path,
-          post.title,
-          options,
-        )}</aside>`
-      : ''
-  }<section class="related-posts"><h2>Keep listening</h2><ul>${releases
-    .filter(item => item.slug !== release.slug)
-    .slice(0, 3)
-    .map(item => `<li>${internal(item.path, item.title, options)}</li>`)
-    .join('')}</ul>${internal('/music', 'All music', options)}</section>`;
+  }</section>`;
 }
-
-module.exports = { renderRelease };
+module.exports = { renderRecording };

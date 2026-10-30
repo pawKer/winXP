@@ -616,7 +616,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
       );
       await checkWinampMovement();
       await click('.ie__content a[href="/music"]');
-      await click('.ie__content a[href="/music/forever"]');
+      await click('.ie__content a[href="/blog/forever"]');
       await click('.ie__content button[data-play-winamp="forever"]');
       if (hasTestMedia) {
         await waitFor(
@@ -782,7 +782,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
         downloadThroughput: -1,
         uploadThroughput: -1,
       });
-      await navigate('/music/forever?utm_source=qa#listen');
+      await navigate('/music/forever?view=desktop&utm_source=qa#listen');
       await waitFor(
         '!!document.querySelector("[data-desktop-recovery]")',
         'Direct desktop entry recovers to reading',
@@ -790,7 +790,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
       await assertHead('/music/forever');
       assert.equal(
         await evaluate('document.querySelector("h1").textContent'),
-        'forever',
+        getPage('/blog/forever').post.title,
         'Direct failure keeps the requested recording',
       );
       assert(
@@ -1063,7 +1063,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
       'Unrelated IE startup window remains small',
     );
     await screenshot('direct-note-maximized');
-    await navigate('/music/forever?source=shared#listen');
+    await navigate('/music/forever?view=desktop&source=shared#listen');
     await waitFor(
       '!!document.querySelector(".ie__content button[data-play-winamp=forever]")',
       'Direct song entry',
@@ -1076,7 +1076,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
     );
     assert.equal(
       await evaluate('document.querySelector("#ie-address").value'),
-      origin + '/music/forever?source=shared#listen',
+      origin + '/blog/forever?view=desktop&source=shared#listen',
       'IE shows the full browser URL',
     );
     await navigate('/');
@@ -1451,7 +1451,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
     await navigate('/music/forever?view=read');
     let mediaTiming;
     await waitFor(
-      'document.querySelector(".release-cover")?.complete && document.querySelector(".release-cover")?.naturalWidth === 800',
+      'document.querySelector(".recording-summary img")?.complete && document.querySelector(".recording-summary img")?.naturalWidth === 800',
       'Album cover loads in reading view',
     );
     await cdp('Emulation.setDeviceMetricsOverride', {
@@ -1499,7 +1499,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
         downloadThroughput: -1,
         uploadThroughput: -1,
       });
-      await click('#view-toggle');
+      await click('.standalone-surface a[data-play-desktop="forever"]');
       assert(
         await evaluate('window.__qaAudio.paused'),
         'Mode switch pauses native audio',
@@ -1508,7 +1508,6 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
         '!!document.querySelector("#webamp")',
         'Winamp available for explicit playback',
       );
-      await click('.ie__content button[data-play-winamp="forever"]');
       await waitFor(
         'window.__analytics.some(event=>event.eventName==="music_play_start"&&event.parameters.player==="winamp"&&event.parameters.release==="forever")',
         'Winamp playback advances',
@@ -1538,12 +1537,11 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
         'Successful Winamp playback tracked once',
       );
     } else {
-      await click('#view-toggle');
+      await click('.standalone-surface a[data-play-desktop="forever"]');
       await waitFor(
         '!!document.querySelector("#webamp")',
         'Winamp startup without local media',
       );
-      await click('.ie__content button[data-play-winamp="forever"]');
       await waitFor(
         'document.querySelector("[data-play-status]")?.textContent.includes("unavailable")',
         'Winamp explains missing media',
@@ -1563,6 +1561,16 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
     await waitFor(
       '!!document.querySelector("#webamp #minimize")',
       'Winamp controls ready',
+    );
+    assert(
+      await evaluate('!new URLSearchParams(location.search).has("play")'),
+      'The one-time Winamp request is consumed instead of replaying on later mode changes',
+    );
+    assert(
+      await evaluate(
+        '[...document.querySelectorAll("button.footer__window.focus")].some(button=>button.textContent.includes("Winamp"))',
+      ),
+      'Opening local audio from reading view brings Winamp to the front',
     );
     await click('#webamp #minimize');
     await waitFor(
@@ -1658,7 +1666,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
     await evaluate('window.fetch = window.__qaFetch; delete window.__qaFetch');
 
     await viewport(390, 844);
-    await navigate('/music/bruises');
+    await navigate('/music/bruises?view=desktop');
     assert(
       await evaluate(
         'document.querySelector(".ie__content").getBoundingClientRect().width>=innerWidth-10',

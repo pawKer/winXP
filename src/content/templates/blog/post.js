@@ -1,13 +1,8 @@
 const { releases, notes } = require('../../site');
 const { publishedPosts } = require('../../registry');
-const {
-  postDateLabel,
-  escapeHtml,
-  external,
-  internal,
-  listenLink,
-} = require('../helpers');
+const { postDateLabel, escapeHtml, external, internal } = require('../helpers');
 const { renderVideo } = require('../partials');
+const { renderRecording } = require('../music');
 const { videoById } = require('../../catalogue');
 const { renderMarkdown } = require('./markdown');
 function renderPost(page, options) {
@@ -19,25 +14,27 @@ function renderPost(page, options) {
     publishedPosts[current - 1],
     publishedPosts[current + 1],
   ].filter(Boolean);
-  return `<article class="blog-article"><div class="post-meta"><span class="category-label">${escapeHtml(
+  return `<article class="blog-article article"><div class="post-meta"><span class="category-label">${escapeHtml(
     post.type,
   )}</span> ${postDateLabel(post)} · by ${escapeHtml(
     post.author,
   )}</div><h1 tabindex="-1">${escapeHtml(
     post.title,
-  )}</h1><div class="post-intro">${
-    release && release.artwork
-      ? `<img class="article-cover" src="${escapeHtml(
+  )}</h1><p class="article-intro dek">${escapeHtml(post.excerpt)}</p>${
+    post.videoId || (release && release.video)
+      ? renderVideo(
+          videoById(post.videoId) || release.video,
+          options,
+          post.releaseId || '',
+        )
+      : release && release.artwork
+      ? `<figure class="article-artwork"><img class="release-cover" src="${escapeHtml(
           release.artwork,
-        )}" alt="${escapeHtml(
+        )}" width="260" height="260" alt="${escapeHtml(
           release.title,
-        )} cover artwork" width="120" height="120">`
+        )} cover artwork"></figure>`
       : ''
-  }<p class="article-intro">${escapeHtml(post.excerpt)}</p></div>${
-    post.videoId
-      ? renderVideo(videoById(post.videoId), options, post.releaseId || '')
-      : ''
-  }<div class="post-body">${renderMarkdown(post, options)}</div>${
+  }<div class="post-body article-body">${renderMarkdown(post, options)}</div>${
     post.chapters
       ? `<section class="chapter-list"><h2>Jump into the video</h2><ol>${post.chapters
           .map(
@@ -64,15 +61,7 @@ function renderPost(page, options) {
           )
           .join('')}</ul></section>`
       : ''
-  }${
-    release
-      ? `<section class="related-note"><h2>The recording</h2><p>${internal(
-          release.path,
-          `${release.title}: listening links, credits & resources`,
-          options,
-        )}</p>${listenLink(release, 'blog')}</section>`
-      : ''
-  }${
+  }${release ? renderRecording(release, options) : ''}${
     post.noteIds
       ? `<section class="related-note"><h2>Files, parts & resources</h2><ul>${post.noteIds
           .map(id => notes.find(note => note.id === id))
@@ -85,18 +74,7 @@ function renderPost(page, options) {
           )
           .join('')}</ul></section>`
       : ''
-  }<footer class="article-footer"><p>${[
-    post.sourceUrl ? external(post.sourceUrl, 'Original source') : '',
-    post.provenance
-      ? escapeHtml(post.provenance)
-      : post.releaseId
-      ? 'Archive entry based on the official recording and video credits.'
-      : '',
-  ]
-    .filter(Boolean)
-    .join(
-      ' · ',
-    )}</p><button class="xp-button js-only" type="button" data-copy-link>Copy post link</button><span class="copy-status" role="status"></span></footer></article><nav class="post-pagination" aria-label="More posts">${internal(
+  }</article><nav class="post-pagination" aria-label="More posts">${internal(
     '/blog',
     '← All posts',
     options,

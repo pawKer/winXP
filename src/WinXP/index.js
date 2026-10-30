@@ -7,6 +7,8 @@ import React, {
 } from 'react';
 import styled, { keyframes } from 'styled-components';
 import useMouse from 'react-use/lib/useMouse';
+import { useHistory, useLocation } from 'react-router-dom';
+import { trackEvent } from 'hooks/useGA';
 
 import {
   ADD_APP,
@@ -213,6 +215,9 @@ function WinXP({
     ),
   }));
   const [playRequest, setPlayRequest] = useState(null);
+  const location = useLocation();
+  const history = useHistory();
+  const handledPlayRequest = useRef(null);
   const ref = useRef(null);
   const mouse = useMouse(ref);
   const focusedAppId = getFocusedAppId();
@@ -256,6 +261,35 @@ function WinXP({
     else dispatch({ type: ADD_APP, payload: appSettings['Internet Explorer'] });
     directEntry.current = false;
   }, [defaultPath, active]);
+
+  useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    const slug = query.get('play');
+    if (!slug) {
+      handledPlayRequest.current = null;
+      return;
+    }
+    const release = getPage(location.pathname)?.release;
+    if (!active || !release || release.slug !== slug) return;
+    const requestKey = `${location.key}:${location.pathname}:${location.search}`;
+    if (handledPlayRequest.current === requestKey) return;
+    handledPlayRequest.current = requestKey;
+    trackEvent('music_play_request', {
+      release: slug,
+      player: 'winamp',
+      view_mode: 'desktop',
+    });
+    setPlayRequest({
+      url: release.webAudioUrl || release.trackUrl,
+      requestId: requestKey,
+    });
+    dispatch({ type: ADD_APP, payload: appSettings.Winamp });
+    query.delete('play');
+    history.replace({
+      ...location,
+      search: query.toString() ? `?${query}` : '',
+    });
+  }, [active, location, history]);
 
   const onFocusApp = useCallback(id => {
     dispatch({ type: FOCUS_APP, payload: id });

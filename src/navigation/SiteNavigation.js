@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useRef } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import pageContent from 'content/pages';
 
 const Navigation = createContext(null);
 
@@ -19,6 +20,8 @@ export function SiteNavigationProvider({ children }) {
 
   function navigate(destination, options = {}) {
     const url = new URL(destination, window.location.origin);
+    const page = pageContent.getPage(url.pathname);
+    if (page) url.pathname = page.path;
     if (
       url.pathname === location.pathname &&
       url.search === location.search &&
