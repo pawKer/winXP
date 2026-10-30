@@ -190,6 +190,10 @@ test('Music is a view of canonical articles and every old song URL resolves to i
   const { renderSitemap } = require('../templates/discovery.cjs');
   const { internal } = require('../../src/content/templates/helpers');
   const music = renderContent(getPage('/music'), { reading: true });
+  assert.equal(
+    (music.match(/class="record-cover"/g) || []).length,
+    releases.length - 1,
+  );
   for (const release of releases) {
     const post = publishedPosts.find(item => item.releaseId === release.slug);
     assert.ok(post, release.slug);
@@ -229,6 +233,61 @@ test('Music is a view of canonical articles and every old song URL resolves to i
     );
     if (release.video) assert.equal((html.match(/<iframe /g) || []).length, 1);
   }
+});
+
+test('My Documents renders shared navigation, readable note panes and inactive media safely', () => {
+  const { getPage, renderContent } = require('../../src/content/pages');
+  for (const path of [
+    '/blog',
+    '/music',
+    '/notes',
+    '/notes/guitar-parts',
+    '/blog/building-my-midi-pedal',
+  ]) {
+    const html = renderContent(getPage(path), { reading: true });
+    assert.ok(html.includes('class="xp-site blog-page"'), path);
+    assert.ok(html.includes('src="/icons/windows.png"'), path);
+    assert.equal((html.match(/class="social-icon"/g) || []).length, 3, path);
+    assert.equal((html.match(/<h1(?:\s|>)/g) || []).length, 1, path);
+    assert.equal((html.match(/<main(?:\s|>)/g) || []).length, 1, path);
+  }
+  const note = renderContent(getPage('/notes/guitar-parts'), { reading: true });
+  assert.ok(note.includes('aria-label="Choose a note"'));
+  assert.equal((note.match(/width="20" height="20"/g) || []).length, 4);
+  assert.ok(!note.includes('sidebar-categories'));
+  assert.ok(note.includes('affiliate links. I may earn'));
+  const hidden = renderContent(getPage('/blog/forever'), {
+    embedded: true,
+    mediaActive: false,
+  });
+  assert.ok(!hidden.includes('<iframe'));
+  assert.ok(hidden.includes('https://www.youtube.com/watch?'));
+  const article = renderContent(getPage('/blog/forever'), { reading: true });
+  assert.ok(article.includes('aria-label="Breadcrumb"'));
+  assert.ok(article.includes('href="/blog/category/music"'));
+  assert.ok(article.includes('Listen in browser instead'));
+  assert.ok(article.includes('class="small-button" data-listen='));
+});
+
+test('Article search covers older pages, respects categories and restores pagination entries', () => {
+  const { getPage } = require('../../src/content/registry');
+  const {
+    renderBlogEntries,
+  } = require('../../src/content/templates/blog/feed');
+  const page = getPage('/blog');
+  const older = renderBlogEntries(page, {}, 'forever');
+  assert.equal(older.count, 1);
+  assert.ok(older.html.includes('href="/blog/forever"'));
+  assert.equal(
+    renderBlogEntries(getPage('/blog/category/projects'), {}, 'forever').count,
+    0,
+  );
+  assert.ok(
+    renderBlogEntries(page, {}, 'no-such-article-zzzz').html.includes(
+      'No entries found',
+    ),
+  );
+  assert.equal(renderBlogEntries(page, {}, '').count, 6);
 });
 
 test('Every published article omits the source/copy footer controls', () => {

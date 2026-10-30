@@ -5,7 +5,7 @@ import { useSiteNavigation } from 'navigation/SiteNavigation';
 import { trackEvent } from 'hooks/useGA';
 import { claimPlayback, registerPlayer, loadYouTube } from 'media/playback';
 
-const { getPage, renderContent } = pageContent;
+const { getPage, renderContent, renderBlogEntries } = pageContent;
 
 export default function PublicPage({
   path,
@@ -15,7 +15,7 @@ export default function PublicPage({
 }) {
   const ref = useRef(null);
   const prefix = useId().replace(/:/g, '');
-  const { mode, navigate } = useSiteNavigation();
+  const { mode, navigate, setMode } = useSiteNavigation();
   const page = getPage(path);
   const focusedPath = useRef(null);
   const html = useMemo(
@@ -213,6 +213,22 @@ export default function PublicPage({
     }
     const link = event.target.closest('a');
     if (!link) return;
+    if (
+      link.hasAttribute('data-desktop-view') &&
+      event.button === 0 &&
+      !event.metaKey &&
+      !event.ctrlKey &&
+      !event.shiftKey &&
+      !event.altKey
+    ) {
+      event.preventDefault();
+      trackEvent('view_mode_change', { view_mode: 'desktop' });
+      setMode('desktop');
+      requestAnimationFrame(() =>
+        document.getElementById('desktop-reading-toggle')?.focus(),
+      );
+      return;
+    }
     if (link.hasAttribute('data-note-link'))
       trackEvent('notes_link_click', {
         destination: link.href,
@@ -264,6 +280,28 @@ export default function PublicPage({
       ref={ref}
       className={`public-page${embedded ? ' embedded-public' : ''}`}
       onClick={onClick}
+      onInput={event => {
+        if (!event.target.hasAttribute('data-blog-search')) return;
+        const query = event.target.value.trim().toLowerCase();
+        const result = renderBlogEntries(
+          page,
+          { embedded, reading: !embedded },
+          query,
+        );
+        ref.current.querySelector('[data-blog-results]').innerHTML =
+          result.html;
+        const pagination = ref.current.querySelector(
+          '[aria-label="Blog pages"]',
+        );
+        if (pagination) pagination.hidden = Boolean(query);
+        ref.current.querySelector(
+          '[data-blog-search-status]',
+        ).textContent = query
+          ? `${result.count} matching ${
+              result.count === 1 ? 'entry' : 'entries'
+            }.`
+          : '';
+      }}
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

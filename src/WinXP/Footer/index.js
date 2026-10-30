@@ -7,7 +7,7 @@ import startButton from 'assets/windowsIcons/start.png';
 import sound from 'assets/windowsIcons/690(16x16).png';
 import usb from 'assets/windowsIcons/394(16x16).png';
 import risk from 'assets/windowsIcons/229(16x16).png';
-import readingIcon from 'assets/windowsIcons/327(16x16).png';
+import readingIcon from 'assets/windowsIcons/ie-book.png';
 
 const getTime = () => {
   const date = new Date();

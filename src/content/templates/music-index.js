@@ -1,36 +1,59 @@
+const { publishedPosts } = require('../registry');
 const { releases } = require('../site');
-const { icon, internal, escapeHtml, listenLink } = require('./helpers');
+const { internal, escapeHtml } = require('./helpers');
+const duration = seconds =>
+  `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
 function renderMusicIndex(options) {
-  return `<header class="document-heading">${icon(
-    'music',
-  )}<div><p class="eyebrow">reshra audio archive</p><h1>Music by reshra</h1><p>New recordings and old favourites, all in one folder.</p></div></header><ul class="music-releases">${releases
+  const music = publishedPosts
+    .map(post => ({
+      post,
+      release: releases.find(release => release.slug === post.releaseId),
+    }))
+    .filter(item => item.release);
+  const upcoming = music.find(
+    item => item.release.releaseStatus === 'upcoming',
+  );
+  const archive = music.filter(item => item !== upcoming);
+  const cover = release =>
+    `<img src="${escapeHtml(
+      release.artwork || '/artwork/drafts.jpg',
+    )}" alt="${escapeHtml(
+      release.title,
+    )} cover artwork" width="240" height="240" loading="lazy">`;
+  return `<header class="page-heading"><div><p class="eyebrow">The recordings</p><h1>The music folder.</h1><p>The music articles, collected by cover. Open one for the story, videos, and listening links.</p></div><img class="heading-icon" src="/icons/music.png" alt=""></header>${
+    upcoming
+      ? `<section class="music-feature music-release"><a href="${escapeHtml(
+          upcoming.post.path,
+        )}">${cover(
+          upcoming.release,
+        )}</a><div><span class="tiny-label">NEXT RELEASE${
+          upcoming.release.releaseDate
+            ? ` / ${escapeHtml(upcoming.release.releaseDate)}`
+            : ''
+        }</span><h2>${escapeHtml(
+          upcoming.release.title,
+        )}</h2><p>A new recording by reshra.</p>${internal(
+          upcoming.post.path,
+          'Read & listen \u2192',
+          options,
+          'class="small-button"',
+        )}</div></section>`
+      : ''
+  }<div class="section-caption"><strong>Browse the archive</strong><span>${
+    archive.length
+  } music articles &middot; newest first</span></div><div class="record-grid">${archive
     .map(
-      release =>
-        `<li class="music-release">${
-          release.artwork
-            ? `<img class="release-thumbnail album-cover" src="${escapeHtml(
-                release.artwork,
-              )}" width="120" height="120" alt="" loading="lazy">`
-            : release.video
-            ? `<img class="release-thumbnail" src="https://i.ytimg.com/vi/${release.video.id}/hqdefault.jpg" width="120" height="90" alt="" loading="lazy">`
-            : icon('music')
-        }<div><p class="eyebrow">${
-          release.releaseStatus === 'upcoming' ? 'Coming soon' : 'Recording'
-        }</p><h2>${internal(
-          release.path,
+      ({ post, release }) =>
+        `<article class="record music-release"><a class="record-cover" href="${escapeHtml(
+          post.path,
+        )}">${cover(release)}</a><div class="record-title"><h2>${internal(
+          post.path,
           release.title,
           options,
-        )}</h2><p>${escapeHtml(
-          release.description,
-        )}</p><div class="music-actions">${listenLink(
-          release,
-          'catalogue',
-        )}${internal(
-          release.path,
-          'Open recording',
-          options,
-        )}</div></div></li>`,
+        )}</h2><span>${duration(
+          release.duration,
+        )}</span></div><p>reshra &middot; story, video &amp; links</p></article>`,
     )
-    .join('')}</ul>`;
+    .join('')}</div>`;
 }
 module.exports = { renderMusicIndex };

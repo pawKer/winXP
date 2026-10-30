@@ -756,7 +756,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
       await click('.site-nav a[href^="/notes"]');
       assert(
         await evaluate(
-          'location.pathname==="/notes" && !!document.querySelector(".note-index")',
+          'location.pathname==="/notes" && !!document.querySelector(".notes-explorer")',
         ),
         'Content navigation works offline after desktop failure',
       );
@@ -908,8 +908,32 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
       'One initial page view',
     );
     const standaloneScripts = [...new Set(scripts)];
+    await evaluate(() => {
+      const input = document.querySelector('[data-blog-search]');
+      input.value = 'forever';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    assert.equal(
+      await evaluate(
+        'document.querySelectorAll("[data-blog-entry]:not([hidden])").length',
+      ),
+      1,
+      'Article search finds a recording from an older archive page',
+    );
+    await evaluate(() => {
+      const input = document.querySelector('[data-blog-search]');
+      input.value = '';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    assert.equal(
+      await evaluate(
+        'document.querySelectorAll("[data-blog-entry]:not([hidden])").length',
+      ),
+      6,
+      'Clearing search restores entries',
+    );
     await screenshot('blog-desktop');
-    await click('.blog-sidebar a[href="/blog/category/projects"]');
+    await click('.filters a[href="/blog/category/projects"]');
     assert.equal(
       await evaluate('location.pathname'),
       '/blog/category/projects',
@@ -961,7 +985,13 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
       );
       assert(
         await evaluate('document.documentElement.scrollWidth<=innerWidth+1'),
-        pathname + ': doubled text reflows at 320 CSS pixels',
+        pathname +
+          ': doubled text reflows at 320 CSS pixels; overflow: ' +
+          JSON.stringify(
+            await evaluate(
+              'Array.from(document.querySelectorAll(".public-page *")).filter(el=>el.getBoundingClientRect().right>innerWidth+1).map(el=>({tag:el.tagName,class:el.className,right:Math.round(el.getBoundingClientRect().right)})).slice(0,12)',
+            ),
+          ),
       );
       await evaluate('document.querySelector("main").focus()');
       await cdp('Input.dispatchKeyEvent', {
@@ -1133,12 +1163,19 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
     );
     assert(
       await evaluate(
+        '[...document.querySelectorAll(".ie__content .music-feature img, .ie__content .record-cover img")].every(image=>{const box=image.getBoundingClientRect();return Math.abs(box.width-box.height)<1;})',
+      ),
+      'Highlighted release and archive artwork remain square at their rendered size',
+    );
+    await screenshot('music-archive-desktop');
+    assert(
+      await evaluate(
         '!document.querySelector(".ie__function_bar button[aria-label=Back]").disabled',
       ),
       'IE Back reflects site history',
     );
     await click('.ie__content a[href="/notes"]');
-    await click('.ie__content h2 a[href="/notes/guitar-parts"]');
+    await click('.ie__content .file-list a[href="/notes/guitar-parts"]');
     await waitFor(
       `!!document.querySelector(${JSON.stringify(
         'textarea[aria-label="Temporary scratchpad"]',
@@ -1228,7 +1265,7 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
     await delay(250);
     await waitFor('location.pathname==="/notes"', 'Back to notes index');
     await waitFor(
-      '!!document.querySelector(".ie__content .note-index")',
+      '!!document.querySelector(".ie__content .notes-explorer")',
       'Back reopens the closed Internet Explorer',
     );
     await assertHead('/notes');

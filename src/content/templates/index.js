@@ -1,31 +1,31 @@
 const { renderHomeIndex } = require('./home-index');
 const { renderMusicIndex } = require('./music-index');
-const { renderNotesIndex } = require('./notes-index');
-const { renderBlog } = require('./blog/layout');
-const { renderRelease } = require('./music');
+const { renderFeed } = require('./blog/feed');
+const { renderPost } = require('./blog/post');
 const { renderNote } = require('./notes');
-const { internal } = require('./helpers');
-const { navigation } = require('./partials');
+const { notes } = require('../site');
+const { escapeHtml } = require('./helpers');
+const { renderLayout, notesBrowser } = require('./layout');
 function renderContent(page, options = {}) {
   if (!page)
     return '<main id="page-main" tabindex="-1"><h1>Page not found</h1><p>This page is not in the archive.</p><a href="/">Go home</a></main>';
-  if (page.kind === 'blog' || page.kind === 'post')
-    return renderBlog(page, options);
   let content;
-  if (page.kind === 'release') content = renderRelease(page.release, options);
-  if (page.kind === 'note') content = renderNote(page.note, options);
+  if (page.kind === 'post') content = renderPost(page, options);
+  if (page.kind === 'blog') content = renderFeed(page, options);
   if (page.kind === 'music') content = renderMusicIndex(options);
-  if (page.kind === 'notes') content = renderNotesIndex(options);
   if (page.kind === 'home') content = renderHomeIndex(options);
-  return `<div class="document-page">${navigation(
-    page.path,
-    options,
-  )}<main id="${
-    options.embedded ? 'desktop-page-main' : 'page-main'
-  }" tabindex="-1">${content}</main><footer class="document-footer">© reshra · ${internal(
-    '/blog',
-    'Blog',
-    options,
-  )} · <a href="/feed.xml">RSS</a></footer></div>`;
+  if (page.kind === 'notes' || page.kind === 'note') {
+    const note =
+      page.note || notes.find(item => item.id === 'midiPedal') || notes[0];
+    const paneOptions = Object.assign({}, options, { notePane: true });
+    content = `<header class="page-heading"><div><p class="eyebrow">The useful bits</p><h1>${
+      page.note ? escapeHtml(note.title) : 'Notes, links & little files.'
+    }</h1><p>Parts lists, project resources, and things to come back to.</p></div><img class="heading-icon" src="/icons/note.png" alt=""></header>${notesBrowser(
+      note,
+      renderNote(note, paneOptions),
+      options,
+    )}`;
+  }
+  return renderLayout(page, content, options);
 }
 module.exports = { renderContent };

@@ -142,31 +142,14 @@ function AppContent() {
       )}
       {reading && (
         <div className="standalone-surface">
-          <div className="mode-controls">
-            <span className="mode-label">
-              reshra.xyz /{' '}
-              {page?.kind === 'blog' || page?.kind === 'post'
-                ? 'the blog'
-                : 'reading view'}
-            </span>
-            {desktopFailed ? (
+          {desktopFailed && (
+            <div className="mode-controls">
               <a className="xp-button" id="desktop-retry" href={retryPath}>
                 <img className="desktop-view-icon" src={windowsIcon} alt="" />
                 Try desktop again
               </a>
-            ) : (
-              <button
-                className="xp-button"
-                id="view-toggle"
-                type="button"
-                onClick={() => changeMode('desktop')}
-              >
-                <img className="desktop-view-icon" src={windowsIcon} alt="" />
-                Open desktop view
-              </button>
-            )}
-            <a href="/feed.xml">RSS feed</a>
-          </div>
+            </div>
+          )}
           {desktopFailed && (
             <p className="desktop-recovery" role="alert" data-desktop-recovery>
               The desktop could not load. You can keep reading here, or try it

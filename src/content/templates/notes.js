@@ -12,9 +12,11 @@ function renderNote(note, options) {
   const related = publishedPosts.filter(post =>
     (post.noteIds || []).includes(note.id),
   );
-  return `<header class="document-heading">${icon('note')}<div><h1>${escapeHtml(
-    note.title,
-  )}</h1><p>${escapeHtml(note.description)}</p></div></header>${
+  return `<header class="document-heading">${icon('note')}<div><${
+    options.notePane ? 'h2' : 'h1'
+  }>${escapeHtml(note.title)}</${
+    options.notePane ? 'h2' : 'h1'
+  }><p>${escapeHtml(note.description)}</p></div></header>${
     note.sections.title
       ? `<p class="welcome-note">${escapeHtml(note.sections.title)}</p>`
       : ''
