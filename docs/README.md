@@ -27,6 +27,7 @@ root unless stated otherwise.
 
 ## Working material
 
+- [Content-page design mockups](design-preview/README.md): two local HTML directions for the blog, articles, music archive, and notes.
 - [Article drafts and source notes](../content-drafts/README.md) stay together in `content-drafts/`.
 - [Source evidence](../content-sources/) contains public video metadata and implementation baselines.
 - [Font documentation and license](../src/assets/fonts/README.md) stay beside the font assets.
