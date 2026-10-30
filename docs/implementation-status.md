@@ -1,5 +1,34 @@
 # Blog and SEO implementation status
 
+## My Documents design, 30 October 2026
+
+The approved My Documents design is now implemented locally in the shared
+production templates. Blog, article, music, note and readable homepage views use
+one XP frame, profile panel with social icons, folder rail and desktop control.
+Articles keep source-video dates, thumbnails, embeds, chapters and resource links.
+Music is an artwork view of the same articles; recording links, credits, alternate
+videos, downloads and native/Winamp controls live inside those articles.
+
+The comparison refinements restore note-file icons and article/category
+breadcrumbs, keep the folder rail to its three main destinations, and match
+the mockup's small listening buttons. All articles omit the source/copy-link
+footer. Listening from reading view can open the requested recording directly
+in Winamp; its one-time URL request is consumed after opening, and browser audio
+remains available as a secondary option. The desktop reading control uses a book
+icon to distinguish it from Notepad.
+
+The 35 generated HTML routes now comprise 25 canonical pages and ten music URL
+aliases. nginx sends aliases to their existing `/blog/...` articles with HTTP 301;
+the preview server, static fallback documents and client navigation also resolve
+them. Sitemap and RSS expose canonical content. No audio files, article prose,
+source dates, note URLs or desktop window behavior were migrated.
+
+Build, lint (five existing warnings), unit/content checks and nginx routing
+checks pass. Browser checks cover shared reading/desktop navigation, phone widths,
+200% text reflow, keyboard/touch scrolling, note scratchpad preservation, window
+controls and missing-media fallbacks. Browser screenshots were visually reviewed.
+Deployment is still manual; these changes have not been published.
+
 Updated 28 October 2026. This tracks the full objective in [blog plan](blog-plan.md) and [SEO follow-ups](seo/followups.md). The user deployed the initial release on 28 October. Live browser/edge checks and GA activation with verified realtime ingestion and key events are complete. Homepage startup, default-WAV playback and proxy-redirect fixes are ready locally for the next manual deployment. Search-account inspection and Bing verification remain outstanding; see [release verification](release-verification.md).
 
 ## What is available

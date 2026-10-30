@@ -56,6 +56,14 @@ posts. A missing status defaults to draft.
 
 ## Videos, dates and related resources
 
+Music uses one public article per recording. Add `releaseId` to that article's
+frontmatter to attach its cover, listening links, credits, alternate videos,
+downloads, and local/Winamp playback options from the catalogue. `/music` is an
+artwork view of these published articles; both archive views open `/blog/<slug>`.
+Existing `/music/<slug>` URLs redirect to the corresponding article, preserving
+queries. The generated `music-redirects.conf` supplies nginx's permanent redirects;
+portable static HTML and client navigation provide fallback redirects.
+
 For a video companion, add `videoId` using the YouTube ID from
 [`src/content/videos.json`](../src/content/videos.json). The shared template
 adds the player and uses that video's publication timestamp as the post date,
@@ -102,11 +110,12 @@ Use consistent spelling and capitalization. Do not name posts `page.md` or
 | --- | --- |
 | `src/content/registry.js` | Public route list, categories, ordering and pagination. |
 | `src/content/schema.js` | Structured data for songs, videos and posts. |
-| `src/content/templates/index.js` | Page selection and shared document layout. |
-| `src/content/templates/blog/layout.js` | Blog masthead, sidebar and footer. |
+| `src/content/templates/index.js` | Page selection and note-pane composition. |
+| `src/content/templates/layout.js` | Shared My Documents masthead, sidebar, navigation and footer. |
+| `src/content/templates/blog/layout.js` | Compatibility wrapper around the shared layout. |
 | `src/content/templates/blog/post.js` | Article layout, player and related resources. |
 | `src/content/templates/blog/feed.js` | Archive feed and pagination. |
-| `src/content/templates/blog/partials.js` | Post previews and sidebar contents. |
+| `src/content/templates/blog/partials.js` | Article previews and pinned-entry thumbnails. |
 | `src/content/templates/` | Music, note, homepage and shared partial templates. |
 | `scripts/templates/document.cjs` | Full static HTML, metadata and 404 document. |
 | `scripts/templates/discovery.cjs` | Sitemap, RSS and robots templates. |
