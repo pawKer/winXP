@@ -9,13 +9,15 @@ function renderMarkdown(post, options) {
     const page = getPage(url.pathname);
     const redirected = page && page.path !== url.pathname;
     if (redirected) url.pathname = page.path;
+    const browserNote = options.browserNotes && page && page.kind === 'note';
+    if (browserNote) url.searchParams.set('app', 'ie');
     if (
       !options.reading ||
       !page ||
       url.pathname.startsWith('/blog') ||
       url.searchParams.has('view')
     )
-      return redirected
+      return redirected || browserNote
         ? `href="${escapeHtml(url.pathname + url.search + url.hash)}"`
         : attribute;
     url.searchParams.set('view', 'read');

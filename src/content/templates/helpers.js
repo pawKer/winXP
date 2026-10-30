@@ -31,6 +31,8 @@ const internal = (path, label, options = {}, attributes = '') => {
   const url = new URL(path, siteUrl);
   const page = require('../registry').getPage(url.pathname);
   if (page && page.path !== url.pathname) url.pathname = page.path;
+  if (options.browserNotes && page && page.kind === 'note')
+    url.searchParams.set('app', 'ie');
   if (
     options.reading &&
     !url.pathname.startsWith('/blog') &&

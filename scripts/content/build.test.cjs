@@ -194,6 +194,36 @@ test('Compilation is stable and reading links preserve mode, query and fragment'
   );
 });
 
+test('Blog note links use the shared browser page and retain queries, fragments and reading mode', () => {
+  const { getPage, renderContent } = require('../../src/content/pages');
+  const {
+    renderMarkdown,
+  } = require('../../src/content/templates/blog/markdown');
+  const post = parse('', '[Parts](/notes/guitar-parts?source=post#parts)');
+  assert.ok(
+    renderMarkdown(post, { browserNotes: true }).includes(
+      'href="/notes/guitar-parts?source=post&amp;app=ie#parts"',
+    ),
+  );
+  assert.ok(
+    renderMarkdown(post, { browserNotes: true, reading: true }).includes(
+      'href="/notes/guitar-parts?source=post&amp;app=ie&amp;view=read#parts"',
+    ),
+  );
+  const embedded = renderContent(getPage('/blog/building-my-midi-pedal'), {
+    embedded: true,
+  });
+  assert.ok(embedded.includes('href="/notes/midi-pedal?app=ie"'));
+  const note = renderContent(getPage('/notes/midi-pedal'), { embedded: true });
+  assert.ok(note.includes('href="/notes/guitar-parts?app=ie"'));
+  const { internal } = require('../../src/content/templates/helpers');
+  assert.ok(
+    internal('/notes/guitar-parts', 'Desktop shortcut').includes(
+      'href="/notes/guitar-parts"',
+    ),
+  );
+});
+
 test('Music is a view of canonical articles and every old song URL resolves to its article', () => {
   buildContent();
   const {

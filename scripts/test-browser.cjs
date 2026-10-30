@@ -1175,7 +1175,32 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
       'IE Back reflects site history',
     );
     await click('.ie__content a[href="/notes"]');
-    await click('.ie__content .file-list a[href="/notes/guitar-parts"]');
+    await click('.ie__content .file-list a[href="/notes/guitar-parts?app=ie"]');
+    await waitFor(
+      '!!document.querySelector(".ie__content .note-body")',
+      'Note stays in the browser',
+    );
+    assert(
+      await evaluate('!document.querySelector(".notepad-document")'),
+      'Browser note links do not launch Notepad',
+    );
+    await click('.ie__content .main-nav a[href="/blog"]');
+    await click('.ie__content a[href="/blog/building-my-midi-pedal"]');
+    await click(
+      '.ie__content .related-note a[href="/notes/midi-pedal?app=ie"]',
+    );
+    await waitFor(
+      '!!document.querySelector(".ie__content .note-body")',
+      'Blog resource opens the shared note page',
+    );
+    assert(
+      await evaluate('!document.querySelector(".notepad-document")'),
+      'Blog resource does not launch Notepad',
+    );
+    await click('.ie__content .file-list a[href="/notes/guitar-parts?app=ie"]');
+    await evaluate(
+      'document.querySelector(\'img[alt="Guitar Parts.txt"]\').parentElement.parentElement.dispatchEvent(new MouseEvent("dblclick", {bubbles:true}))',
+    );
     await waitFor(
       `!!document.querySelector(${JSON.stringify(
         'textarea[aria-label="Temporary scratchpad"]',
@@ -1263,12 +1288,15 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
     );
     await evaluate('history.back()');
     await delay(250);
-    await waitFor('location.pathname==="/notes"', 'Back to notes index');
+    await waitFor(
+      'location.pathname==="/notes/guitar-parts" && new URLSearchParams(location.search).get("app")==="ie"',
+      'Back to the browser note',
+    );
     await waitFor(
       '!!document.querySelector(".ie__content .notes-explorer")',
       'Back reopens the closed Internet Explorer',
     );
-    await assertHead('/notes');
+    await assertHead('/notes/guitar-parts');
     const topWindow = await evaluate(
       '[...document.querySelectorAll(".app__header__title")].filter(el=>el.getClientRects().length).sort((a,b)=>Number(b.parentElement.parentElement.style.zIndex)-Number(a.parentElement.parentElement.style.zIndex))[0].textContent',
     );

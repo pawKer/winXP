@@ -7,6 +7,7 @@ const { notes, settings } = require('../site');
 const { escapeHtml } = require('./helpers');
 const { renderLayout, notesBrowser } = require('./layout');
 function renderContent(page, options = {}) {
+  options = Object.assign({}, options, { browserNotes: true });
   if (!page)
     return '<main id="page-main" tabindex="-1"><h1>Page not found</h1><p>This page is not in the archive.</p><a href="/">Go home</a></main>';
   let content;

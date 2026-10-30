@@ -63,7 +63,11 @@ export default function InternetExplorer({
     setAddress(currentAddress);
   }, [currentAddress]);
   const page = getPage(location.pathname);
-  const showContent = page && !['home', 'note'].includes(page.kind);
+  const showContent =
+    page &&
+    (!['home', 'note'].includes(page.kind) ||
+      (page.kind === 'note' &&
+        new URLSearchParams(location.search).get('app') === 'ie'));
 
   function goHome() {
     setNewsletter(false);

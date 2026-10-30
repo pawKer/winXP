@@ -202,6 +202,9 @@ function WinXP({
   onReady,
   onReadingView,
 }) {
+  const location = useLocation();
+  const noteInBrowser =
+    new URLSearchParams(location.search).get('app') === 'ie';
   const directEntry = useRef(
     defaultPath === initialPath && initialPath !== '/',
   );
@@ -209,14 +212,13 @@ function WinXP({
     ...initial,
     apps: initial.apps.map(app =>
       directEntry.current &&
-      !getNoteByPath(defaultPath) &&
+      (!getNoteByPath(defaultPath) || noteInBrowser) &&
       app.component === appSettings['Internet Explorer'].component
         ? { ...app, maximized: true }
         : app,
     ),
   }));
   const [playRequest, setPlayRequest] = useState(null);
-  const location = useLocation();
   const history = useHistory();
   const handledPlayRequest = useRef(null);
   const ref = useRef(null);
@@ -232,7 +234,8 @@ function WinXP({
     const note = getNoteById(noteId);
     if (!note) return;
 
-    if (defaultPath !== note.path) navigate(note.path, { mode: 'desktop' });
+    if (defaultPath !== note.path || noteInBrowser)
+      navigate(note.path, { mode: 'desktop' });
     else dispatch({ type: 'OPEN_NOTE', payload: noteApp(note) });
   }
 
@@ -251,7 +254,7 @@ function WinXP({
   useEffect(() => {
     if (!active) return;
     const noteFromPath = getNoteByPath(defaultPath);
-    if (noteFromPath)
+    if (noteFromPath && !noteInBrowser)
       dispatch({
         type: 'OPEN_NOTE',
         payload: {
@@ -261,7 +264,7 @@ function WinXP({
       });
     else dispatch({ type: ADD_APP, payload: appSettings['Internet Explorer'] });
     directEntry.current = false;
-  }, [defaultPath, active]);
+  }, [defaultPath, active, noteInBrowser]);
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
