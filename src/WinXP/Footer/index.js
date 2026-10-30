@@ -69,15 +69,21 @@ function Footer({
   return (
     <Container onMouseDown={_onMouseDown}>
       <div className="footer__items left">
-        <div ref={menu} className="footer__start__menu">
-          {menuOn && <FooterMenu onClick={_onClickMenuItem} />}
+        <div ref={menu} className="footer__start-group">
+          <div className="footer__start__menu" id="xp-start-menu">
+            {menuOn && <FooterMenu onClick={_onClickMenuItem} />}
+          </div>
+          <button
+            type="button"
+            className="footer__start"
+            aria-label="Start"
+            aria-expanded={menuOn}
+            aria-controls="xp-start-menu"
+            onClick={toggleMenu}
+          >
+            <img src={startButton} alt="" draggable={false} />
+          </button>
         </div>
-        <img
-          src={startButton}
-          alt="start"
-          className="footer__start"
-          onMouseDown={toggleMenu}
-        />
         {[...apps].map(
           app =>
             !app.header.noFooterWindow && (
@@ -103,7 +109,6 @@ function Footer({
       >
         <img src={readingIcon} alt="" />
         <span className="footer__reading-full">Reading view</span>
-        <span className="footer__reading-short">Read</span>
       </button>
       <div className="footer__items right">
         <img className="footer__icon" src={sound} alt="" />
@@ -189,19 +194,14 @@ const Container = styled.footer`
       height: 16px;
     }
   }
-  .footer__reading-short {
-    display: none;
-  }
   @media (max-width: 600px) {
     .footer__reading-full {
       display: none;
     }
-    .footer__reading-short {
-      display: inline;
-    }
     .footer__reading {
-      padding-inline: 7px;
-      min-width: 42px;
+      justify-content: center;
+      padding-inline: 6px;
+      width: 30px;
     }
     .footer__items.right {
       margin-left: 4px;
@@ -209,12 +209,6 @@ const Container = styled.footer`
     }
     .footer__items.right .footer__icon {
       display: none;
-    }
-    .footer__start {
-      width: 70px;
-      object-fit: cover;
-      object-position: left;
-      margin-right: 4px;
     }
     .footer__window {
       min-width: 28px;
@@ -258,16 +252,30 @@ const Container = styled.footer`
     align-items: center;
   }
   .footer__start {
+    flex: none;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    cursor: pointer;
     height: 100%;
     margin-right: 10px;
     position: relative;
+    img {
+      display: block;
+      height: 100%;
+      width: auto;
+    }
     &:hover {
       filter: brightness(105%);
     }
     &:active {
-      pointer-events: none;
       filter: brightness(85%);
     }
+  }
+  .footer__start-group {
+    display: flex;
+    flex: none;
+    height: 100%;
   }
   .footer__start__menu {
     position: absolute;

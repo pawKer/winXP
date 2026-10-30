@@ -363,7 +363,9 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
             readingBottom: reading.bottom,
             visibleHeight: innerHeight,
             ieBottom: ie.bottom,
-            startReachable: hit?.classList.contains('footer__start'),
+            startReachable: document
+              .querySelector('.footer__start')
+              .contains(hit),
           };
         });
         assert(
@@ -385,6 +387,104 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
         );
       };
       await checkTaskbar('Portrait with browser controls');
+      const checkMobileStacking = async () => {
+        await waitFor(
+          '!!document.querySelector("#desktop-layer #webamp #main-window")',
+          'Winamp attaches inside the desktop window stack',
+        );
+        await delay(500);
+        assert(
+          await evaluate(() => {
+            const shell = node => node.closest('[style*="translate"]');
+            const ie = shell(document.querySelector('.ie__content'));
+            const winamp = shell(document.querySelector('#webamp'));
+            const box = document
+              .querySelector('#webamp #main-window')
+              .getBoundingClientRect();
+            const hit = document.elementFromPoint(
+              Math.max(5, Math.min(innerWidth - 5, box.left + box.width / 2)),
+              Math.max(5, Math.min(innerHeight - 40, box.top + box.height / 2)),
+            );
+            return (
+              Number(ie.style.zIndex) > Number(winamp.style.zIndex) &&
+              ie.contains(hit)
+            );
+          }),
+          'IE stays above Winamp after asynchronous mobile startup',
+        );
+      };
+      for (let load = 0; load < 3; load++) {
+        if (load) {
+          await navigate('/');
+          await evaluate(() => {
+            const style = document.createElement('style');
+            style.textContent = '#root { min-height: 956px; }';
+            document.head.appendChild(style);
+          });
+        }
+        await checkMobileStacking();
+      }
+
+      assert(
+        await evaluate(() => {
+          const image = document.querySelector('.footer__start img');
+          const box = image.getBoundingClientRect();
+          return (
+            Math.abs(
+              box.width / box.height - image.naturalWidth / image.naturalHeight,
+            ) < 0.01
+          );
+        }),
+        'Mobile Start artwork keeps its full aspect ratio',
+      );
+      const tapStart = async () => {
+        const point = await evaluate(() => {
+          const box = document
+            .querySelector('.footer__start')
+            .getBoundingClientRect();
+          return { x: box.left + box.width / 2, y: box.top + box.height / 2 };
+        });
+        await cdp('Input.dispatchTouchEvent', {
+          type: 'touchStart',
+          touchPoints: [point],
+        });
+        await cdp('Input.dispatchTouchEvent', {
+          type: 'touchEnd',
+          touchPoints: [],
+        });
+      };
+      await cdp('Emulation.setTouchEmulationEnabled', { enabled: true });
+      await tapStart();
+      await waitFor(
+        '!!document.querySelector("#xp-start-menu .menu")',
+        'Touch opens Start',
+      );
+      await tapStart();
+      await waitFor(
+        '!document.querySelector("#xp-start-menu .menu")',
+        'Touch closes Start',
+      );
+      await cdp('Emulation.setTouchEmulationEnabled', { enabled: false });
+      await delay(400);
+      await evaluate('document.querySelector(".footer__start").focus()');
+
+      await cdp('Input.dispatchKeyEvent', {
+        type: 'keyDown',
+        key: ' ',
+        code: 'Space',
+        windowsVirtualKeyCode: 32,
+      });
+      await cdp('Input.dispatchKeyEvent', {
+        type: 'keyUp',
+        key: ' ',
+        code: 'Space',
+        windowsVirtualKeyCode: 32,
+      });
+      await waitFor(
+        '!!document.querySelector("#xp-start-menu .menu")',
+        'Keyboard opens Start',
+      );
+      await click('.footer__start');
       await viewport(440, 860);
       await checkTaskbar('Browser controls collapsed');
       await viewport(874, 380);
@@ -398,8 +498,9 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
       );
       await click('#view-toggle');
       await checkTaskbar('Return from Reading View');
+      await checkMobileStacking();
       console.log(
-        'PASS: mobile taskbar and Start remain visible with a large-vh minimum, browser resizing, landscape and presentation switches.',
+        'PASS: mobile taskbar and Start remain visible with a large-vh minimum, browser resizing, landscape and presentation switches; touch and keyboard toggle Start; IE stays above Winamp across repeated loads.',
       );
       return;
     }
