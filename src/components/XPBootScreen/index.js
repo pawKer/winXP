@@ -39,7 +39,7 @@ export default function XPBootScreen({
       </p>
       {onSkip && (
         <button className="xp-boot__skip" type="button" onClick={onSkip}>
-          Click or press Esc to skip
+          Return to reading view (Esc)
         </button>
       )}
     </Screen>

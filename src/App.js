@@ -69,15 +69,22 @@ function AppContent() {
     if (!reading) setDesktopMounted(true);
   }, [reading]);
 
+  useEffect(() => {
+    if (reading || desktopReady) return undefined;
+    const startupTimer = window.setTimeout(() => {
+      pauseAll();
+      setDesktopFailed(true);
+    }, 12000);
+    return () => window.clearTimeout(startupTimer);
+  }, [reading, desktopReady]);
+
   useLayoutEffect(() => {
     document.documentElement.classList.toggle('desktop-mode', !reading);
-    if (reading || desktopReady) {
-      clearTimeout(window.__desktopStartupTimer);
-      document.documentElement.classList.remove('desktop-starting');
-      document.documentElement.classList.add('app-ready');
-      document.getElementById('static-content')?.remove();
-    }
-  }, [reading, desktopReady]);
+    clearTimeout(window.__desktopStartupTimer);
+    document.documentElement.classList.remove('desktop-starting');
+    document.documentElement.classList.add('app-ready');
+    document.getElementById('static-content')?.remove();
+  }, [reading]);
 
   function changeMode(next) {
     pauseAll();
@@ -130,7 +137,7 @@ function AppContent() {
               setMode('read');
             }}
           >
-            <Suspense fallback={<p role="status">Starting the desktop…</p>}>
+            <Suspense fallback={null}>
               <Desktop
                 defaultPath={location.pathname}
                 initialPath={initialPath.current}

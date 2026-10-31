@@ -1,12 +1,14 @@
 # Optional XP boot screen
 
 Adapted from the supplied boot-screen design, without AzuraCast integration.
-This component is not enabled or imported by the application.
+This component is currently disabled and is not imported by the application.
+It remains available for future use. Desktop startup still falls back to readable
+content with a retry link if loading has not completed after 12 seconds.
 
 ```jsx
 import XPBootScreen from 'components/XPBootScreen';
 
-// Unmount as soon as the desktop is ready; there is no fixed animation delay.
+// App controls readiness; the component only renders.
 <XPBootScreen
   label="reshra"
   status="Starting the desktop…"
