@@ -545,6 +545,59 @@ html.app-ready #static-content {
   padding: 14px 0;
   border-block: 1px solid #c6c1c8;
 }
+.article-pagination {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.article-pagination .article-page-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  min-height: 48px;
+  padding: 12px;
+  border: 1px solid #bac5d6;
+  border-radius: 3px;
+  background: linear-gradient(#fff, #f2f5fa);
+  text-decoration: none;
+}
+.article-pagination .article-page-link:hover {
+  border-color: #537ec2;
+  background: #eaf2ff;
+}
+.article-pagination .article-page-link:focus-visible {
+  outline: 2px solid #245bd9;
+  outline-offset: 2px;
+}
+.article-pagination .article-page-link--all {
+  grid-column: 1 / -1;
+  justify-self: start;
+  min-height: 44px;
+  padding: 8px 12px;
+}
+.article-page-icon {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  text-align: center;
+  font: 24px/1 Tahoma, Arial, sans-serif;
+}
+.article-page-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.article-page-label {
+  color: #56647a;
+  font-size: 11px;
+}
+.article-pagination strong {
+  font-size: 14px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
 .embedded-public {
   user-select: text !important;
 }
@@ -1858,9 +1911,12 @@ html.app-ready #static-content {
     box-shadow: none;
     font-size: 14px;
   }
-  .xp-site .explorer-address,
   .xp-site .masthead-copy {
     display: none;
+  }
+  .xp-site .explorer-address {
+    gap: 8px;
+    padding: 4px 12px;
   }
   .xp-site .window-title {
     display: flex;
@@ -2240,6 +2296,18 @@ html.app-ready #static-content {
     min-height: 44px;
     padding-block: 8px;
     font-size: 14px;
+  }
+  .xp-site .article-pagination {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .xp-site .article-pagination .article-page-link {
+    padding: 12px;
+  }
+  .xp-site .article-pagination .article-page-link--all {
+    justify-self: stretch;
+  }
+  .xp-site .article-page-label {
+    font-size: 12px;
   }
   .xp-site .small-button,
   .xp-site .xp-button {

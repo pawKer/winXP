@@ -50,8 +50,8 @@ function renderLayout(page, body, options) {
   return `<div class="xp-site blog-page">${
     options.embedded
       ? `<div class="embedded-page-tools"><a href="${escapeHtml(
-          page.path,
-        )}" target="_blank" rel="noopener noreferrer">Open full page ↗</a></div>`
+          `${page.path}?view=read`,
+        )}">Open full page ↗</a></div>`
       : ''
   }
     <div class="window-title"><span>▣ &nbsp; ${escapeHtml(
@@ -94,11 +94,13 @@ function renderLayout(page, body, options) {
           }</span></a>`,
         );
     })
-    .join('')}<a class="desktop-link" id="${
-    options.embedded ? 'embedded-desktop-link' : 'view-toggle'
-  }" data-desktop-view href="${escapeHtml(
-    page.path,
-  )}?view=desktop"><img class="windows-icon" src="/icons/windows.png" alt=""><span>XP desktop</span><span class="desktop-arrow" aria-hidden="true">↗</span></a></nav>
+    .join('')}${
+    options.embedded
+      ? ''
+      : `<a class="desktop-link" id="view-toggle" data-desktop-view href="${escapeHtml(
+          page.path,
+        )}?view=desktop"><img class="windows-icon" src="/icons/windows.png" alt=""><span>XP desktop</span><span class="desktop-arrow" aria-hidden="true">↗</span></a>`
+  }</nav>
     <div class="layout blog-layout"><aside class="sidebar blog-sidebar" aria-label="About and shortcuts"><section class="panel profile-panel"><h2 class="panel-heading">About ${escapeHtml(
       profile.name,
     )}</h2><div class="profile-content"><img class="avatar" src="${escapeHtml(

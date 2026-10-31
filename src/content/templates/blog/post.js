@@ -5,15 +5,31 @@ const { renderVideo } = require('../partials');
 const { renderRecording } = require('../music');
 const { videoById } = require('../../catalogue');
 const { renderMarkdown } = require('./markdown');
+
+function articleNavigationLink(post, direction, options) {
+  const previous = direction === 'previous';
+  return internal(
+    post.path,
+    '',
+    options,
+    `class="article-page-link" rel="${previous ? 'prev' : 'next'}"`,
+  ).replace(
+    '</a>',
+    `<span class="article-page-icon" aria-hidden="true">${
+      previous ? '&#8592;' : '&#8594;'
+    }</span><span class="article-page-text"><span class="article-page-label">${
+      previous ? 'Previous article' : 'Next article'
+    }</span><strong>${escapeHtml(post.title)}</strong></span></a>`,
+  );
+}
+
 function renderPost(page, options) {
   const post = page.post;
   const release =
     post.releaseId && releases.find(item => item.slug === post.releaseId);
   const current = publishedPosts.indexOf(post);
-  const adjacent = [
-    publishedPosts[current - 1],
-    publishedPosts[current + 1],
-  ].filter(Boolean);
+  const previous = publishedPosts[current + 1];
+  const next = publishedPosts[current - 1];
   return `<article class="blog-article article"><div class="post-meta"><span class="category-label">${escapeHtml(
     post.type,
   )}</span> ${postDateLabel(post)} · by ${escapeHtml(
@@ -74,12 +90,16 @@ function renderPost(page, options) {
           )
           .join('')}</ul></section>`
       : ''
-  }</article><nav class="post-pagination" aria-label="More posts">${internal(
+  }</article><nav class="post-pagination article-pagination" aria-label="More posts">${internal(
     '/blog',
-    '← All posts',
+    '',
     options,
-  )}${adjacent
-    .map(item => internal(item.path, item.title, options))
-    .join('')}</nav>`;
+    'class="article-page-link article-page-link--all"',
+  ).replace(
+    '</a>',
+    '<img class="article-page-icon" src="/icons/blog.png" alt="" width="24" height="24"><strong>All posts</strong></a>',
+  )}${previous ? articleNavigationLink(previous, 'previous', options) : ''}${
+    next ? articleNavigationLink(next, 'next', options) : ''
+  }</nav>`;
 }
 module.exports = { renderPost };
