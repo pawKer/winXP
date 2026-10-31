@@ -1351,6 +1351,16 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
       '/blog',
     );
     await expectNewTab(async () => {
+      await evaluate(() => {
+        const toggle = document.querySelector(
+          '.ie__content [data-menu-toggle]',
+        );
+        if (
+          toggle.getClientRects().length &&
+          toggle.getAttribute('aria-expanded') === 'false'
+        )
+          toggle.click();
+      });
       const center = await evaluate(() => {
         const r = document
           .querySelector('.ie__content .site-nav a[href="/music"]')

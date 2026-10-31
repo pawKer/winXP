@@ -3,6 +3,12 @@ const { publishedPosts } = require('../registry');
 const { categorySlug } = require('../categories');
 const { internal, escapeHtml } = require('./helpers');
 const socialIcons = require('./social-icons');
+const navigationIcons = {
+  '/blog': '/icons/blog.png',
+  '/music': '/icons/music.png',
+  '/notes': '/icons/note.png',
+  '/blog/about': '/icons/user.png',
+};
 
 function renderLayout(page, body, options) {
   const section =
@@ -26,6 +32,7 @@ function renderLayout(page, body, options) {
   const announcement =
     upcoming && publishedPosts.find(post => post.releaseId === upcoming.slug);
   const nav = navigation.map(item => [item.path, item.label, item.glyph]);
+  const menuId = `${options.prefix || 'static'}-site-menu`;
   const breadcrumb = [internal('/blog', 'reshra.xyz', options)];
   if (page.kind === 'post') {
     breadcrumb.push(internal('/blog', 'Blog', options));
@@ -57,17 +64,37 @@ function renderLayout(page, body, options) {
       options,
     )}<span>.xyz</span></p><div class="masthead-copy"><span>${escapeHtml(
     copy.mastheadEyebrow,
-  )}</span><p>${escapeHtml(copy.tagline)}</p></div></header>
-    <nav class="main-nav site-nav" aria-label="Main navigation">${nav
-      .map(([path, label, glyph]) =>
-        internal(
-          path,
-          `${glyph} ${label}`,
-          options,
-          section === path.slice(1) ? 'aria-current="page"' : '',
-        ),
+  )}</span><p>${escapeHtml(
+    copy.tagline,
+  )}</p></div><button class="mobile-menu-toggle" type="button" data-menu-toggle aria-expanded="false" aria-controls="${escapeHtml(
+    menuId,
+  )}" aria-label="Open navigation menu"><svg class="menu-open-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16"></path></svg><svg class="menu-close-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"></path></svg><span data-menu-label>Menu</span></button></header>
+    <nav class="main-nav site-nav" id="${escapeHtml(
+      menuId,
+    )}" data-site-menu aria-label="Main navigation">${nav
+    .map(([path, label, glyph]) => {
+      const current = section === path.slice(1);
+      return internal(
+        path,
+        label,
+        options,
+        current ? 'aria-current="page"' : '',
       )
-      .join('')}<a class="desktop-link" id="${
+        .replace(
+          '>',
+          `><img class="nav-icon" src="${navigationIcons[path] ||
+            '/icons/folder.png'}" alt="" width="24" height="24"><span class="nav-glyph" aria-hidden="true">${escapeHtml(
+            glyph,
+          )}</span><span class="nav-label">`,
+        )
+        .replace(
+          '</a>',
+          `</span><span class="nav-arrow" aria-hidden="true">${
+            current ? '•' : '›'
+          }</span></a>`,
+        );
+    })
+    .join('')}<a class="desktop-link" id="${
     options.embedded ? 'embedded-desktop-link' : 'view-toggle'
   }" data-desktop-view href="${escapeHtml(
     page.path,

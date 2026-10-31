@@ -186,7 +186,56 @@ export default function PublicPage({
     };
   }, [html, active, mode, prefix]);
 
+  function setMenuOpen(open, restoreFocus = false) {
+    const toggle = ref.current?.querySelector('[data-menu-toggle]');
+    const menu = ref.current?.querySelector('[data-site-menu]');
+    if (!toggle || !menu) return;
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.querySelector('[data-menu-label]').textContent = open
+      ? 'Close'
+      : 'Menu';
+    toggle.setAttribute(
+      'aria-label',
+      open ? 'Close navigation menu' : 'Open navigation menu',
+    );
+    menu.toggleAttribute('data-menu-open', open);
+    if (restoreFocus) toggle.focus();
+  }
+
+  function setSearchOpen(open, restoreFocus = false) {
+    const toggle = ref.current?.querySelector('[data-search-toggle]');
+    const field = ref.current?.querySelector('[data-search-field]');
+    if (!toggle || !field) return;
+    const input = field.querySelector('input');
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute(
+      'aria-label',
+      open ? 'Close search' : 'Search blog entries',
+    );
+    field.toggleAttribute('data-search-open', open);
+    if (open)
+      requestAnimationFrame(() => {
+        if (input.isConnected) input.focus();
+      });
+    else if (input.value) {
+      input.value = '';
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+    }
+    if (restoreFocus) toggle.focus();
+  }
+
   function onClick(event) {
+    const menuToggle = event.target.closest('[data-menu-toggle]');
+    if (menuToggle) {
+      setMenuOpen(menuToggle.getAttribute('aria-expanded') !== 'true');
+      return;
+    }
+    if (!event.target.closest('[data-site-menu]')) setMenuOpen(false);
+    const searchToggle = event.target.closest('[data-search-toggle]');
+    if (searchToggle) {
+      setSearchOpen(searchToggle.getAttribute('aria-expanded') !== 'true');
+      return;
+    }
     const button = event.target.closest('button');
     const listen = event.target.closest('[data-listen]');
     if (listen)
@@ -280,6 +329,16 @@ export default function PublicPage({
       ref={ref}
       className={`public-page${embedded ? ' embedded-public' : ''}`}
       onClick={onClick}
+      onKeyDown={event => {
+        if (event.key !== 'Escape') return;
+        if (ref.current.querySelector('[data-search-open]')) {
+          setSearchOpen(false, true);
+          event.preventDefault();
+        } else if (ref.current.querySelector('[data-menu-open]')) {
+          setMenuOpen(false, true);
+          event.preventDefault();
+        }
+      }}
       onInput={event => {
         if (!event.target.hasAttribute('data-blog-search')) return;
         const query = event.target.value.trim().toLowerCase();

@@ -35,6 +35,7 @@ function renderBlogEntries(page, options, query = '') {
 }
 function renderFeed(page, options) {
   const number = page.number || 1;
+  const searchId = `${options.prefix || 'static'}-blog-search`;
   return `<header class="page-heading feed-heading"><div><p class="eyebrow">The weblog</p><h1 tabindex="-1">${
     page.category
       ? escapeHtml(page.category)
@@ -57,7 +58,11 @@ function renderFeed(page, options) {
     )
     .join(
       '',
-    )}</nav><label class="search js-only"><span class="sr-only">Search blog entries${
+    )}</nav><button class="search-toggle" type="button" data-search-toggle aria-expanded="false" aria-controls="${escapeHtml(
+    searchId,
+  )}" aria-label="Search blog entries"><svg class="search-open-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m15.5 15.5 5 5"></path></svg><svg class="search-close-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" focusable="false"><path d="m6 6 12 12M18 6 6 18"></path></svg></button><label class="search js-only" id="${escapeHtml(
+    searchId,
+  )}" data-search-field><span class="sr-only">Search blog entries${
     page.category ? ` in ${escapeHtml(page.category)}` : ''
   }</span><input type="search" data-blog-search placeholder="Find an entry..."></label></div><p class="search-status" data-blog-search-status role="status"></p><div class="blog-feed" data-blog-results>${
     renderBlogEntries(page, options).html
